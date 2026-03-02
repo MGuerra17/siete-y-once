@@ -33,9 +33,7 @@ export const GameScreenContainer: React.FC = () => {
       point={state.point}
       diceValues={state.diceValues}
       isRolling={state.isRolling}
-      onDicePress={() => {
-        setToastMessage("Dice rolled");
-      }}
+      onDicePress={onDicePress}
       onOpenBetSheet={openBetSheet}
       onSubmitBet={submitBet}
       isBetSheetVisible={state.isBetSheetVisible}
