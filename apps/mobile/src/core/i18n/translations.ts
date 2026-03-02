@@ -13,7 +13,20 @@ type TranslationKeys =
   | "game.betRoleLabel"
   | "game.rollRoleLabel"
   | "game.pointLabel"
-  | "game.rollDiceCta";
+  | "game.rollDiceCta"
+  | "game.betSheet.title"
+  | "game.betSheet.currentBetLabel"
+  | "game.betSheet.newTotalBetLabel"
+  | "game.betSheet.firstBetCta"
+  | "game.betSheet.keepCta"
+  | "game.betSheet.increaseCta"
+  | "game.endModal.title"
+  | "game.endModal.subtitle"
+  | "game.endModal.roundsLabel"
+  | "game.endModal.goHomeCta"
+  | "game.endModal.shareCta"
+  | "game.endModal.winnerLabel"
+  | "game.endModal.loserLabel";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -32,6 +45,19 @@ export const translations: TranslationRecord = {
     "game.rollRoleLabel": "Roll",
     "game.pointLabel": "Point",
     "game.rollDiceCta": "Roll dices",
+    "game.betSheet.title": "It's time for bet",
+    "game.betSheet.currentBetLabel": "Current bet",
+    "game.betSheet.newTotalBetLabel": "New total bet",
+    "game.betSheet.firstBetCta": "Bet",
+    "game.betSheet.keepCta": "Keep",
+    "game.betSheet.increaseCta": "Increase",
+    "game.endModal.title": "Game over",
+    "game.endModal.subtitle": "Congrats, {winnerName}!",
+    "game.endModal.roundsLabel": "Rounds played",
+    "game.endModal.goHomeCta": "Finish",
+    "game.endModal.shareCta": "Share",
+    "game.endModal.winnerLabel": "Winner",
+    "game.endModal.loserLabel": "Loser",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -47,8 +73,20 @@ export const translations: TranslationRecord = {
     "game.rollRoleLabel": "Lanzar",
     "game.pointLabel": "Punto",
     "game.rollDiceCta": "Lanzar dados",
+    "game.betSheet.title": "Es momento de apostar",
+    "game.betSheet.currentBetLabel": "Apuesta actual",
+    "game.betSheet.newTotalBetLabel": "Nueva apuesta total",
+    "game.betSheet.firstBetCta": "Apostar",
+    "game.betSheet.keepCta": "Mantener",
+    "game.betSheet.increaseCta": "Aumentar",
+    "game.endModal.title": "Fin de la partida",
+    "game.endModal.subtitle": "¡Felicidades, {winnerName}!",
+    "game.endModal.roundsLabel": "Rondas jugadas",
+    "game.endModal.goHomeCta": "Finalizar",
+    "game.endModal.shareCta": "Compartir",
+    "game.endModal.winnerLabel": "Ganador",
+    "game.endModal.loserLabel": "Perdedor",
   },
 };
 
 export type TranslationKey = TranslationKeys;
-
