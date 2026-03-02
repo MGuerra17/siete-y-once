@@ -1,0 +1,147 @@
+import { colors } from "@/src/theme/colors";
+import { fontSize } from "@/src/theme/fontSize";
+import { spacing } from "@/src/theme/spacing";
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  backdrop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: spacing.xl,
+  },
+  card: {
+    width: "100%",
+    borderRadius: spacing.xl,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.xxl,
+    backgroundColor: colors.surface,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 12,
+    alignItems: "center",
+    gap: spacing.lg,
+  },
+  header: {
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  title: {
+    fontSize: fontSize.xl,
+    fontWeight: "800",
+    color: colors.textPrimary,
+  },
+  subtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+  },
+  avatarsRow: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: spacing.sm,
+  },
+  winnerAvatarWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loserAvatarWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.7,
+  },
+  crownBadge: {
+    position: "absolute",
+    top: -spacing.sm,
+    right: "30%",
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.background,
+  },
+  winnerLabelPill: {
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 999,
+    backgroundColor: colors.primaryMuted,
+  },
+  loserLabelPill: {
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 999,
+    backgroundColor: colors.border,
+  },
+  labelPillText: {
+    fontSize: fontSize.xs,
+    fontWeight: "600",
+    color: colors.background,
+  },
+  statsContainer: {
+    width: "100%",
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  statRow: {
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  statLabel: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+  },
+  statValue: {
+    fontSize: fontSize.md,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+  buttonsContainer: {
+    marginTop: spacing.sm,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  primaryButton: {
+    flex: 1,
+    borderRadius: spacing.xl,
+    paddingVertical: spacing.md,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+  },
+  primaryButtonText: {
+    fontSize: fontSize.md,
+    fontWeight: "700",
+    color: colors.background,
+  },
+  secondaryButton: {
+    flex: 1,
+    borderRadius: spacing.xl,
+    paddingVertical: spacing.md,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    borderWidth: 2,
+    borderColor: colors.border,
+  },
+  secondaryButtonText: {
+    fontSize: fontSize.md,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+});
