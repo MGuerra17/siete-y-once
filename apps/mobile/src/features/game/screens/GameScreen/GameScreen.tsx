@@ -2,11 +2,13 @@ import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenCon
 import React from "react";
 import { View } from "react-native";
 import { BetBottomSheet } from "../../components/BetBottomSheet/BetBottomSheet";
+import { DiceSumDisplay } from "../../components/DiceSumDisplay/DiceSumDisplay";
 import { Dices } from "../../components/Dices/Dices";
 import { PlayerInfo } from "../../components/PlayerInfo/PlayerInfo";
 import { PointDisplay } from "../../components/PointDisplay/PointDisplay";
 import { GameEndModal } from "../../components/GameEndModal/GameEndModal";
 import { GameToast } from "../../components/GameToast/GameToast";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
 import type { Player } from "../../types";
 import { styles } from "./GameScreen.styles";
 import { GameScreenProps } from "./GameScreen.types";
@@ -20,6 +22,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   point,
   diceValues,
   isRolling,
+  lastRollSumPlayer1,
+  lastRollSumPlayer2,
   onDicePress,
   onOpenBetSheet,
   onSubmitBet,
@@ -27,6 +31,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   endModalProps,
   toastProps,
 }) => {
+  const { t } = useLanguage();
   const activeBetter: Player | null =
     activeBetterId === "player1"
       ? player1
@@ -53,11 +58,20 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         </View>
 
         <View style={styles.middle}>
+          <DiceSumDisplay
+            label={t("game.lastRollSumPlayer2Label")}
+            value={lastRollSumPlayer2}
+          />
           <PointDisplay point={point} />
           <Dices
             diceValues={diceValues}
             isRolling={isRolling}
             onPress={onDicePress}
+          />
+          <DiceSumDisplay
+            label={t("game.lastRollSumPlayer1Label")}
+            value={lastRollSumPlayer1}
+            invertOrder
           />
         </View>
 

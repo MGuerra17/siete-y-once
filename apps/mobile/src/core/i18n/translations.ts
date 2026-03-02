@@ -13,6 +13,8 @@ type TranslationKeys =
   | "game.betRoleLabel"
   | "game.rollRoleLabel"
   | "game.pointLabel"
+  | "game.lastRollSumPlayer1Label"
+  | "game.lastRollSumPlayer2Label"
   | "game.rollDiceCta"
   | "game.betSheet.title"
   | "game.betSheet.currentBetLabel"
@@ -44,6 +46,8 @@ export const translations: TranslationRecord = {
     "game.betRoleLabel": "Bet",
     "game.rollRoleLabel": "Roll",
     "game.pointLabel": "Point",
+    "game.lastRollSumPlayer1Label": "Player 1 last roll",
+    "game.lastRollSumPlayer2Label": "Player 2 last roll",
     "game.rollDiceCta": "Roll dices",
     "game.betSheet.title": "It's time for bet",
     "game.betSheet.currentBetLabel": "Current bet",
@@ -72,6 +76,8 @@ export const translations: TranslationRecord = {
     "game.betRoleLabel": "Apostar",
     "game.rollRoleLabel": "Lanzar",
     "game.pointLabel": "Punto",
+    "game.lastRollSumPlayer1Label": "Último lanzamiento jugador 1",
+    "game.lastRollSumPlayer2Label": "Último lanzamiento jugador 2",
     "game.rollDiceCta": "Lanzar dados",
     "game.betSheet.title": "Es momento de apostar",
     "game.betSheet.currentBetLabel": "Apuesta actual",

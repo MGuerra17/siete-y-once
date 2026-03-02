@@ -33,6 +33,8 @@ export const GameScreenContainer: React.FC = () => {
       point={state.point}
       diceValues={state.diceValues}
       isRolling={state.isRolling}
+      lastRollSumPlayer1={state.lastRollSumPlayer1}
+      lastRollSumPlayer2={state.lastRollSumPlayer2}
       onDicePress={onDicePress}
       onOpenBetSheet={openBetSheet}
       onSubmitBet={submitBet}

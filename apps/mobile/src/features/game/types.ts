@@ -34,5 +34,9 @@ export type GameState = {
   point: number;
   diceValues: [number, number];
   isRolling: boolean;
+  /** Sum of last dice roll by player 1 (when they were the roller). */
+  lastRollSumPlayer1?: number;
+  /** Sum of last dice roll by player 2 (when they were the roller). */
+  lastRollSumPlayer2?: number;
 };
 

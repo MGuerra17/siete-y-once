@@ -11,6 +11,8 @@ export type GameScreenProps = {
   point: number;
   diceValues: [number, number];
   isRolling: boolean;
+  lastRollSumPlayer1?: number;
+  lastRollSumPlayer2?: number;
   onDicePress: () => void;
   onOpenBetSheet: () => void;
   onSubmitBet: (bet: number) => void;

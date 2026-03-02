@@ -61,11 +61,21 @@ export const useGameLogic = () => {
 
       setState((prev) => {
         const nextIsPlayer1Active = !prev.player1.isActive;
+        const rollerId =
+          prev.player1.currentRole === PlayerRole.ROLLER &&
+          prev.player1.isActive
+            ? "player1"
+            : "player2";
+
         return {
           ...prev,
           isRolling: false,
           diceValues: [die1, die2],
           point,
+          lastRollSumPlayer1:
+            rollerId === "player1" ? point : prev.lastRollSumPlayer1,
+          lastRollSumPlayer2:
+            rollerId === "player2" ? point : prev.lastRollSumPlayer2,
           player1: { ...prev.player1, isActive: nextIsPlayer1Active },
           player2: { ...prev.player2, isActive: !nextIsPlayer1Active },
         };
