@@ -70,6 +70,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  winningNumberPillActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
   winningNumberText: {
     color: colors.textPrimary,
     fontWeight: "500",

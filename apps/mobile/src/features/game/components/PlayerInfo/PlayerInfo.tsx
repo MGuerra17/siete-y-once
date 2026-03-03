@@ -1,5 +1,6 @@
 import { AppText } from "@/src/core/components/AppText/AppText";
 import { Avatar } from "@/src/core/components/Avatar/Avatar";
+import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -16,6 +17,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   role,
   winningNumbers,
   isActive,
+  activeWinningNumber = null,
 }) => {
   const variant = id === "player1" ? "primary" : "secondary";
   const { t } = useLanguage();
@@ -32,7 +34,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
       ? t("game.betRoleLabel")
       : t("game.rollRoleLabel");
 
-  const formattedMoney = currentMoney.toLocaleString();
+  const formattedMoney = formatMoneyCompact(currentMoney);
 
   return (
     <View
@@ -81,7 +83,13 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
           <AppText variant="subtitle">{displayName}</AppText>
           <View style={styles.winningNumbersRow}>
             {winningNumbers.map((num) => (
-              <View key={num} style={styles.winningNumberPill}>
+              <View
+                key={num}
+                style={[
+                  styles.winningNumberPill,
+                  num === activeWinningNumber && styles.winningNumberPillActive,
+                ]}
+              >
                 <Text style={styles.winningNumberText}>{num}</Text>
               </View>
             ))}

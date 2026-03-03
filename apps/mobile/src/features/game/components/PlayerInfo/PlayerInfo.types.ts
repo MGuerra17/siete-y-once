@@ -10,6 +10,7 @@ export type PlayerInfoProps = {
   role: PlayerRole;
   winningNumbers: number[];
   isActive: boolean;
+  activeWinningNumber?: number | null;
   variant?: PlayerInfoVariant;
 };
 
