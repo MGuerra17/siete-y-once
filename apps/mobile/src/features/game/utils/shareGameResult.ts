@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 import { Platform, Share, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
-import type { Player } from "../types";
+import type { Player } from "@/src/features/game/types";
 
 type TranslateFn = (key: string) => string;
 

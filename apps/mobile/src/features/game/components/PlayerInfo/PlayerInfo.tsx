@@ -6,9 +6,9 @@ import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, View } from "react-native";
-import { PlayerRole } from "../../enums/PlayerRole";
-import { styles } from "./PlayerInfo.styles";
-import { PlayerInfoProps } from "./PlayerInfo.types";
+import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
+import { styles } from "@/src/features/game/components/PlayerInfo/PlayerInfo.styles";
+import { PlayerInfoProps } from "@/src/features/game/components/PlayerInfo/PlayerInfo.types";
 
 export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   id,

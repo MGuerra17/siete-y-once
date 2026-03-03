@@ -4,21 +4,21 @@ import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { BetBill } from "../../components/BetBill/BetBill";
-import { BetBottomSheet } from "../../components/BetBottomSheet/BetBottomSheet";
-import { DiceSumDisplay } from "../../components/DiceSumDisplay/DiceSumDisplay";
-import { Dices } from "../../components/Dices/Dices";
-import { ExitConfirmModal } from "../../components/ExitConfirmModal/ExitConfirmModal";
-import { GameEndModal } from "../../components/GameEndModal/GameEndModal";
-import { GameToast } from "../../components/GameToast/GameToast";
-import { PlayerInfo } from "../../components/PlayerInfo/PlayerInfo";
-import { PointDisplay } from "../../components/PointDisplay/PointDisplay";
-import { WinningNumberFlyer } from "../../components/WinningNumberFlyer/WinningNumberFlyer";
-import { GamePhase } from "../../enums/GamePhase";
-import { PlayerRole } from "../../enums/PlayerRole";
-import type { Player } from "../../types";
-import { styles } from "./GameScreen.styles";
-import type { GameScreenProps } from "./GameScreen.types";
+import { BetBill } from "@/src/features/game/components/BetBill/BetBill";
+import { BetBottomSheet } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet";
+import { DiceSumDisplay } from "@/src/features/game/components/DiceSumDisplay/DiceSumDisplay";
+import { Dices } from "@/src/features/game/components/Dices/Dices";
+import { ExitConfirmModal } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal";
+import { GameEndModal } from "@/src/features/game/components/GameEndModal/GameEndModal";
+import { GameToast } from "@/src/features/game/components/GameToast/GameToast";
+import { PlayerInfo } from "@/src/features/game/components/PlayerInfo/PlayerInfo";
+import { PointDisplay } from "@/src/features/game/components/PointDisplay/PointDisplay";
+import { WinningNumberFlyer } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer";
+import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
+import type { Player } from "@/src/features/game/types";
+import { styles } from "@/src/features/game/screens/GameScreen/GameScreen.styles";
+import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   player1,

@@ -1,8 +1,8 @@
 import { colors } from "@/src/theme/colors";
 import React from "react";
 import { Pressable, Text } from "react-native";
-import { styles } from "./BetControlButton.styles";
-import { BetControlButtonProps } from "./BetControlButton.types";
+import { styles } from "@/src/features/game/components/BetControlButton/BetControlButton.styles";
+import { BetControlButtonProps } from "@/src/features/game/components/BetControlButton/BetControlButton.types";
 
 export const BetControlButton: React.FC<BetControlButtonProps> = ({
   label,

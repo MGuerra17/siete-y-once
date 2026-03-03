@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import type { PlayerId } from "../../types";
+import type { PlayerId } from "@/src/features/game/types";
 
 const { width, height } = Dimensions.get("window");
 

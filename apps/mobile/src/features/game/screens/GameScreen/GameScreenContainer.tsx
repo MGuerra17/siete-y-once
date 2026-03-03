@@ -2,13 +2,13 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler, View } from "react-native";
-import { GameMode } from "../../enums/GameMode";
-import { GamePhase } from "../../enums/GamePhase";
-import { useGameSounds } from "../../hooks/useGameSounds";
-import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
-import { useGameStore } from "../../store/gameStore";
-import { shareGameResult } from "../../utils/shareGameResult";
-import { GameScreen } from "./GameScreen";
+import { GameMode } from "@/src/features/game/enums/GameMode";
+import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
+import { useLocalGameEngine } from "@/src/features/game/hooks/useLocalGameEngine";
+import { useGameStore } from "@/src/features/game/store/gameStore";
+import { shareGameResult } from "@/src/features/game/utils/shareGameResult";
+import { GameScreen } from "@/src/features/game/screens/GameScreen/GameScreen";
 
 export const GameScreenContainer: React.FC = () => {
   // Game store state

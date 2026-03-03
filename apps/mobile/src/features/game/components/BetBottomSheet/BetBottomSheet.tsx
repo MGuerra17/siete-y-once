@@ -7,10 +7,10 @@ import {
 } from "@gorhom/bottom-sheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Text, View } from "react-native";
-import { BetControlButton } from "../BetControlButton/BetControlButton";
-import { BetSubmitButton } from "../BetSubmitButton/BetSubmitButton";
-import { styles } from "./BetBottomSheet.styles";
-import type { BetBottomSheetProps } from "./BetBottomSheet.types";
+import { BetControlButton } from "@/src/features/game/components/BetControlButton/BetControlButton";
+import { BetSubmitButton } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton";
+import { styles } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.styles";
+import type { BetBottomSheetProps } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.types";
 
 export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
   visible,

@@ -2,8 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
 import { spacing } from "@/src/theme/spacing";
-import { StartGameButtonProps } from "./StartGameButton.types";
-import { styles } from "./StartGameButton.styles";
+import { StartGameButtonProps } from "@/src/features/home/components/StartGameButton/StartGameButton.types";
+import { styles } from "@/src/features/home/components/StartGameButton/StartGameButton.styles";
 
 export const StartGameButton: React.FC<StartGameButtonProps> = ({
   label,

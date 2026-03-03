@@ -1,4 +1,4 @@
-import { PlayerRole } from "./enums/PlayerRole";
+import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
 
 export type PlayerId = "player1" | "player2";
 

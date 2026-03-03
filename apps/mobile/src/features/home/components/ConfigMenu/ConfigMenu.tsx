@@ -8,8 +8,8 @@ import { Pressable, Switch, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { colors } from "@/src/theme/colors";
-import { styles } from "./ConfigMenu.styles";
-import type { ConfigMenuProps } from "./ConfigMenu.types";
+import { styles } from "@/src/features/home/components/ConfigMenu/ConfigMenu.styles";
+import type { ConfigMenuProps } from "@/src/features/home/components/ConfigMenu/ConfigMenu.types";
 
 const isActiveLanguage = (current: string, target: string) => current === target;
 

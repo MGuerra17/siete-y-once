@@ -6,9 +6,9 @@ import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { StartGameButton } from "../../components/StartGameButton/StartGameButton";
-import { styles } from "./HomeScreen.styles";
-import type { HomeScreenProps } from "./HomeScreen.types";
+import { StartGameButton } from "@/src/features/home/components/StartGameButton/StartGameButton";
+import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
+import type { HomeScreenProps } from "@/src/features/home/screens/HomeScreen/HomeScreen.types";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   startLabel,

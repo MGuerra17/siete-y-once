@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { styles } from "./WinningNumbersRow.styles";
-import { WinningNumbersRowProps } from "./WinningNumbersRow.types";
+import { styles } from "@/src/features/game/components/WinningNumbersRow/WinningNumbersRow.styles";
+import { WinningNumbersRowProps } from "@/src/features/game/components/WinningNumbersRow/WinningNumbersRow.types";
 
 export const WinningNumbersRow: React.FC<WinningNumbersRowProps> = ({
   label,

@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { AppText } from "@/src/core/components/AppText/AppText";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { styles } from "./PointDisplay.styles";
+import { styles } from "@/src/features/game/components/PointDisplay/PointDisplay.styles";
 
 type PointDisplayProps = {
   point: number;

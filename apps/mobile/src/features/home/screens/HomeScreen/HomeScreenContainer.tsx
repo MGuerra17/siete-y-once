@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useSound } from "@/src/core/hooks/useSound";
-import { HomeScreen } from "./HomeScreen";
-import { ConfigMenu } from "../../components/ConfigMenu/ConfigMenu";
+import { HomeScreen } from "@/src/features/home/screens/HomeScreen/HomeScreen";
+import { ConfigMenu } from "@/src/features/home/components/ConfigMenu/ConfigMenu";
 import { GameMode } from "@/src/features/game/enums/GameMode";
 
 export const HomeScreenContainer: React.FC = () => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { Dice } from "../Dice/Dice";
-import { styles } from "./Dices.styles";
-import { DicesProps } from "./Dices.types";
+import { Dice } from "@/src/features/game/components/Dice/Dice";
+import { styles } from "@/src/features/game/components/Dices/Dices.styles";
+import { DicesProps } from "@/src/features/game/components/Dices/Dices.types";
 
 export const Dices: React.FC<DicesProps> = ({
   diceValues,

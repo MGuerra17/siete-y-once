@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
-import { styles } from "./BetSubmitButton.styles";
-import { BetSubmitButtonProps } from "./BetSubmitButton.types";
+import { styles } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton.styles";
+import { BetSubmitButtonProps } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton.types";
 
 export const BetSubmitButton: React.FC<BetSubmitButtonProps> = ({
   label,

@@ -9,7 +9,7 @@ import {
   Language,
   translations,
   TranslationKey,
-} from "../i18n/translations";
+} from "@/src/core/i18n/translations";
 
 type LanguageContextValue = {
   language: Language;

@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 import type { View } from "react-native";
-import type { GamePhase } from "../../enums/GamePhase";
-import type { Player, PlayerId } from "../../types";
+import type { GamePhase } from "@/src/features/game/enums/GamePhase";
+import type { Player, PlayerId } from "@/src/features/game/types";
 
 export type GameScreenProps = {
   player1: Player;

@@ -1,8 +1,8 @@
 import { AppText } from "@/src/core/components/AppText/AppText";
 import React from "react";
 import { View } from "react-native";
-import { styles } from "./DiceSumDisplay.styles";
-import { DiceSumDisplayProps } from "./DiceSumDisplay.types";
+import { styles } from "@/src/features/game/components/DiceSumDisplay/DiceSumDisplay.styles";
+import { DiceSumDisplayProps } from "@/src/features/game/components/DiceSumDisplay/DiceSumDisplay.types";
 
 export const DiceSumDisplay: React.FC<DiceSumDisplayProps> = ({
   label,

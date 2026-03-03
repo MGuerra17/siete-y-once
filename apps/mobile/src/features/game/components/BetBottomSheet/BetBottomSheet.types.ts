@@ -1,4 +1,4 @@
-import type { Player } from "../../types";
+import type { Player } from "@/src/features/game/types";
 
 export type BetBottomSheetProps = {
   visible: boolean;

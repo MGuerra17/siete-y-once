@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { INITIAL_MONEY, MIN_BET } from "../constants/game.constants";
-import { GamePhase } from "../enums/GamePhase";
-import { PlayerRole } from "../enums/PlayerRole";
-import type { Player, PlayerId } from "../types";
+import { INITIAL_MONEY, MIN_BET } from "@/src/features/game/constants/game.constants";
+import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
+import type { Player, PlayerId } from "@/src/features/game/types";
 
 export type GameStoreState = {
   phase: GamePhase;

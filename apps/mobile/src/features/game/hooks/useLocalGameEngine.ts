@@ -1,8 +1,8 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useCallback, useMemo } from "react";
-import { createLocalGameEngine } from "../engine/localGameEngine";
-import type { IGameEngine } from "../engine/IGameEngine";
-import { useGameStore } from "../store/gameStore";
+import { createLocalGameEngine } from "@/src/features/game/engine/localGameEngine";
+import type { IGameEngine } from "@/src/features/game/engine/IGameEngine";
+import { useGameStore } from "@/src/features/game/store/gameStore";
 import type { TranslationKey } from "@/src/core/i18n/translations";
 
 const formatMessage = (

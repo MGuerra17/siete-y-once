@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, View } from "react-native";
-import { styles } from "./Dice.styles";
-import { DiceProps } from "./Dice.types";
+import { styles } from "@/src/features/game/components/Dice/Dice.styles";
+import { DiceProps } from "@/src/features/game/components/Dice/Dice.types";
 
 export const Dice: React.FC<DiceProps> = ({
   value,

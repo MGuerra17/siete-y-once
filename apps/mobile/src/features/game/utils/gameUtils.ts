@@ -1,8 +1,8 @@
 import {
   BETTOR_CRAPS_WINS,
   SHOOTER_NATURAL_WINS,
-} from "../constants/game.constants";
-import { RoundOutcome } from "../enums/RoundOutcome";
+} from "@/src/features/game/constants/game.constants";
+import { RoundOutcome } from "@/src/features/game/enums/RoundOutcome";
 
 export const rollDie = (): number => Math.floor(Math.random() * 6) + 1;
 

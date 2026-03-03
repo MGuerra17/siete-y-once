@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { Avatar } from "@/src/core/components/Avatar/Avatar";
 import { colors } from "@/src/theme/colors";
-import { styles } from "./GameEndModal.styles";
-import type { GameEndModalProps } from "./GameEndModal.types";
+import { styles } from "@/src/features/game/components/GameEndModal/GameEndModal.styles";
+import type { GameEndModalProps } from "@/src/features/game/components/GameEndModal/GameEndModal.types";
 
 export const GameEndModal: React.FC<GameEndModalProps> = ({
   visible,

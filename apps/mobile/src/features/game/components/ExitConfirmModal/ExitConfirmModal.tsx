@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { styles } from "./ExitConfirmModal.styles";
-import type { ExitConfirmModalProps } from "./ExitConfirmModal.types";
+import { styles } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal.styles";
+import type { ExitConfirmModalProps } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal.types";
 
 export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
   visible,

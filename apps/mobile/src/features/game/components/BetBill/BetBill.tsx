@@ -4,8 +4,8 @@ import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { styles } from "./BetBill.styles";
-import type { BetBillProps } from "./BetBill.types";
+import { styles } from "@/src/features/game/components/BetBill/BetBill.styles";
+import type { BetBillProps } from "@/src/features/game/components/BetBill/BetBill.types";
 
 export const BetBill: React.FC<BetBillProps> = ({
   visible = false,

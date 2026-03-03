@@ -2,8 +2,8 @@ import React from "react";
 import { Image, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/src/theme/colors";
-import { styles } from "./Avatar.styles";
-import { AvatarProps } from "./Avatar.types";
+import { styles } from "@/src/core/components/Avatar/Avatar.styles";
+import { AvatarProps } from "@/src/core/components/Avatar/Avatar.types";
 
 export const Avatar: React.FC<AvatarProps> = ({
   imageUri,

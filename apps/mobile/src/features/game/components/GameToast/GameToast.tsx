@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";
-import { styles } from "./GameToast.styles";
-import type { GameToastProps } from "./GameToast.types";
+import { styles } from "@/src/features/game/components/GameToast/GameToast.styles";
+import type { GameToastProps } from "@/src/features/game/components/GameToast/GameToast.types";
 
 const DEFAULT_DURATION = 3000;
 

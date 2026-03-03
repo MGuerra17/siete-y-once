@@ -1,15 +1,15 @@
-import { RESULT_DELAY_MS, ROLL_DURATION_MS } from "../constants/game.constants";
-import { GamePhase } from "../enums/GamePhase";
-import { RoundOutcome } from "../enums/RoundOutcome";
-import type { GameStore } from "../store/gameStore";
-import type { PlayerId } from "../types";
+import { RESULT_DELAY_MS, ROLL_DURATION_MS } from "@/src/features/game/constants/game.constants";
+import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { RoundOutcome } from "@/src/features/game/enums/RoundOutcome";
+import type { GameStore } from "@/src/features/game/store/gameStore";
+import type { PlayerId } from "@/src/features/game/types";
 import {
   delay,
   evaluateFirstRoll,
   evaluateSubsequentRoll,
   isPlayerBroke,
   rollDice,
-} from "../utils/gameUtils";
+} from "@/src/features/game/utils/gameUtils";
 
 type ToastFn = (key: string, params?: Record<string, string | number>) => string;
 
