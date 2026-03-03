@@ -64,8 +64,8 @@ export const styles = StyleSheet.create({
   },
   crownBadge: {
     position: "absolute",
-    top: -spacing.sm,
-    right: "30%",
+    top: -spacing.md,
+    right: "26%",
     width: 32,
     height: 32,
     borderRadius: 16,
