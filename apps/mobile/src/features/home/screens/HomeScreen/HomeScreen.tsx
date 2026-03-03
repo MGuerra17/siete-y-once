@@ -113,7 +113,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   <View style={styles.comingSoonBadge}>
                     <Text style={styles.comingSoonText}>{comingSoonLabel}</Text>
                   </View>
-                  <View style={styles.modeCardIconWrapperDisabled}>
+                  <View
+                    style={[
+                      styles.modeCardIconWrapper,
+                      styles.modeCardIconWrapperDisabled,
+                    ]}
+                  >
                     <Ionicons
                       name="globe-outline"
                       size={24}

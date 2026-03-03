@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
-import { spacing } from "@/src/theme/spacing";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontSize";
+import { spacing } from "@/src/theme/spacing";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary + "40",
   },
   modeCardIconWrapperDisabled: {
-    backgroundColor: colors.border + "60",
+    backgroundColor: colors.border + "50",
   },
   modeLabel: {
     fontSize: fontSize.md,
