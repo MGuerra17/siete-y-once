@@ -93,6 +93,8 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
           <Pressable
             style={styles.secondaryButton}
             onPress={onShare}
+            accessibilityLabel={t("game.endModal.shareCta")}
+            accessibilityRole="button"
           >
             <Text style={styles.secondaryButtonText}>
               {t("game.endModal.shareCta")}
@@ -101,6 +103,8 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
           <Pressable
             style={styles.primaryButton}
             onPress={onGoHome}
+            accessibilityLabel={t("game.endModal.goHomeCta")}
+            accessibilityRole="button"
           >
             <Text style={styles.primaryButtonText}>
               {t("game.endModal.goHomeCta")}

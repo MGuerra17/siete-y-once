@@ -40,7 +40,12 @@ export const GameToast: React.FC<GameToastProps> = ({
   }
 
   return (
-    <View style={styles.container} pointerEvents="box-none">
+    <View
+      style={styles.container}
+      pointerEvents="box-none"
+      accessibilityLabel={message}
+      accessibilityRole="alert"
+    >
       <View style={styles.pill}>
         <Text style={styles.text}>{message}</Text>
       </View>

@@ -3,5 +3,6 @@ export type DiceProps = {
   isRolling: boolean;
   onPress: () => void;
   disabled?: boolean;
+  accessibilityLabel?: string;
 };
 

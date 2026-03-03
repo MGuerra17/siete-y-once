@@ -8,6 +8,7 @@ export const Dice: React.FC<DiceProps> = ({
   isRolling,
   onPress,
   disabled,
+  accessibilityLabel,
 }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
@@ -167,7 +168,12 @@ export const Dice: React.FC<DiceProps> = ({
   };
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
+    >
       <Animated.View
         style={[
           styles.die,

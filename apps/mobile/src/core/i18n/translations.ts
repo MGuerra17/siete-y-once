@@ -57,7 +57,10 @@ type TranslationKeys =
   | "game.exitModal.title"
   | "game.exitModal.message"
   | "game.exitModal.cancelCta"
-  | "game.exitModal.exitCta";
+  | "game.exitModal.exitCta"
+  | "game.a11y.exitButton"
+  | "game.a11y.rollDice"
+  | "game.a11y.keepBetToggle";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -121,6 +124,9 @@ export const translations: TranslationRecord = {
     "game.exitModal.message": "Your progress will be lost.",
     "game.exitModal.cancelCta": "Cancel",
     "game.exitModal.exitCta": "Exit",
+    "game.a11y.exitButton": "Exit game",
+    "game.a11y.rollDice": "Roll dice",
+    "game.a11y.keepBetToggle": "Keep bet locked",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -181,6 +187,9 @@ export const translations: TranslationRecord = {
     "game.exitModal.message": "Se perderá tu progreso.",
     "game.exitModal.cancelCta": "Cancelar",
     "game.exitModal.exitCta": "Salir",
+    "game.a11y.exitButton": "Salir del juego",
+    "game.a11y.rollDice": "Lanzar dados",
+    "game.a11y.keepBetToggle": "Mantener apuesta bloqueada",
   },
 };
 

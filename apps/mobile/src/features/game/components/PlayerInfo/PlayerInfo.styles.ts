@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: spacing.lg,
-    backgroundColor: "rgba(34,197,94,0.15)",
+    backgroundColor: colors.primary + "20",
   },
   moneyIcon: {
     marginRight: spacing.xs,

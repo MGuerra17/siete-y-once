@@ -1,4 +1,5 @@
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -50,6 +51,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onExitConfirm,
   onExitCancel,
 }) => {
+  const { t } = useLanguage();
   const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
   const isGameOver = phase === GamePhase.GAME_OVER;
 
@@ -69,10 +71,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       <View style={{ flex: 1 }}>
         <View style={styles.top}>
           <View style={styles.topRow}>
-            <Pressable style={styles.exitButton} onPress={onExitPress}>
+            <Pressable
+              style={styles.exitButton}
+              onPress={onExitPress}
+              accessibilityLabel={t("game.a11y.exitButton")}
+              accessibilityRole="button"
+            >
               <Ionicons
                 name="exit-outline"
-                size={18}
+                size={20}
                 color={colors.textSecondary}
               />
             </Pressable>
@@ -119,6 +126,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             isRolling={isRolling}
             onPress={isProcessing || isBetSheetVisible ? () => {} : onDicePress}
             disabled={isProcessing || isBetSheetVisible}
+            accessibilityLabel={t("game.a11y.rollDice")}
           />
           <View style={styles.middleSlot}>
             {isInitialPhase ? (

@@ -37,7 +37,10 @@ export const BetBill: React.FC<BetBillProps> = ({
           <Pressable
             style={[styles.lockButton, lockPermanent && styles.lockButtonPermanent]}
             onPress={lockPermanent ? undefined : onKeepBetToggle}
-            hitSlop={8}
+            hitSlop={12}
+            accessibilityLabel={t("game.a11y.keepBetToggle")}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: lockPermanent }}
           >
             <Ionicons
               name={keepBet ? "lock-closed" : "lock-open"}
@@ -47,7 +50,12 @@ export const BetBill: React.FC<BetBillProps> = ({
           </Pressable>
         )}
         <View style={styles.billHeader}>
-          <Ionicons name="cash" size={20} color="#15803d" style={styles.icon} />
+          <Ionicons
+            name="cash"
+            size={20}
+            color={colors.primaryMuted}
+            style={styles.icon}
+          />
           <Text style={styles.label}>{t("game.betSheet.currentBetLabel")}</Text>
         </View>
         <Text style={styles.amount}>{formattedAmount}</Text>

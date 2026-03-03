@@ -9,6 +9,7 @@ export const Dices: React.FC<DicesProps> = ({
   isRolling,
   onPress,
   disabled,
+  accessibilityLabel,
 }) => {
   return (
     <View style={styles.container}>
@@ -17,12 +18,14 @@ export const Dices: React.FC<DicesProps> = ({
         isRolling={isRolling}
         onPress={onPress}
         disabled={disabled}
+        accessibilityLabel={accessibilityLabel}
       />
       <Dice
         value={diceValues[1]}
         isRolling={isRolling}
         onPress={onPress}
         disabled={disabled}
+        accessibilityLabel={accessibilityLabel}
       />
     </View>
   );

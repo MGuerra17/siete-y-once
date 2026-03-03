@@ -21,12 +21,22 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         <Text style={styles.title}>{t("game.exitModal.title")}</Text>
         <Text style={styles.message}>{t("game.exitModal.message")}</Text>
         <View style={styles.buttonsContainer}>
-          <Pressable style={styles.cancelButton} onPress={onCancel}>
+          <Pressable
+            style={styles.cancelButton}
+            onPress={onCancel}
+            accessibilityLabel={t("game.exitModal.cancelCta")}
+            accessibilityRole="button"
+          >
             <Text style={styles.cancelButtonText}>
               {t("game.exitModal.cancelCta")}
             </Text>
           </Pressable>
-          <Pressable style={styles.confirmButton} onPress={onConfirm}>
+          <Pressable
+            style={styles.confirmButton}
+            onPress={onConfirm}
+            accessibilityLabel={t("game.exitModal.exitCta")}
+            accessibilityRole="button"
+          >
             <Text style={styles.confirmButtonText}>
               {t("game.exitModal.exitCta")}
             </Text>

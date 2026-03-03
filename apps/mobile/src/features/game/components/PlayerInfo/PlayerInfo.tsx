@@ -2,6 +2,7 @@ import { AppText } from "@/src/core/components/AppText/AppText";
 import { Avatar } from "@/src/core/components/Avatar/Avatar";
 import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, View } from "react-native";
@@ -36,12 +37,16 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
 
   const formattedMoney = formatMoneyCompact(currentMoney);
 
+  const a11yLabel = `${displayName}, ${roleLabel}, ${formattedMoney}`;
+
   return (
     <View
       style={[
         styles.container,
         variant === "secondary" && styles.containerSecondary,
       ]}
+      accessibilityLabel={a11yLabel}
+      accessibilityRole="summary"
     >
       <View style={styles.avatarColumn}>
         <Avatar
@@ -68,7 +73,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
             <Ionicons
               name="cash-outline"
               size={16}
-              color="#facc15"
+              color={colors.primary}
               style={styles.moneyIcon}
             />
             <Text style={styles.moneyText}>{formattedMoney}</Text>
