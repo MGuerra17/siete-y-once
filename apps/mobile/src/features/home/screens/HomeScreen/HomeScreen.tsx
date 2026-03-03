@@ -1,4 +1,5 @@
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
+import { GameMode } from "@/src/features/game/enums/GameMode";
 import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -21,7 +22,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   selectedMode,
   onSelectMode,
 }) => {
-  const isOfflineSelected = selectedMode === "offline";
+  const isOfflineSelected = selectedMode === GameMode.OFFLINE;
 
   return (
     <ScreenContainer>
@@ -67,7 +68,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <View style={styles.modeSelector}>
               <View style={styles.modeRow}>
                 <Pressable
-                  onPress={() => onSelectMode("offline")}
+                  onPress={() => onSelectMode(GameMode.OFFLINE)}
                   style={[
                     styles.modeCard,
                     isOfflineSelected && styles.modeCardActive,

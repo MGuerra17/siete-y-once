@@ -1,4 +1,4 @@
-export type GameMode = "online" | "offline";
+import { GameMode } from "@/src/features/game/enums/GameMode";
 
 export type HomeScreenProps = {
   startLabel: string;

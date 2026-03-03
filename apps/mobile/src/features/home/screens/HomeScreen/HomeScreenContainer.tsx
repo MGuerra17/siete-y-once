@@ -4,18 +4,18 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useSound } from "@/src/core/hooks/useSound";
 import { HomeScreen } from "./HomeScreen";
 import { ConfigMenu } from "../../components/ConfigMenu/ConfigMenu";
-import type { GameMode } from "./HomeScreen.types";
+import { GameMode } from "@/src/features/game/enums/GameMode";
 
 export const HomeScreenContainer: React.FC = () => {
   const router = useRouter();
   const { language, setLanguage, t } = useLanguage();
   const { soundEnabled, setSoundEnabled } = useSound();
   const [configVisible, setConfigVisible] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<GameMode>("offline");
+  const [selectedMode, setSelectedMode] = useState<GameMode>(GameMode.OFFLINE);
 
   const handleStart = () => {
-    if (selectedMode === "offline") {
-      router.push("/game");
+    if (selectedMode === GameMode.OFFLINE) {
+      router.push({ pathname: "/game", params: { mode: selectedMode } });
     }
   };
 

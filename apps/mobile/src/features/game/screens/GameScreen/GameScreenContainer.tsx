@@ -1,23 +1,19 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler, View } from "react-native";
+import { GameMode } from "../../enums/GameMode";
 import { GamePhase } from "../../enums/GamePhase";
-import { useDiceRollSound } from "../../hooks/useDiceRollSound";
+import { useGameSounds } from "../../hooks/useGameSounds";
 import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
 import { useGameStore } from "../../store/gameStore";
 import { shareGameResult } from "../../utils/shareGameResult";
 import { GameScreen } from "./GameScreen";
 
 export const GameScreenContainer: React.FC = () => {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const engine = useLocalGameEngine();
-  const navigation = useNavigation();
-
+  // Game store state
   const phase = useGameStore((s) => s.phase);
   const isRolling = useGameStore((s) => s.isRolling);
-  useDiceRollSound(isRolling);
   const player1 = useGameStore((s) => s.player1);
   const player2 = useGameStore((s) => s.player2);
   const point = useGameStore((s) => s.point);
@@ -37,12 +33,29 @@ export const GameScreenContainer: React.FC = () => {
   const resetGame = useGameStore((s) => s.resetGame);
   const setToastMessage = useGameStore((s) => s.setToastMessage);
 
+  // Router and navigation
+  const { mode } = useLocalSearchParams<{ mode?: GameMode }>();
+  const router = useRouter();
+  const { t } = useLanguage();
+  const navigation = useNavigation();
+
+  // Game engine
+  const engine = useLocalGameEngine();
+
+  // Game sounds
+  const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(
+    mode,
+    isRolling,
+  );
+
+  // Local state
   const [isExitConfirmVisible, setIsExitConfirmVisible] = useState(false);
 
   const activeBetter =
     bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
   const maxBet = activeBetter?.currentMoney ?? minBet;
 
+  // Navigation options
   useEffect(() => {
     navigation.setOptions({
       gestureEnabled: false,
@@ -63,16 +76,45 @@ export const GameScreenContainer: React.FC = () => {
           setIsExitConfirmVisible(true);
         }
         return true;
-      }
+      },
     );
     return () => subscription.remove();
   }, [isExitConfirmVisible]);
 
+  // Keep bet when user can't bet anymore
   useEffect(() => {
     if (currentBet > 0 && currentBet >= maxBet) {
       setKeepBet(true);
     }
   }, [currentBet, maxBet, setKeepBet]);
+
+  // Play win round sound when last winner is determined
+  useEffect(() => {
+    if (lastWinnerId) {
+      playWinRoundSound();
+    }
+  }, [lastWinnerId, playWinRoundSound]);
+
+  const prevPhase = useRef(phase);
+
+  // Play win game sound when game is over
+  useEffect(() => {
+    const justEnteredGameOver =
+      phase === GamePhase.GAME_OVER &&
+      prevPhase.current !== GamePhase.GAME_OVER;
+    prevPhase.current = phase;
+    if (justEnteredGameOver) {
+      playWinGameSound();
+    }
+  }, [phase, playWinGameSound]);
+
+  const handleSubmitBet = useCallback(
+    (amount: number) => {
+      engine.onBetSubmit(amount);
+      playBetSound();
+    },
+    [engine, playBetSound],
+  );
 
   const handleGoHome = () => {
     resetGame();
@@ -125,7 +167,7 @@ export const GameScreenContainer: React.FC = () => {
       onDicePress={engine.onDicePress}
       onOpenBetSheet={engine.onOpenBetSheet}
       onKeepBetChange={setKeepBet}
-      onSubmitBet={engine.onBetSubmit}
+      onSubmitBet={handleSubmitBet}
       onDismissToast={() => setToastMessage(null)}
       onGoHome={handleGoHome}
       onShare={handleShare}
