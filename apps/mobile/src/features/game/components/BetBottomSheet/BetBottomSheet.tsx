@@ -1,4 +1,5 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -31,15 +32,15 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
     }
 
     if (visible) {
-      setSheetBet(currentBet);
+      const initialBet = isFirstBet ? minBet : currentBet;
+      setSheetBet(initialBet);
       bottomSheetRef.current.present();
     } else {
       bottomSheetRef.current.dismiss();
     }
-  }, [visible, currentBet]);
+  }, [visible, currentBet, isFirstBet, minBet]);
 
   const clampBet = (value: number) => {
-    "worklet";
     if (value < minBet) return minBet;
     if (value > maxBet) return maxBet;
     return value;
@@ -49,7 +50,9 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
     setSheetBet((prev) => clampBet(prev + delta));
   };
 
-  const canDecreaseBy = (delta: number) => sheetBet - delta >= minBet;
+  // Players cannot decrease an existing bet; only increase or keep
+  const canDecreaseBy = (delta: number) =>
+    isFirstBet && sheetBet - delta >= minBet;
   const canIncreaseBy = (delta: number) => sheetBet + delta <= maxBet;
 
   const isValidBet = sheetBet >= minBet && sheetBet <= maxBet;
@@ -85,7 +88,6 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
       handleIndicatorStyle={styles.handleIndicator}
       style={styles.modal}
       backgroundStyle={styles.background}
-      // controlled visibility is handled by parent through ref and visible flag
     >
       <BottomSheetView style={styles.content}>
         <View style={styles.headerRow}>
@@ -103,10 +105,13 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
           <Text style={styles.amountLabel}>
             {t("game.betSheet.newTotalBetLabel")}
           </Text>
-          <Text style={styles.amountValue}>{`${sheetBet}k`}</Text>
-          <Text style={styles.amountSecondary}>
-            {t("game.betSheet.currentBetLabel")}: {currentBet}k
-          </Text>
+          <Text style={styles.amountValue}>{formatMoneyCompact(sheetBet)}</Text>
+          {!isFirstBet && (
+            <Text style={styles.amountSecondary}>
+              {t("game.betSheet.currentBetLabel")}:{" "}
+              {formatMoneyCompact(currentBet)}
+            </Text>
+          )}
         </View>
 
         <View style={styles.controlsContainer}>
@@ -115,23 +120,23 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
               <BetControlButton
                 label="-50k"
                 type="decrease"
-                disabled={!canDecreaseBy(50)}
-                onPress={() => handleAdjust(-50)}
+                disabled={!canDecreaseBy(50_000)}
+                onPress={() => handleAdjust(-50_000)}
               />
               <View style={styles.secondaryRow}>
                 <BetControlButton
                   label="-100k"
                   type="decrease"
                   small
-                  disabled={!canDecreaseBy(100)}
-                  onPress={() => handleAdjust(-100)}
+                  disabled={!canDecreaseBy(100_000)}
+                  onPress={() => handleAdjust(-100_000)}
                 />
                 <BetControlButton
                   label="-200k"
                   type="decrease"
                   small
-                  disabled={!canDecreaseBy(200)}
-                  onPress={() => handleAdjust(-200)}
+                  disabled={!canDecreaseBy(200_000)}
+                  onPress={() => handleAdjust(-200_000)}
                 />
               </View>
             </View>
@@ -140,23 +145,23 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
               <BetControlButton
                 label="+50k"
                 type="increase"
-                disabled={!canIncreaseBy(50)}
-                onPress={() => handleAdjust(50)}
+                disabled={!canIncreaseBy(50_000)}
+                onPress={() => handleAdjust(50_000)}
               />
               <View style={styles.secondaryRow}>
                 <BetControlButton
                   label="+100k"
                   type="increase"
                   small
-                  disabled={!canIncreaseBy(100)}
-                  onPress={() => handleAdjust(100)}
+                  disabled={!canIncreaseBy(100_000)}
+                  onPress={() => handleAdjust(100_000)}
                 />
                 <BetControlButton
                   label="+200k"
                   type="increase"
                   small
-                  disabled={!canIncreaseBy(200)}
-                  onPress={() => handleAdjust(200)}
+                  disabled={!canIncreaseBy(200_000)}
+                  onPress={() => handleAdjust(200_000)}
                 />
               </View>
             </View>
