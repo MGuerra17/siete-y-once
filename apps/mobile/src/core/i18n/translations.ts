@@ -27,6 +27,7 @@ type TranslationKeys =
   | "game.endModal.roundsLabel"
   | "game.endModal.goHomeCta"
   | "game.endModal.shareCta"
+  | "game.endModal.shareMessage"
   | "game.endModal.winnerLabel"
   | "game.endModal.loserLabel"
   | "game.toast.rollToDetermineShooter"
@@ -74,6 +75,8 @@ export const translations: TranslationRecord = {
     "game.endModal.roundsLabel": "Rounds played",
     "game.endModal.goHomeCta": "Finish",
     "game.endModal.shareCta": "Share",
+    "game.endModal.shareMessage":
+      "{winner} won against {loser} in {totalRounds} rounds! Play Dice Duel with me!",
     "game.endModal.winnerLabel": "Winner",
     "game.endModal.loserLabel": "Loser",
     "game.toast.rollToDetermineShooter": "Roll to determine the Shooter!",
@@ -118,6 +121,8 @@ export const translations: TranslationRecord = {
     "game.endModal.roundsLabel": "Rondas jugadas",
     "game.endModal.goHomeCta": "Finalizar",
     "game.endModal.shareCta": "Compartir",
+    "game.endModal.shareMessage":
+      "{winner} ganó contra {loser} en {totalRounds} rondas! ¡Juega Duelo de Dados conmigo!",
     "game.endModal.winnerLabel": "Ganador",
     "game.endModal.loserLabel": "Perdedor",
     "game.toast.rollToDetermineShooter": "¡Lanza para determinar al Lanzador!",

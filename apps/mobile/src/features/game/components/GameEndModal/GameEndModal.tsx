@@ -14,6 +14,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
   totalRounds,
   onGoHome,
   onShare = () => {},
+  captureRef,
 }) => {
   const { t } = useLanguage();
 
@@ -34,7 +35,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
 
   return (
     <View style={styles.backdrop} pointerEvents="box-none">
-      <View style={styles.card}>
+      <View ref={captureRef} style={styles.card} collapsable={false}>
         <View style={styles.header}>
           <Text style={styles.title}>{t("game.endModal.title")}</Text>
           <Text style={styles.subtitle}>

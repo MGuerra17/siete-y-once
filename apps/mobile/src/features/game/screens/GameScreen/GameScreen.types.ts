@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+import type { View } from "react-native";
 import type { GamePhase } from "../../enums/GamePhase";
 import type { Player, PlayerId } from "../../types";
 
@@ -25,4 +27,6 @@ export type GameScreenProps = {
   onSubmitBet: (amount: number) => void;
   onDismissToast: () => void;
   onGoHome: () => void;
+  onShare?: () => void;
+  captureRef?: RefObject<View | null>;
 };

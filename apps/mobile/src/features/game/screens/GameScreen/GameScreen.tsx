@@ -40,6 +40,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onSubmitBet,
   onDismissToast,
   onGoHome,
+  onShare,
+  captureRef,
 }) => {
   const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
   const isGameOver = phase === GamePhase.GAME_OVER;
@@ -159,6 +161,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             loser={loser}
             totalRounds={totalRounds}
             onGoHome={onGoHome}
+            onShare={onShare}
+            captureRef={captureRef}
           />
         )}
 

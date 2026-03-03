@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+import type { View } from "react-native";
 import type { Player } from "../../types";
 
 export type GameEndModalProps = {
@@ -7,5 +9,6 @@ export type GameEndModalProps = {
   totalRounds: number;
   onGoHome: () => void;
   onShare?: () => void;
+  captureRef?: RefObject<View | null>;
 };
 

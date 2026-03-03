@@ -1,9 +1,11 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { View } from "react-native";
 import { GamePhase } from "../../enums/GamePhase";
 import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
 import { useGameStore } from "../../store/gameStore";
+import { shareGameResult } from "../../utils/shareGameResult";
 import { GameScreen } from "./GameScreen";
 
 export const GameScreenContainer: React.FC = () => {
@@ -54,6 +56,15 @@ export const GameScreenContainer: React.FC = () => {
     router.replace("/");
   };
 
+  const captureRef = useRef<View>(null);
+  const winner =
+    player1.currentMoney >= player2.currentMoney ? player1 : player2;
+  const loser = winner.id === "player1" ? player2 : player1;
+
+  const handleShare = () => {
+    shareGameResult(captureRef, winner, loser, totalRounds, t as (key: string) => string);
+  };
+
   return (
     <GameScreen
       player1={player1}
@@ -79,6 +90,8 @@ export const GameScreenContainer: React.FC = () => {
       onSubmitBet={engine.onBetSubmit}
       onDismissToast={() => setToastMessage(null)}
       onGoHome={handleGoHome}
+      onShare={handleShare}
+      captureRef={captureRef}
     />
   );
 };
