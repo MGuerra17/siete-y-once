@@ -1,58 +1,66 @@
 import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
-import { useGameLogic } from "../../hooks/useGameLogic";
+import React, { useEffect } from "react";
+import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
+import { useGameStore } from "../../store/gameStore";
 import { GameScreen } from "./GameScreen";
+import { GamePhase } from "../../enums/GamePhase";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
 
 export const GameScreenContainer: React.FC = () => {
   const router = useRouter();
-  const { state, onDicePress, openBetSheet, submitBet } = useGameLogic();
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [totalRounds] = useState(0);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { t } = useLanguage();
+  const engine = useLocalGameEngine();
 
-  const { winner, loser } = useMemo(() => {
-    if (!isGameOver) {
-      return { winner: state.player1, loser: state.player2 };
+  const phase = useGameStore((s) => s.phase);
+  const player1 = useGameStore((s) => s.player1);
+  const player2 = useGameStore((s) => s.player2);
+  const point = useGameStore((s) => s.point);
+  const diceValues = useGameStore((s) => s.diceValues);
+  const isRolling = useGameStore((s) => s.isRolling);
+  const isProcessing = useGameStore((s) => s.isProcessing);
+  const initialRolls = useGameStore((s) => s.initialRolls);
+  const currentBet = useGameStore((s) => s.currentBet);
+  const minBet = useGameStore((s) => s.minBet);
+  const bettorId = useGameStore((s) => s.bettorId);
+  const isBetSheetVisible = useGameStore((s) => s.isBetSheetVisible);
+  const toastMessage = useGameStore((s) => s.toastMessage);
+  const totalRounds = useGameStore((s) => s.totalRounds);
+  const resetGame = useGameStore((s) => s.resetGame);
+  const setToastMessage = useGameStore((s) => s.setToastMessage);
+  const setActiveInitialRoller = useGameStore((s) => s.setActiveInitialRoller);
+
+  useEffect(() => {
+    if (phase === GamePhase.INITIAL_ROLL) {
+      setActiveInitialRoller("player1");
+      setToastMessage(t("game.toast.rollToDetermineShooter"));
     }
+  }, []);
 
-    const player1IsWinner =
-      state.player1.currentMoney >= state.player2.currentMoney;
-
-    return player1IsWinner
-      ? { winner: state.player1, loser: state.player2 }
-      : { winner: state.player2, loser: state.player1 };
-  }, [isGameOver, state.player1, state.player2]);
+  const handleGoHome = () => {
+    resetGame();
+    router.replace("/");
+  };
 
   return (
     <GameScreen
-      player1={state.player1}
-      player2={state.player2}
-      activeBetterId={state.activeBetterId}
-      currentBet={state.currentBet}
-      minBet={state.minBet}
-      point={state.point}
-      diceValues={state.diceValues}
-      isRolling={state.isRolling}
-      lastRollSumPlayer1={state.lastRollSumPlayer1}
-      lastRollSumPlayer2={state.lastRollSumPlayer2}
-      onDicePress={onDicePress}
-      onOpenBetSheet={openBetSheet}
-      onSubmitBet={submitBet}
-      isBetSheetVisible={state.isBetSheetVisible}
-      endModalProps={{
-        visible: isGameOver,
-        winner,
-        loser,
-        totalRounds,
-        onGoHome: () => {
-          setIsGameOver(false);
-          router.replace("/");
-        },
-      }}
-      toastProps={{
-        message: toastMessage,
-        onDismiss: () => setToastMessage(null),
-      }}
+      player1={player1}
+      player2={player2}
+      phase={phase}
+      point={point}
+      diceValues={diceValues}
+      isRolling={isRolling}
+      isProcessing={isProcessing}
+      initialRolls={initialRolls}
+      currentBet={currentBet}
+      minBet={minBet}
+      bettorId={bettorId}
+      isBetSheetVisible={isBetSheetVisible}
+      toastMessage={toastMessage}
+      totalRounds={totalRounds}
+      onDicePress={engine.onDicePress}
+      onOpenBetSheet={engine.onOpenBetSheet}
+      onSubmitBet={engine.onBetSubmit}
+      onGoHome={handleGoHome}
     />
   );
 };

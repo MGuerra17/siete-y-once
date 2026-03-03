@@ -4,43 +4,47 @@ import { View } from "react-native";
 import { BetBottomSheet } from "../../components/BetBottomSheet/BetBottomSheet";
 import { DiceSumDisplay } from "../../components/DiceSumDisplay/DiceSumDisplay";
 import { Dices } from "../../components/Dices/Dices";
-import { PlayerInfo } from "../../components/PlayerInfo/PlayerInfo";
-import { PointDisplay } from "../../components/PointDisplay/PointDisplay";
 import { GameEndModal } from "../../components/GameEndModal/GameEndModal";
 import { GameToast } from "../../components/GameToast/GameToast";
-import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { PlayerInfo } from "../../components/PlayerInfo/PlayerInfo";
+import { PointDisplay } from "../../components/PointDisplay/PointDisplay";
+import { GamePhase } from "../../enums/GamePhase";
 import type { Player } from "../../types";
 import { styles } from "./GameScreen.styles";
-import { GameScreenProps } from "./GameScreen.types";
+import type { GameScreenProps } from "./GameScreen.types";
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   player1,
   player2,
-  activeBetterId,
-  currentBet,
-  minBet,
+  phase,
   point,
   diceValues,
   isRolling,
-  lastRollSumPlayer1,
-  lastRollSumPlayer2,
+  isProcessing,
+  initialRolls,
+  currentBet,
+  minBet,
+  bettorId,
+  isBetSheetVisible,
+  toastMessage,
+  totalRounds,
   onDicePress,
   onOpenBetSheet,
   onSubmitBet,
-  isBetSheetVisible,
-  endModalProps,
-  toastProps,
+  onGoHome,
 }) => {
-  const { t } = useLanguage();
+  const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
+  const isGameOver = phase === GamePhase.GAME_OVER;
+
   const activeBetter: Player | null =
-    activeBetterId === "player1"
-      ? player1
-      : activeBetterId === "player2"
-        ? player2
-        : null;
+    bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
 
   const maxBet = activeBetter?.currentMoney ?? minBet;
   const isFirstBet = currentBet === minBet;
+
+  const winner =
+    player1.currentMoney >= player2.currentMoney ? player1 : player2;
+  const loser = winner.id === "player1" ? player2 : player1;
 
   return (
     <ScreenContainer>
@@ -59,18 +63,20 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
         <View style={styles.middle}>
           <DiceSumDisplay
-            label={t("game.lastRollSumPlayer2Label")}
-            value={lastRollSumPlayer2}
+            label={player2.name ?? "Player 2"}
+            value={initialRolls.player2 ?? null}
+            visible={isInitialPhase}
           />
-          <PointDisplay point={point} />
+          {!isInitialPhase && point !== null && <PointDisplay point={point} />}
           <Dices
             diceValues={diceValues}
             isRolling={isRolling}
-            onPress={onDicePress}
+            onPress={isProcessing ? () => {} : onDicePress}
           />
           <DiceSumDisplay
-            label={t("game.lastRollSumPlayer1Label")}
-            value={lastRollSumPlayer1}
+            label={player1.name ?? "Player 1"}
+            value={initialRolls.player1 ?? null}
+            visible={isInitialPhase}
             invertOrder
           />
         </View>
@@ -87,13 +93,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           />
         </View>
 
-        {toastProps && (
-          <GameToast
-            message={toastProps.message}
-            duration={toastProps.duration}
-            onDismiss={toastProps.onDismiss}
-          />
-        )}
+        <GameToast
+          message={toastMessage}
+          onDismiss={() => {}}
+        />
 
         <BetBottomSheet
           visible={isBetSheetVisible}
@@ -102,15 +105,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           minBet={minBet}
           maxBet={maxBet}
           isFirstBet={isFirstBet}
-          onClose={() => {
-            // Sheet cannot be dismissed without a bet; keep it visible.
-            onOpenBetSheet();
-          }}
+          onClose={onOpenBetSheet}
           onSubmitBet={onSubmitBet}
         />
 
-        {endModalProps?.visible && (
-          <GameEndModal {...endModalProps} />
+        {isGameOver && (
+          <GameEndModal
+            visible={isGameOver}
+            winner={winner}
+            loser={loser}
+            totalRounds={totalRounds}
+            onGoHome={onGoHome}
+          />
         )}
       </View>
     </ScreenContainer>

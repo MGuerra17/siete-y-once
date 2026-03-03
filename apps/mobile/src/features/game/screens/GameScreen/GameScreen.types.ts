@@ -1,22 +1,23 @@
-import type { Player } from "../../types";
-import type { GameEndModalProps } from "../../components/GameEndModal/GameEndModal.types";
-import type { GameToastProps } from "../../components/GameToast/GameToast.types";
+import type { GamePhase } from "../../enums/GamePhase";
+import type { Player, PlayerId } from "../../types";
 
 export type GameScreenProps = {
   player1: Player;
   player2: Player;
-  activeBetterId: Player["id"] | null;
-  currentBet: number;
-  minBet: number;
-  point: number;
+  phase: GamePhase;
+  point: number | null;
   diceValues: [number, number];
   isRolling: boolean;
-  lastRollSumPlayer1?: number;
-  lastRollSumPlayer2?: number;
+  isProcessing: boolean;
+  initialRolls: Partial<Record<PlayerId, number>>;
+  currentBet: number;
+  minBet: number;
+  bettorId: PlayerId | null;
+  isBetSheetVisible: boolean;
+  toastMessage: string | null;
+  totalRounds: number;
   onDicePress: () => void;
   onOpenBetSheet: () => void;
-  onSubmitBet: (bet: number) => void;
-  isBetSheetVisible: boolean;
-  endModalProps?: GameEndModalProps;
-  toastProps?: GameToastProps;
+  onSubmitBet: (amount: number) => void;
+  onGoHome: () => void;
 };

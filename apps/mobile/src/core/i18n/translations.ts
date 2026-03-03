@@ -28,7 +28,20 @@ type TranslationKeys =
   | "game.endModal.goHomeCta"
   | "game.endModal.shareCta"
   | "game.endModal.winnerLabel"
-  | "game.endModal.loserLabel";
+  | "game.endModal.loserLabel"
+  | "game.toast.rollToDetermineShooter"
+  | "game.toast.playerRolled"
+  | "game.toast.tie"
+  | "game.toast.shooterDetermined"
+  | "game.toast.placeBet"
+  | "game.toast.shooterRoll"
+  | "game.toast.shooterWinsNatural"
+  | "game.toast.bettorWinsCraps"
+  | "game.toast.pointSet"
+  | "game.toast.shooterWinsPoint"
+  | "game.toast.bettorWinsSeven"
+  | "game.toast.continueRolling"
+  | "game.toast.comparingRolls";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -62,6 +75,19 @@ export const translations: TranslationRecord = {
     "game.endModal.shareCta": "Share",
     "game.endModal.winnerLabel": "Winner",
     "game.endModal.loserLabel": "Loser",
+    "game.toast.rollToDetermineShooter": "Roll to determine the Shooter!",
+    "game.toast.playerRolled": "{name} rolled {sum}! {next}'s turn.",
+    "game.toast.tie": "It's a tie! Roll again.",
+    "game.toast.shooterDetermined": "{name} is the Shooter!",
+    "game.toast.placeBet": "{name}, place your bet!",
+    "game.toast.shooterRoll": "{name}, roll the dice!",
+    "game.toast.shooterWinsNatural": "7 or 11! {name} wins!",
+    "game.toast.bettorWinsCraps": "Craps! {name} wins!",
+    "game.toast.pointSet": "Point is {point}! Roll to match it.",
+    "game.toast.shooterWinsPoint": "Point matched! {name} wins!",
+    "game.toast.bettorWinsSeven": "Seven out! {name} wins!",
+    "game.toast.continueRolling": "Rolled {sum}. Keep rolling!",
+    "game.toast.comparingRolls": "{name} rolled {sum}! Comparing...",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -92,6 +118,19 @@ export const translations: TranslationRecord = {
     "game.endModal.shareCta": "Compartir",
     "game.endModal.winnerLabel": "Ganador",
     "game.endModal.loserLabel": "Perdedor",
+    "game.toast.rollToDetermineShooter": "¡Lanza para determinar al Lanzador!",
+    "game.toast.playerRolled": "{name} sacó {sum}. Turno de {next}.",
+    "game.toast.tie": "¡Empate! Lanza de nuevo.",
+    "game.toast.shooterDetermined": "¡{name} es el Lanzador!",
+    "game.toast.placeBet": "{name}, ¡haz tu apuesta!",
+    "game.toast.shooterRoll": "{name}, ¡lanza los dados!",
+    "game.toast.shooterWinsNatural": "¡7 u 11! ¡{name} gana!",
+    "game.toast.bettorWinsCraps": "¡Craps! ¡{name} gana!",
+    "game.toast.pointSet": "¡El punto es {point}! Igualalo para ganar.",
+    "game.toast.shooterWinsPoint": "¡Punto igualado! ¡{name} gana!",
+    "game.toast.bettorWinsSeven": "¡Seven out! ¡{name} gana!",
+    "game.toast.continueRolling": "Sacaste {sum}. ¡Sigue lanzando!",
+    "game.toast.comparingRolls": "{name} sacó {sum}. Comparando...",
   },
 };
 
