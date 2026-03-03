@@ -34,5 +34,8 @@ export const styles = StyleSheet.create({
   pipTransparent: {
     backgroundColor: "transparent",
   },
+  dieDisabled: {
+    opacity: 0.5,
+  },
 });
 

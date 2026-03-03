@@ -101,7 +101,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           <Dices
             diceValues={diceValues}
             isRolling={isRolling}
-            onPress={isProcessing ? () => {} : onDicePress}
+            onPress={
+              isProcessing || isBetSheetVisible ? () => {} : onDicePress
+            }
+            disabled={isProcessing || isBetSheetVisible}
           />
           <View style={styles.middleSlot}>
             {isInitialPhase ? (

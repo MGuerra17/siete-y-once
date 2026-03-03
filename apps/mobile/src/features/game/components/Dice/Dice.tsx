@@ -3,7 +3,12 @@ import { Animated, Pressable, View } from "react-native";
 import { styles } from "./Dice.styles";
 import { DiceProps } from "./Dice.types";
 
-export const Dice: React.FC<DiceProps> = ({ value, isRolling, onPress }) => {
+export const Dice: React.FC<DiceProps> = ({
+  value,
+  isRolling,
+  onPress,
+  disabled,
+}) => {
   const scale = useRef(new Animated.Value(1)).current;
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -163,7 +168,13 @@ export const Dice: React.FC<DiceProps> = ({ value, isRolling, onPress }) => {
 
   return (
     <Pressable onPress={onPress}>
-      <Animated.View style={[styles.die, { transform: [{ scale }] }]}>
+      <Animated.View
+        style={[
+          styles.die,
+          { transform: [{ scale }] },
+          disabled && styles.dieDisabled,
+        ]}
+      >
         {renderPips(displayValue)}
       </Animated.View>
     </Pressable>
