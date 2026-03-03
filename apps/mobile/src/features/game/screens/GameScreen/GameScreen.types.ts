@@ -29,4 +29,8 @@ export type GameScreenProps = {
   onGoHome: () => void;
   onShare?: () => void;
   captureRef?: RefObject<View | null>;
+  isExitConfirmVisible: boolean;
+  onExitPress: () => void;
+  onExitConfirm: () => void;
+  onExitCancel: () => void;
 };

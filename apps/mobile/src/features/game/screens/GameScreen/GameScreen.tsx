@@ -1,10 +1,13 @@
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
+import { colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { BetBill } from "../../components/BetBill/BetBill";
 import { BetBottomSheet } from "../../components/BetBottomSheet/BetBottomSheet";
 import { DiceSumDisplay } from "../../components/DiceSumDisplay/DiceSumDisplay";
 import { Dices } from "../../components/Dices/Dices";
+import { ExitConfirmModal } from "../../components/ExitConfirmModal/ExitConfirmModal";
 import { GameEndModal } from "../../components/GameEndModal/GameEndModal";
 import { GameToast } from "../../components/GameToast/GameToast";
 import { PlayerInfo } from "../../components/PlayerInfo/PlayerInfo";
@@ -42,6 +45,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onGoHome,
   onShare,
   captureRef,
+  isExitConfirmVisible,
+  onExitPress,
+  onExitConfirm,
+  onExitCancel,
 }) => {
   const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
   const isGameOver = phase === GamePhase.GAME_OVER;
@@ -61,6 +68,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     <ScreenContainer>
       <View style={{ flex: 1 }}>
         <View style={styles.top}>
+          <View style={styles.topRow}>
+            <Pressable style={styles.exitButton} onPress={onExitPress}>
+              <Ionicons
+                name="exit-outline"
+                size={18}
+                color={colors.textSecondary}
+              />
+            </Pressable>
+          </View>
           <PlayerInfo
             id={player2.id}
             name={player2.name}
@@ -101,9 +117,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           <Dices
             diceValues={diceValues}
             isRolling={isRolling}
-            onPress={
-              isProcessing || isBetSheetVisible ? () => {} : onDicePress
-            }
+            onPress={isProcessing || isBetSheetVisible ? () => {} : onDicePress}
             disabled={isProcessing || isBetSheetVisible}
           />
           <View style={styles.middleSlot}>
@@ -155,6 +169,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           isFirstBet={isFirstBet}
           onClose={() => {}}
           onSubmitBet={onSubmitBet}
+        />
+
+        <ExitConfirmModal
+          visible={isExitConfirmVisible}
+          onConfirm={onExitConfirm}
+          onCancel={onExitCancel}
         />
 
         {isGameOver && (

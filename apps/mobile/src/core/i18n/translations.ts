@@ -43,7 +43,11 @@ type TranslationKeys =
   | "game.toast.bettorWinsSeven"
   | "game.toast.continueRolling"
   | "game.toast.comparingRolls"
-  | "game.keepBetLabel";
+  | "game.keepBetLabel"
+  | "game.exitModal.title"
+  | "game.exitModal.message"
+  | "game.exitModal.cancelCta"
+  | "game.exitModal.exitCta";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -93,6 +97,10 @@ export const translations: TranslationRecord = {
     "game.toast.continueRolling": "Rolled {sum}. Keep rolling!",
     "game.toast.comparingRolls": "{name} rolled {sum}! Comparing...",
     "game.keepBetLabel": "Keep bet",
+    "game.exitModal.title": "Exit game?",
+    "game.exitModal.message": "Your progress will be lost.",
+    "game.exitModal.cancelCta": "Cancel",
+    "game.exitModal.exitCta": "Exit",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -139,6 +147,10 @@ export const translations: TranslationRecord = {
     "game.toast.continueRolling": "Sacaste {sum}. ¡Sigue lanzando!",
     "game.toast.comparingRolls": "{name} sacó {sum}. Comparando...",
     "game.keepBetLabel": "Mantener apuesta",
+    "game.exitModal.title": "¿Salir del juego?",
+    "game.exitModal.message": "Se perderá tu progreso.",
+    "game.exitModal.cancelCta": "Cancelar",
+    "game.exitModal.exitCta": "Salir",
   },
 };
 

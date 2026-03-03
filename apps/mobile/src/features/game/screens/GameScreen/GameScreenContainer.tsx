@@ -1,7 +1,7 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { useRouter } from "expo-router";
-import React, { useEffect, useRef } from "react";
-import { View } from "react-native";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { BackHandler, View } from "react-native";
 import { GamePhase } from "../../enums/GamePhase";
 import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
 import { useGameStore } from "../../store/gameStore";
@@ -12,6 +12,7 @@ export const GameScreenContainer: React.FC = () => {
   const router = useRouter();
   const { t } = useLanguage();
   const engine = useLocalGameEngine();
+  const navigation = useNavigation();
 
   const phase = useGameStore((s) => s.phase);
   const player1 = useGameStore((s) => s.player1);
@@ -34,16 +35,36 @@ export const GameScreenContainer: React.FC = () => {
   const resetGame = useGameStore((s) => s.resetGame);
   const setToastMessage = useGameStore((s) => s.setToastMessage);
 
+  const [isExitConfirmVisible, setIsExitConfirmVisible] = useState(false);
+
   const activeBetter =
     bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
   const maxBet = activeBetter?.currentMoney ?? minBet;
 
   useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: false,
+    });
     if (phase === GamePhase.INITIAL_ROLL) {
       setToastMessage(t("game.toast.rollToDetermineShooter"));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (isExitConfirmVisible) {
+          setIsExitConfirmVisible(false);
+        } else {
+          setIsExitConfirmVisible(true);
+        }
+        return true;
+      }
+    );
+    return () => subscription.remove();
+  }, [isExitConfirmVisible]);
 
   useEffect(() => {
     if (currentBet > 0 && currentBet >= maxBet) {
@@ -53,7 +74,11 @@ export const GameScreenContainer: React.FC = () => {
 
   const handleGoHome = () => {
     resetGame();
-    router.replace("/");
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
   };
 
   const captureRef = useRef<View>(null);
@@ -62,7 +87,18 @@ export const GameScreenContainer: React.FC = () => {
   const loser = winner.id === "player1" ? player2 : player1;
 
   const handleShare = () => {
-    shareGameResult(captureRef, winner, loser, totalRounds, t as (key: string) => string);
+    shareGameResult(
+      captureRef,
+      winner,
+      loser,
+      totalRounds,
+      t as (key: string) => string,
+    );
+  };
+
+  const handleExitConfirm = () => {
+    setIsExitConfirmVisible(false);
+    handleGoHome();
   };
 
   return (
@@ -92,6 +128,10 @@ export const GameScreenContainer: React.FC = () => {
       onGoHome={handleGoHome}
       onShare={handleShare}
       captureRef={captureRef}
+      isExitConfirmVisible={isExitConfirmVisible}
+      onExitPress={() => setIsExitConfirmVisible(true)}
+      onExitConfirm={handleExitConfirm}
+      onExitCancel={() => setIsExitConfirmVisible(false)}
     />
   );
 };
