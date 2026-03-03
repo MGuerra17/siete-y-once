@@ -41,7 +41,8 @@ type TranslationKeys =
   | "game.toast.shooterWinsPoint"
   | "game.toast.bettorWinsSeven"
   | "game.toast.continueRolling"
-  | "game.toast.comparingRolls";
+  | "game.toast.comparingRolls"
+  | "game.keepBetLabel";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -64,12 +65,12 @@ export const translations: TranslationRecord = {
     "game.rollDiceCta": "Roll dices",
     "game.betSheet.title": "It's time for bet",
     "game.betSheet.currentBetLabel": "Current bet",
-    "game.betSheet.newTotalBetLabel": "New total bet",
+    "game.betSheet.newTotalBetLabel": "New bet",
     "game.betSheet.firstBetCta": "Bet",
     "game.betSheet.keepCta": "Keep",
     "game.betSheet.increaseCta": "Increase",
     "game.endModal.title": "Game over",
-    "game.endModal.subtitle": "Congrats, {winnerName}!",
+    "game.endModal.subtitle": "Congrats!",
     "game.endModal.roundsLabel": "Rounds played",
     "game.endModal.goHomeCta": "Finish",
     "game.endModal.shareCta": "Share",
@@ -88,6 +89,7 @@ export const translations: TranslationRecord = {
     "game.toast.bettorWinsSeven": "Seven out! {name} wins!",
     "game.toast.continueRolling": "Rolled {sum}. Keep rolling!",
     "game.toast.comparingRolls": "{name} rolled {sum}! Comparing...",
+    "game.keepBetLabel": "Keep bet",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -107,12 +109,12 @@ export const translations: TranslationRecord = {
     "game.rollDiceCta": "Lanzar dados",
     "game.betSheet.title": "Es momento de apostar",
     "game.betSheet.currentBetLabel": "Apuesta actual",
-    "game.betSheet.newTotalBetLabel": "Nueva apuesta total",
+    "game.betSheet.newTotalBetLabel": "Nueva apuesta",
     "game.betSheet.firstBetCta": "Apostar",
     "game.betSheet.keepCta": "Mantener",
     "game.betSheet.increaseCta": "Aumentar",
     "game.endModal.title": "Fin de la partida",
-    "game.endModal.subtitle": "¡Felicidades, {winnerName}!",
+    "game.endModal.subtitle": "¡Felicidades!",
     "game.endModal.roundsLabel": "Rondas jugadas",
     "game.endModal.goHomeCta": "Finalizar",
     "game.endModal.shareCta": "Compartir",
@@ -131,6 +133,7 @@ export const translations: TranslationRecord = {
     "game.toast.bettorWinsSeven": "¡Seven out! ¡{name} gana!",
     "game.toast.continueRolling": "Sacaste {sum}. ¡Sigue lanzando!",
     "game.toast.comparingRolls": "{name} sacó {sum}. Comparando...",
+    "game.keepBetLabel": "Mantener apuesta",
   },
 };
 
