@@ -10,6 +10,8 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    zIndex: 1000,
+    elevation: 1000,
     backgroundColor: "rgba(0,0,0,0.7)",
     alignItems: "center",
     justifyContent: "center",
@@ -86,6 +88,12 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: 999,
     backgroundColor: colors.border,
+  },
+  playerName: {
+    marginTop: spacing.xs,
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    color: colors.textPrimary,
   },
   labelPillText: {
     fontSize: fontSize.xs,

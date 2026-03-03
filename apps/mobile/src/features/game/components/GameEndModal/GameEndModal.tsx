@@ -38,7 +38,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
         <View style={styles.header}>
           <Text style={styles.title}>{t("game.endModal.title")}</Text>
           <Text style={styles.subtitle}>
-            {t("game.endModal.subtitle").replace("{winnerName}", winnerName)}
+            {t("game.endModal.subtitle")}
           </Text>
         </View>
 
@@ -60,6 +60,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
                 {t("game.endModal.winnerLabel")}
               </Text>
             </View>
+            <Text style={styles.playerName}>{winnerName}</Text>
           </View>
 
           <View style={styles.loserAvatarWrapper}>
@@ -74,6 +75,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
                 {t("game.endModal.loserLabel")}
               </Text>
             </View>
+            <Text style={styles.playerName}>{loserName}</Text>
           </View>
         </View>
 
