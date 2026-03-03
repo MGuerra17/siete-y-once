@@ -1,10 +1,10 @@
+import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
+import { GamePhase } from "../../enums/GamePhase";
 import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
 import { useGameStore } from "../../store/gameStore";
 import { GameScreen } from "./GameScreen";
-import { GamePhase } from "../../enums/GamePhase";
-import { useLanguage } from "@/src/core/hooks/useLanguage";
 
 export const GameScreenContainer: React.FC = () => {
   const router = useRouter();
@@ -22,19 +22,32 @@ export const GameScreenContainer: React.FC = () => {
   const currentBet = useGameStore((s) => s.currentBet);
   const minBet = useGameStore((s) => s.minBet);
   const bettorId = useGameStore((s) => s.bettorId);
+  const keepBet = useGameStore((s) => s.keepBet);
   const isBetSheetVisible = useGameStore((s) => s.isBetSheetVisible);
+  const setKeepBet = useGameStore((s) => s.setKeepBet);
   const toastMessage = useGameStore((s) => s.toastMessage);
   const totalRounds = useGameStore((s) => s.totalRounds);
+  const lastWinnerId = useGameStore((s) => s.lastWinnerId);
+  const lastWinningNumber = useGameStore((s) => s.lastWinningNumber);
   const resetGame = useGameStore((s) => s.resetGame);
   const setToastMessage = useGameStore((s) => s.setToastMessage);
-  const setActiveInitialRoller = useGameStore((s) => s.setActiveInitialRoller);
+
+  const activeBetter =
+    bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
+  const maxBet = activeBetter?.currentMoney ?? minBet;
 
   useEffect(() => {
     if (phase === GamePhase.INITIAL_ROLL) {
-      setActiveInitialRoller("player1");
       setToastMessage(t("game.toast.rollToDetermineShooter"));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (currentBet > 0 && currentBet >= maxBet) {
+      setKeepBet(true);
+    }
+  }, [currentBet, maxBet, setKeepBet]);
 
   const handleGoHome = () => {
     resetGame();
@@ -54,12 +67,17 @@ export const GameScreenContainer: React.FC = () => {
       currentBet={currentBet}
       minBet={minBet}
       bettorId={bettorId}
+      keepBet={keepBet}
       isBetSheetVisible={isBetSheetVisible}
       toastMessage={toastMessage}
       totalRounds={totalRounds}
+      lastWinnerId={lastWinnerId}
+      lastWinningNumber={lastWinningNumber}
       onDicePress={engine.onDicePress}
       onOpenBetSheet={engine.onOpenBetSheet}
+      onKeepBetChange={setKeepBet}
       onSubmitBet={engine.onBetSubmit}
+      onDismissToast={() => setToastMessage(null)}
       onGoHome={handleGoHome}
     />
   );

@@ -12,6 +12,7 @@ export type GameStoreState = {
   bettorId: PlayerId | null;
   currentBet: number;
   minBet: number;
+  keepBet: boolean;
   point: number | null;
   diceValues: [number, number];
   isRolling: boolean;
@@ -21,6 +22,8 @@ export type GameStoreState = {
   totalRounds: number;
   initialRolls: Partial<Record<PlayerId, number>>;
   activeInitialRollerId: PlayerId | null;
+  lastWinnerId: PlayerId | null;
+  lastWinningNumber: number | null;
 };
 
 type GameStoreActions = {
@@ -36,11 +39,13 @@ type GameStoreActions = {
   setShooterAndBettor: (shooterId: PlayerId, bettorId: PlayerId) => void;
   openBetSheet: () => void;
   closeBetSheet: () => void;
+  setKeepBet: (value: boolean) => void;
   setBet: (amount: number) => void;
   setMinBet: (amount: number) => void;
   setPlayerActive: (playerId: PlayerId, active: boolean) => void;
   setPlayerWinningNumbers: (playerId: PlayerId, numbers: number[]) => void;
   setPlayerRole: (playerId: PlayerId, role: PlayerRole) => void;
+  setLastWin: (winnerId: PlayerId, winningNumber: number) => void;
   applyRoundResult: (winnerId: PlayerId, bet: number) => void;
   incrementRounds: () => void;
   resetForNewRound: (newShooterId: PlayerId) => void;
@@ -49,24 +54,29 @@ type GameStoreActions = {
 
 export type GameStore = GameStoreState & GameStoreActions;
 
-const createInitialPlayer = (id: PlayerId, role: PlayerRole): Player => ({
+const createInitialPlayer = (
+  id: PlayerId,
+  role: PlayerRole,
+  isActive: boolean = false,
+): Player => ({
   id,
   name: undefined,
   imageUri: null,
   currentMoney: INITIAL_MONEY,
   currentRole: role,
   winningNumbers: [],
-  isActive: false,
+  isActive,
 });
 
 const createInitialState = (): GameStoreState => ({
   phase: GamePhase.INITIAL_ROLL,
-  player1: createInitialPlayer("player1", PlayerRole.BETTER),
-  player2: createInitialPlayer("player2", PlayerRole.ROLLER),
+  player1: createInitialPlayer("player1", PlayerRole.BETTER, true),
+  player2: createInitialPlayer("player2", PlayerRole.ROLLER, false),
   shooterId: null,
   bettorId: null,
-  currentBet: MIN_BET,
+  currentBet: 0,
   minBet: MIN_BET,
+  keepBet: false,
   point: null,
   diceValues: [1, 1],
   isRolling: false,
@@ -76,6 +86,8 @@ const createInitialState = (): GameStoreState => ({
   totalRounds: 0,
   initialRolls: {},
   activeInitialRollerId: "player1",
+  lastWinnerId: null,
+  lastWinningNumber: null,
 });
 
 const updatePlayer = (
@@ -83,8 +95,10 @@ const updatePlayer = (
   playerId: PlayerId,
   patch: Partial<Player>,
 ): Pick<GameStoreState, "player1" | "player2"> => ({
-  player1: playerId === "player1" ? { ...state.player1, ...patch } : state.player1,
-  player2: playerId === "player2" ? { ...state.player2, ...patch } : state.player2,
+  player1:
+    playerId === "player1" ? { ...state.player1, ...patch } : state.player1,
+  player2:
+    playerId === "player2" ? { ...state.player2, ...patch } : state.player2,
 });
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -110,11 +124,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   resetInitialRolls: () => set({ initialRolls: {} }),
 
   setActiveInitialRoller: (playerId) =>
-    set((state) => ({
-      activeInitialRollerId: playerId,
-      ...updatePlayer(state, "player1", { isActive: playerId === "player1" }),
-      ...updatePlayer(state, "player2", { isActive: playerId === "player2" }),
-    })),
+    set((state) => {
+      const p1 = updatePlayer(state, "player1", { isActive: playerId === "player1" });
+      const p2 = updatePlayer(state, "player2", { isActive: playerId === "player2" });
+      return {
+        activeInitialRollerId: playerId,
+        player1: p1.player1,
+        player2: p2.player2,
+      };
+    }),
 
   setShooterAndBettor: (shooterId, bettorId) =>
     set((state) => {
@@ -125,77 +143,101 @@ export const useGameStore = create<GameStore>((set, get) => ({
         bettorId,
         player1: {
           ...state.player1,
-          currentRole: state.player1.id === shooterId ? shooterRole : bettorRole,
+          currentRole:
+            state.player1.id === shooterId ? shooterRole : bettorRole,
           isActive: state.player1.id === bettorId,
           winningNumbers: state.player1.id === shooterId ? [7, 11] : [2, 3, 12],
         },
         player2: {
           ...state.player2,
-          currentRole: state.player2.id === shooterId ? shooterRole : bettorRole,
+          currentRole:
+            state.player2.id === shooterId ? shooterRole : bettorRole,
           isActive: state.player2.id === bettorId,
           winningNumbers: state.player2.id === shooterId ? [7, 11] : [2, 3, 12],
         },
       };
     }),
 
-  openBetSheet: () =>
-    set((state) => ({
-      isBetSheetVisible: true,
-      currentBet: state.minBet,
-    })),
+  openBetSheet: () => set({ isBetSheetVisible: true }),
 
   closeBetSheet: () => set({ isBetSheetVisible: false }),
+
+  setKeepBet: (value) => set({ keepBet: value }),
 
   setBet: (amount) => set({ currentBet: amount }),
 
   setMinBet: (amount) => set({ minBet: amount }),
 
   setPlayerActive: (playerId, active) =>
-    set((state) => ({ ...updatePlayer(state, playerId, { isActive: active }) })),
+    set((state) => ({
+      ...updatePlayer(state, playerId, { isActive: active }),
+    })),
 
   setPlayerWinningNumbers: (playerId, numbers) =>
-    set((state) => ({ ...updatePlayer(state, playerId, { winningNumbers: numbers }) })),
+    set((state) => ({
+      ...updatePlayer(state, playerId, { winningNumbers: numbers }),
+    })),
 
   setPlayerRole: (playerId, role) =>
-    set((state) => ({ ...updatePlayer(state, playerId, { currentRole: role }) })),
+    set((state) => ({
+      ...updatePlayer(state, playerId, { currentRole: role }),
+    })),
+
+  setLastWin: (winnerId, winningNumber) =>
+    set({ lastWinnerId: winnerId, lastWinningNumber: winningNumber }),
 
   applyRoundResult: (winnerId, bet) =>
     set((state) => {
       const loserId: PlayerId = winnerId === "player1" ? "player2" : "player1";
       const loser = state[loserId];
       const actualPayout = Math.min(bet, loser.currentMoney);
+      const winnerUpdate = updatePlayer(state, winnerId, {
+        currentMoney: state[winnerId].currentMoney + actualPayout,
+      });
+      const loserUpdate = updatePlayer(state, loserId, {
+        currentMoney: loser.currentMoney - actualPayout,
+      });
       return {
-        ...updatePlayer(state, winnerId, {
-          currentMoney: state[winnerId].currentMoney + actualPayout,
-        }),
-        ...updatePlayer(state, loserId, {
-          currentMoney: loser.currentMoney - actualPayout,
-        }),
+        player1: winnerId === "player1" ? winnerUpdate.player1 : loserUpdate.player1,
+        player2: winnerId === "player2" ? winnerUpdate.player2 : loserUpdate.player2,
       };
     }),
 
-  incrementRounds: () => set((state) => ({ totalRounds: state.totalRounds + 1 })),
+  incrementRounds: () =>
+    set((state) => ({ totalRounds: state.totalRounds + 1 })),
 
   resetForNewRound: (newShooterId) =>
     set((state) => {
-      const newBettorId: PlayerId = newShooterId === "player1" ? "player2" : "player1";
+      const newBettorId: PlayerId =
+        newShooterId === "player1" ? "player2" : "player1";
       return {
         point: null,
-        currentBet: state.minBet,
+        currentBet: 0,
+        keepBet: false,
         isBetSheetVisible: false,
+        lastWinnerId: null,
+        lastWinningNumber: null,
         shooterId: newShooterId,
         bettorId: newBettorId,
         player1: {
           ...state.player1,
-          currentRole: state.player1.id === newShooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
+          currentRole:
+            state.player1.id === newShooterId
+              ? PlayerRole.ROLLER
+              : PlayerRole.BETTER,
           isActive: state.player1.id === newBettorId,
-          winningNumbers: state.player1.id === newShooterId ? [7, 11] : [2, 3, 12],
+          winningNumbers:
+            state.player1.id === newShooterId ? [7, 11] : [2, 3, 12],
         },
         player2: {
           ...state.player2,
-          currentRole: state.player2.id === newShooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
+          currentRole:
+            state.player2.id === newShooterId
+              ? PlayerRole.ROLLER
+              : PlayerRole.BETTER,
           isActive: state.player2.id === newBettorId,
-          winningNumbers: state.player2.id === newShooterId ? [7, 11] : [2, 3, 12],
+          winningNumbers:
+            state.player2.id === newShooterId ? [7, 11] : [2, 3, 12],
         },
       };
     }),

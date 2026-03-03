@@ -13,11 +13,16 @@ export type GameScreenProps = {
   currentBet: number;
   minBet: number;
   bettorId: PlayerId | null;
+  keepBet: boolean;
   isBetSheetVisible: boolean;
   toastMessage: string | null;
   totalRounds: number;
+  lastWinnerId: PlayerId | null;
+  lastWinningNumber: number | null;
   onDicePress: () => void;
   onOpenBetSheet: () => void;
+  onKeepBetChange: (value: boolean) => void;
   onSubmitBet: (amount: number) => void;
+  onDismissToast: () => void;
   onGoHome: () => void;
 };

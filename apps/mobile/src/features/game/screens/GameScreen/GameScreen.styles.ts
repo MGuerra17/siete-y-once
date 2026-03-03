@@ -10,10 +10,19 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  middleSlot: {
+    height: 120,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   bottom: {
     flex: 1,
     justifyContent: "flex-end",
     paddingBottom: spacing.lg,
+  },
+  betBillContainer: {
+    alignItems: "center",
+    marginVertical: spacing.sm,
   },
 });
 
