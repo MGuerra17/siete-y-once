@@ -3,6 +3,7 @@ import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { BackHandler, View } from "react-native";
 import { GamePhase } from "../../enums/GamePhase";
+import { useDiceRollSound } from "../../hooks/useDiceRollSound";
 import { useLocalGameEngine } from "../../hooks/useLocalGameEngine";
 import { useGameStore } from "../../store/gameStore";
 import { shareGameResult } from "../../utils/shareGameResult";
@@ -15,11 +16,12 @@ export const GameScreenContainer: React.FC = () => {
   const navigation = useNavigation();
 
   const phase = useGameStore((s) => s.phase);
+  const isRolling = useGameStore((s) => s.isRolling);
+  useDiceRollSound(isRolling);
   const player1 = useGameStore((s) => s.player1);
   const player2 = useGameStore((s) => s.player2);
   const point = useGameStore((s) => s.point);
   const diceValues = useGameStore((s) => s.diceValues);
-  const isRolling = useGameStore((s) => s.isRolling);
   const isProcessing = useGameStore((s) => s.isProcessing);
   const initialRolls = useGameStore((s) => s.initialRolls);
   const currentBet = useGameStore((s) => s.currentBet);

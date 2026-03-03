@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 100,
+    top: spacing.lg,
     left: spacing.lg,
     right: spacing.lg,
     alignItems: "center",
