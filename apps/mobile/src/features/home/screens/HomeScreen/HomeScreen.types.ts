@@ -1,12 +1,14 @@
-import type { Language } from "@/src/core/i18n/translations";
+export type GameMode = "online" | "offline";
 
 export type HomeScreenProps = {
-  title: string;
   startLabel: string;
-  language: Language;
-  englishLabel: string;
-  spanishLabel: string;
+  modeOnlineLabel: string;
+  modeOfflineLabel: string;
+  modeOfflineDescription: string;
+  modeOnlineDescription: string;
+  comingSoonLabel: string;
   onStart: () => void;
-  onSelectLanguage: (language: Language) => void;
+  onOpenConfig: () => void;
+  selectedMode: GameMode;
+  onSelectMode: (mode: GameMode) => void;
 };
-

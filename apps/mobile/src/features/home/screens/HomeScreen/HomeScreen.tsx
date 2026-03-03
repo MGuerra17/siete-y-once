@@ -1,77 +1,146 @@
-import React from "react";
-import { Pressable, View, Text } from "react-native";
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
-import { AppText } from "@/src/core/components/AppText/AppText";
+import { colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { Image } from "expo-image";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import { StartGameButton } from "../../components/StartGameButton/StartGameButton";
-import type { Language } from "@/src/core/i18n/translations";
 import { styles } from "./HomeScreen.styles";
-import { HomeScreenProps } from "./HomeScreen.types";
-
-const isActiveLanguage = (current: Language, target: Language) =>
-  current === target;
+import type { HomeScreenProps } from "./HomeScreen.types";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
-  title,
   startLabel,
-  language,
-  englishLabel,
-  spanishLabel,
+  modeOnlineLabel,
+  modeOfflineLabel,
+  modeOfflineDescription,
+  modeOnlineDescription,
+  comingSoonLabel,
   onStart,
-  onSelectLanguage,
+  onOpenConfig,
+  selectedMode,
+  onSelectMode,
 }) => {
+  const isOfflineSelected = selectedMode === "offline";
+
   return (
     <ScreenContainer>
       <View style={styles.container}>
-        <View style={styles.title}>
-          <AppText variant="title" align="center">
-            {title}
-          </AppText>
+        <View style={styles.backgroundLayer} pointerEvents="none">
+          <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
+          <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
+          <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
+          <View style={[styles.backgroundCircle, styles.backgroundCircle4]} />
         </View>
-
-        <View style={styles.startButton}>
-          <StartGameButton label={startLabel} onPress={onStart} />
-        </View>
-
-        <View style={styles.languageRow}>
-          <View style={styles.languageToggle}>
+        <BlurView
+          intensity={100}
+          tint="dark"
+          pointerEvents="none"
+          style={styles.blurLayer}
+        />
+        <View style={styles.contentLayer}>
+          <View style={styles.header}>
             <Pressable
-              onPress={() => onSelectLanguage("en")}
-              style={[
-                styles.languageButton,
-                isActiveLanguage(language, "en") && styles.languageButtonActive,
+              onPress={onOpenConfig}
+              style={({ pressed }) => [
+                styles.configButton,
+                pressed && styles.configButtonPressed,
               ]}
             >
-              <Text
-                style={[
-                  styles.languageButtonText,
-                  isActiveLanguage(language, "en") &&
-                    styles.languageButtonTextActive,
-                ]}
-              >
-                {englishLabel}
-              </Text>
+              <Ionicons
+                name="settings-outline"
+                size={24}
+                color={colors.textPrimary}
+              />
             </Pressable>
-            <Pressable
-              onPress={() => onSelectLanguage("es")}
-              style={[
-                styles.languageButton,
-                isActiveLanguage(language, "es") && styles.languageButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.languageButtonText,
-                  isActiveLanguage(language, "es") &&
-                    styles.languageButtonTextActive,
-                ]}
-              >
-                {spanishLabel}
-              </Text>
-            </Pressable>
+          </View>
+
+          <View style={styles.content}>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("@/assets/images/seven-eleven-logo.png")}
+                style={styles.logo}
+                contentFit="contain"
+              />
+            </View>
+
+            <View style={styles.modeSelector}>
+              <View style={styles.modeRow}>
+                <Pressable
+                  onPress={() => onSelectMode("offline")}
+                  style={[
+                    styles.modeCard,
+                    isOfflineSelected && styles.modeCardActive,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.modeCardIconWrapper,
+                      isOfflineSelected && styles.modeCardIconWrapperActive,
+                    ]}
+                  >
+                    <Ionicons
+                      name="phone-portrait-outline"
+                      size={24}
+                      color={
+                        isOfflineSelected ? colors.primary : colors.textPrimary
+                      }
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.modeLabel,
+                      isOfflineSelected && styles.modeLabelActive,
+                    ]}
+                  >
+                    {modeOfflineLabel}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.modeDescription,
+                      isOfflineSelected && styles.modeDescriptionActive,
+                    ]}
+                  >
+                    {modeOfflineDescription}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => {}}
+                  style={[styles.modeCard, styles.modeCardDisabled]}
+                  disabled
+                >
+                  <View style={styles.comingSoonBadge}>
+                    <Text style={styles.comingSoonText}>{comingSoonLabel}</Text>
+                  </View>
+                  <View style={styles.modeCardIconWrapperDisabled}>
+                    <Ionicons
+                      name="globe-outline"
+                      size={24}
+                      color={colors.textSecondary}
+                    />
+                  </View>
+                  <Text style={[styles.modeLabel, styles.modeLabelDisabled]}>
+                    {modeOnlineLabel}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.modeDescription,
+                      styles.modeDescriptionDisabled,
+                    ]}
+                  >
+                    {modeOnlineDescription}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <View style={styles.startButton}>
+              <StartGameButton label={startLabel} onPress={onStart} />
+            </View>
           </View>
         </View>
       </View>
     </ScreenContainer>
   );
 };
-

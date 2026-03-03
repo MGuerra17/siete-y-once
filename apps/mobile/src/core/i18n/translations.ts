@@ -5,6 +5,16 @@ type TranslationKeys =
   | "home.startGame"
   | "home.languageEnglish"
   | "home.languageSpanish"
+  | "home.configTitle"
+  | "home.languageLabel"
+  | "home.soundLabel"
+  | "home.soundOn"
+  | "home.soundOff"
+  | "home.modeOnline"
+  | "home.modeOffline"
+  | "home.modeOfflineDescription"
+  | "home.modeOnlineDescription"
+  | "home.comingSoon"
   | "game.player1DefaultName"
   | "game.player2DefaultName"
   | "game.currentMoney"
@@ -57,6 +67,16 @@ export const translations: TranslationRecord = {
     "home.startGame": "Start game",
     "home.languageEnglish": "English",
     "home.languageSpanish": "Spanish",
+    "home.configTitle": "Settings",
+    "home.languageLabel": "Language",
+    "home.soundLabel": "Sound",
+    "home.soundOn": "On",
+    "home.soundOff": "Off",
+    "home.modeOnline": "Online",
+    "home.modeOffline": "Offline",
+    "home.modeOfflineDescription": "Play locally with friends on the same device",
+    "home.modeOnlineDescription": "Challenge players worldwide",
+    "home.comingSoon": "Coming soon",
     "game.player1DefaultName": "Player 1",
     "game.player2DefaultName": "Player 2",
     "game.currentMoney": "Money",
@@ -107,6 +127,16 @@ export const translations: TranslationRecord = {
     "home.startGame": "Comenzar juego",
     "home.languageEnglish": "Inglés",
     "home.languageSpanish": "Español",
+    "home.configTitle": "Configuración",
+    "home.languageLabel": "Idioma",
+    "home.soundLabel": "Sonido",
+    "home.soundOn": "Activado",
+    "home.soundOff": "Desactivado",
+    "home.modeOnline": "En línea",
+    "home.modeOffline": "Sin conexión",
+    "home.modeOfflineDescription": "Juega localmente con amigos en el mismo dispositivo",
+    "home.modeOnlineDescription": "Desafía a jugadores de todo el mundo",
+    "home.comingSoon": "Próximamente",
     "game.player1DefaultName": "Jugador 1",
     "game.player2DefaultName": "Jugador 2",
     "game.currentMoney": "Dinero",

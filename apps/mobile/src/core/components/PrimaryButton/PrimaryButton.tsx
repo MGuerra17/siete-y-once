@@ -7,6 +7,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   label,
   onPress,
   disabled,
+  style,
 }) => {
   return (
     <Pressable
@@ -14,6 +15,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         styles.base,
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled,
+        style,
       ]}
       onPress={onPress}
       disabled={disabled}
