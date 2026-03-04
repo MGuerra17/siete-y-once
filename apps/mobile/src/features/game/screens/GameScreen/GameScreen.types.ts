@@ -3,6 +3,7 @@ import type { View } from "react-native";
 import type { GamePhase } from "@/src/features/game/enums/GamePhase";
 import type { Player, PlayerId } from "@/src/features/game/types";
 
+/** Props for the presentational GameScreen component, fully driven by the container. */
 export type GameScreenProps = {
   player1: Player;
   player2: Player;

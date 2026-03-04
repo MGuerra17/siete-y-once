@@ -3,6 +3,7 @@ import { Pressable, Text } from "react-native";
 import { styles } from "@/src/core/components/PrimaryButton/PrimaryButton.styles";
 import { PrimaryButtonProps } from "@/src/core/components/PrimaryButton/PrimaryButton.types";
 
+/** Full-width primary call-to-action button with press and disabled states. */
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   label,
   onPress,

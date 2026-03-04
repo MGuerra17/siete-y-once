@@ -4,6 +4,7 @@ import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
 import type { Player, PlayerId } from "@/src/features/game/types";
 
+/** All observable game state managed by Zustand. */
 export type GameStoreState = {
   phase: GamePhase;
   player1: Player;
@@ -26,6 +27,7 @@ export type GameStoreState = {
   lastWinningNumber: number | null;
 };
 
+/** Actions that mutate game state. */
 type GameStoreActions = {
   setPhase: (phase: GamePhase) => void;
   setIsRolling: (value: boolean) => void;
@@ -33,9 +35,13 @@ type GameStoreActions = {
   setDiceValues: (values: [number, number]) => void;
   setToastMessage: (message: string | null) => void;
   setPoint: (point: number | null) => void;
+  /** Records a player's initial-roll sum for shooter determination. */
   setInitialRoll: (playerId: PlayerId, sum: number) => void;
+  /** Clears both initial rolls so a new tie-breaking round can start. */
   resetInitialRolls: () => void;
+  /** Sets the active roller during the initial-roll phase and toggles isActive. */
   setActiveInitialRoller: (playerId: PlayerId | null) => void;
+  /** Assigns shooter/bettor roles, updates winning numbers, and activates the bettor. */
   setShooterAndBettor: (shooterId: PlayerId, bettorId: PlayerId) => void;
   openBetSheet: () => void;
   closeBetSheet: () => void;
@@ -45,10 +51,20 @@ type GameStoreActions = {
   setPlayerActive: (playerId: PlayerId, active: boolean) => void;
   setPlayerWinningNumbers: (playerId: PlayerId, numbers: number[]) => void;
   setPlayerRole: (playerId: PlayerId, role: PlayerRole) => void;
+  /** Stores the last round winner and winning dice sum for the WinningNumberFlyer. */
   setLastWin: (winnerId: PlayerId, winningNumber: number) => void;
+  /**
+   * Transfers money between players. The actual payout is capped at the
+   * loser's remaining money so balances never go negative.
+   */
   applyRoundResult: (winnerId: PlayerId, bet: number) => void;
   incrementRounds: () => void;
+  /**
+   * Resets per-round state (point, bet, keepBet, UI flags) and swaps
+   * shooter/bettor roles for the next round.
+   */
   resetForNewRound: (newShooterId: PlayerId) => void;
+  /** Returns the entire store to its initial state. */
   resetGame: () => void;
 };
 
@@ -90,6 +106,7 @@ const createInitialState = (): GameStoreState => ({
   lastWinningNumber: null,
 });
 
+/** Immutably patches one player while leaving the other unchanged. */
 const updatePlayer = (
   state: GameStoreState,
   playerId: PlayerId,
@@ -101,7 +118,11 @@ const updatePlayer = (
     playerId === "player2" ? { ...state.player2, ...patch } : state.player2,
 });
 
-export const useGameStore = create<GameStore>((set, get) => ({
+/**
+ * Central Zustand store for all game state.
+ * Used imperatively by the game engine (`getState()`) and reactively by components.
+ */
+export const useGameStore = create<GameStore>((set) => ({
   ...createInitialState(),
 
   setPhase: (phase) => set({ phase }),
@@ -135,28 +156,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
 
   setShooterAndBettor: (shooterId, bettorId) =>
-    set((state) => {
-      const shooterRole = PlayerRole.ROLLER;
-      const bettorRole = PlayerRole.BETTER;
-      return {
-        shooterId,
-        bettorId,
-        player1: {
-          ...state.player1,
-          currentRole:
-            state.player1.id === shooterId ? shooterRole : bettorRole,
-          isActive: state.player1.id === bettorId,
-          winningNumbers: state.player1.id === shooterId ? [7, 11] : [2, 3, 12],
-        },
-        player2: {
-          ...state.player2,
-          currentRole:
-            state.player2.id === shooterId ? shooterRole : bettorRole,
-          isActive: state.player2.id === bettorId,
-          winningNumbers: state.player2.id === shooterId ? [7, 11] : [2, 3, 12],
-        },
-      };
-    }),
+    set((state) => ({
+      shooterId,
+      bettorId,
+      player1: {
+        ...state.player1,
+        currentRole: state.player1.id === shooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
+        isActive: state.player1.id === bettorId,
+        winningNumbers: state.player1.id === shooterId ? [7, 11] : [2, 3, 12],
+      },
+      player2: {
+        ...state.player2,
+        currentRole: state.player2.id === shooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
+        isActive: state.player2.id === bettorId,
+        winningNumbers: state.player2.id === shooterId ? [7, 11] : [2, 3, 12],
+      },
+    })),
 
   openBetSheet: () => set({ isBetSheetVisible: true }),
 
@@ -222,9 +237,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         player1: {
           ...state.player1,
           currentRole:
-            state.player1.id === newShooterId
-              ? PlayerRole.ROLLER
-              : PlayerRole.BETTER,
+            state.player1.id === newShooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
           isActive: state.player1.id === newBettorId,
           winningNumbers:
             state.player1.id === newShooterId ? [7, 11] : [2, 3, 12],
@@ -232,9 +245,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         player2: {
           ...state.player2,
           currentRole:
-            state.player2.id === newShooterId
-              ? PlayerRole.ROLLER
-              : PlayerRole.BETTER,
+            state.player2.id === newShooterId ? PlayerRole.ROLLER : PlayerRole.BETTER,
           isActive: state.player2.id === newBettorId,
           winningNumbers:
             state.player2.id === newShooterId ? [7, 11] : [2, 3, 12],

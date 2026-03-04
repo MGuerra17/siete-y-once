@@ -5,6 +5,7 @@ import { colors } from "@/src/theme/colors";
 import { styles } from "@/src/core/components/Avatar/Avatar.styles";
 import { AvatarProps } from "@/src/core/components/Avatar/Avatar.types";
 
+/** Circular avatar with image or person-icon fallback. Highlights when `isActive` is true. */
 export const Avatar: React.FC<AvatarProps> = ({
   imageUri,
   isActive = false,

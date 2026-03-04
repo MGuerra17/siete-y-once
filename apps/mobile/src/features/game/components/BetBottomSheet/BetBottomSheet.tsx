@@ -1,16 +1,28 @@
-import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";
 import { BetControlButton } from "@/src/features/game/components/BetControlButton/BetControlButton";
 import { BetSubmitButton } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton";
+import { BET_STEPS } from "@/src/features/game/constants/game.constants";
+import { useBetControls } from "@/src/features/game/hooks/useBetControls";
 import { styles } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.styles";
 import type { BetBottomSheetProps } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.types";
+
+const renderBackdrop = (backdropProps: BottomSheetBackdropProps) => (
+  <BottomSheetBackdrop
+    {...backdropProps}
+    appearsOnIndex={0}
+    disappearsOnIndex={-1}
+    pressBehavior="none"
+  />
+);
 
 export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
   visible,
@@ -23,60 +35,27 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
   onSubmitBet,
 }) => {
   const { t } = useLanguage();
-  const [sheetBet, setSheetBet] = useState(currentBet);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  useEffect(() => {
-    if (!bottomSheetRef.current) {
-      return;
-    }
+  const {
+    sheetBet,
+    handleAdjust,
+    canDecreaseBy,
+    canIncreaseBy,
+    isValidBet,
+    primaryCtaLabel,
+    resetTo,
+  } = useBetControls({ initialBet: isFirstBet ? minBet : currentBet, minBet, maxBet, isFirstBet, currentBet });
 
+  useEffect(() => {
+    if (!bottomSheetRef.current) return;
     if (visible) {
-      const initialBet = isFirstBet ? minBet : currentBet;
-      setSheetBet(initialBet);
+      resetTo(isFirstBet ? minBet : currentBet);
       bottomSheetRef.current.present();
     } else {
       bottomSheetRef.current.dismiss();
     }
-  }, [visible, currentBet, isFirstBet, minBet]);
-
-  const clampBet = (value: number) => {
-    if (value < minBet) return minBet;
-    if (value > maxBet) return maxBet;
-    return value;
-  };
-
-  const handleAdjust = (delta: number) => {
-    setSheetBet((prev) => clampBet(prev + delta));
-  };
-
-  // Players cannot decrease an existing bet; only increase or keep
-  const canDecreaseBy = (delta: number) =>
-    isFirstBet && sheetBet - delta >= minBet;
-  const canIncreaseBy = (delta: number) => sheetBet + delta <= maxBet;
-
-  const isValidBet = sheetBet >= minBet && sheetBet <= maxBet;
-
-  const primaryCtaLabel = useMemo(() => {
-    if (isFirstBet) {
-      return t("game.betSheet.firstBetCta");
-    }
-
-    if (sheetBet === currentBet) {
-      return t("game.betSheet.keepCta");
-    }
-
-    return t("game.betSheet.increaseCta");
-  }, [currentBet, isFirstBet, sheetBet, t]);
-
-  const renderBackdrop = (backdropProps: any) => (
-    <BottomSheetBackdrop
-      {...backdropProps}
-      appearsOnIndex={0}
-      disappearsOnIndex={-1}
-      pressBehavior="none"
-    />
-  );
+  }, [visible, currentBet, isFirstBet, minBet, resetTo]);
 
   return (
     <BottomSheetModal
@@ -118,50 +97,50 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
           <View style={styles.primaryRow}>
             <View style={styles.primaryColumn}>
               <BetControlButton
-                label="-50k"
+                label={`-${BET_STEPS[0] / 1000}k`}
                 type="decrease"
-                disabled={!canDecreaseBy(50_000)}
-                onPress={() => handleAdjust(-50_000)}
+                disabled={!canDecreaseBy(BET_STEPS[0])}
+                onPress={() => handleAdjust(-BET_STEPS[0])}
               />
               <View style={styles.secondaryRow}>
                 <BetControlButton
-                  label="-100k"
+                  label={`-${BET_STEPS[1] / 1000}k`}
                   type="decrease"
                   small
-                  disabled={!canDecreaseBy(100_000)}
-                  onPress={() => handleAdjust(-100_000)}
+                  disabled={!canDecreaseBy(BET_STEPS[1])}
+                  onPress={() => handleAdjust(-BET_STEPS[1])}
                 />
                 <BetControlButton
-                  label="-200k"
+                  label={`-${BET_STEPS[2] / 1000}k`}
                   type="decrease"
                   small
-                  disabled={!canDecreaseBy(200_000)}
-                  onPress={() => handleAdjust(-200_000)}
+                  disabled={!canDecreaseBy(BET_STEPS[2])}
+                  onPress={() => handleAdjust(-BET_STEPS[2])}
                 />
               </View>
             </View>
 
             <View style={styles.primaryColumn}>
               <BetControlButton
-                label="+50k"
+                label={`+${BET_STEPS[0] / 1000}k`}
                 type="increase"
-                disabled={!canIncreaseBy(50_000)}
-                onPress={() => handleAdjust(50_000)}
+                disabled={!canIncreaseBy(BET_STEPS[0])}
+                onPress={() => handleAdjust(BET_STEPS[0])}
               />
               <View style={styles.secondaryRow}>
                 <BetControlButton
-                  label="+100k"
+                  label={`+${BET_STEPS[1] / 1000}k`}
                   type="increase"
                   small
-                  disabled={!canIncreaseBy(100_000)}
-                  onPress={() => handleAdjust(100_000)}
+                  disabled={!canIncreaseBy(BET_STEPS[1])}
+                  onPress={() => handleAdjust(BET_STEPS[1])}
                 />
                 <BetControlButton
-                  label="+200k"
+                  label={`+${BET_STEPS[2] / 1000}k`}
                   type="increase"
                   small
-                  disabled={!canIncreaseBy(200_000)}
-                  onPress={() => handleAdjust(200_000)}
+                  disabled={!canIncreaseBy(BET_STEPS[2])}
+                  onPress={() => handleAdjust(BET_STEPS[2])}
                 />
               </View>
             </View>

@@ -3,10 +3,7 @@ import { View } from "react-native";
 import { AppText } from "@/src/core/components/AppText/AppText";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { styles } from "@/src/features/game/components/PointDisplay/PointDisplay.styles";
-
-type PointDisplayProps = {
-  point: number;
-};
+import type { PointDisplayProps } from "@/src/features/game/components/PointDisplay/PointDisplay.types";
 
 export const PointDisplay: React.FC<PointDisplayProps> = ({ point }) => {
   const { t } = useLanguage();

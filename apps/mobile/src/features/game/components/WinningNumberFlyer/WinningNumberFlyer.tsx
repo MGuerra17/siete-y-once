@@ -1,14 +1,15 @@
+import type { WinningNumberFlyerProps } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer.types";
+import type { PlayerId } from "@/src/features/game/types";
 import { colors } from "@/src/theme/colors";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text } from "react-native";
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import type { PlayerId } from "@/src/features/game/types";
+import { scheduleOnRN } from "react-native-worklets";
 
 const { width, height } = Dimensions.get("window");
 
@@ -17,7 +18,10 @@ type Point = { x: number; y: number };
 // Approximate screen-space positions based on the 3-section layout (top / middle / bottom, each flex:1)
 // player2 (top section, row-reversed → winning numbers on the LEFT)
 // player1 (bottom section, normal → winning numbers on the RIGHT)
-const CURVE_CONFIG: Record<PlayerId, { start: Point; ctrl: Point; end: Point }> = {
+const CURVE_CONFIG: Record<
+  PlayerId,
+  { start: Point; ctrl: Point; end: Point }
+> = {
   player2: {
     start: { x: width * 0.18, y: height * 0.15 },
     // arc sweeps toward the right before coming down to center
@@ -41,11 +45,6 @@ function qBezier(p0: number, p1: number, p2: number, t: number): number {
   return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
 }
 
-export type WinningNumberFlyerProps = {
-  number: number;
-  playerId: PlayerId;
-};
-
 export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
   number,
   playerId,
@@ -61,11 +60,11 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
       (finished) => {
         "worklet";
         if (finished) {
-          runOnJS(setVisible)(false);
+          scheduleOnRN(() => setVisible(false));
         }
       },
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => {

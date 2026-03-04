@@ -6,6 +6,7 @@ type ScreenContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
+/** Full-screen safe-area wrapper with the app's background color. */
 export const ScreenContainer: React.FC<ScreenContainerProps> = ({
   children,
   style,

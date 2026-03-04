@@ -7,11 +7,17 @@ import {
   delay,
   evaluateFirstRoll,
   evaluateSubsequentRoll,
+  getOpponentId,
+  getPlayerName,
   isPlayerBroke,
   rollDice,
 } from "@/src/features/game/utils/gameUtils";
 
 type ToastFn = (key: string, params?: Record<string, string | number>) => string;
+
+// ---------------------------------------------------------------------------
+// Shared helpers used by multiple engine flows
+// ---------------------------------------------------------------------------
 
 const performRoll = async (store: GameStore): Promise<[number, number]> => {
   store.setIsRolling(true);
@@ -24,32 +30,84 @@ const performRoll = async (store: GameStore): Promise<[number, number]> => {
 
 const checkGameOver = (store: GameStore): boolean => {
   const { player1, player2, minBet } = store;
-  if (isPlayerBroke(player1.currentMoney, minBet)) {
-    store.setPhase(GamePhase.GAME_OVER);
-    return true;
-  }
-  if (isPlayerBroke(player2.currentMoney, minBet)) {
+  if (isPlayerBroke(player1.currentMoney, minBet) || isPlayerBroke(player2.currentMoney, minBet)) {
     store.setPhase(GamePhase.GAME_OVER);
     return true;
   }
   return false;
 };
 
-const startNextRound = async (
+/** Activates the shooter, deactivates the bettor, shows the roll toast, and transitions phase. */
+const activateShooterForRoll = (
   store: GameStore,
+  shooterId: PlayerId,
+  toast: ToastFn,
+  nextPhase: GamePhase,
+): void => {
+  const name = getPlayerName(store, shooterId);
+  store.setToastMessage(toast("game.toast.shooterRoll", { name }));
+  store.setPlayerActive(shooterId, true);
+  store.setPlayerActive(getOpponentId(shooterId), false);
+  store.setPhase(nextPhase);
+};
+
+/**
+ * After a non-winning roll during the point phase, either keeps the bet and
+ * lets the shooter roll again, or reopens the bet sheet for the bettor.
+ */
+const handleKeepBetOrReopen = (
+  store: GameStore,
+  shooterId: PlayerId,
+  bettorId: PlayerId,
+  toast: ToastFn,
+): void => {
+  if (store.keepBet) {
+    activateShooterForRoll(store, shooterId, toast, GamePhase.WAITING_FOR_ROLL);
+  } else {
+    const name = getPlayerName(store, bettorId);
+    store.setToastMessage(toast("game.toast.placeBet", { name }));
+    store.openBetSheet();
+  }
+};
+
+/** Resolves a round win: shows toast, applies payout, and starts the next round. */
+const resolveRoundWin = async (
+  getStore: () => GameStore,
+  winnerId: PlayerId,
+  toastKey: string,
+  sum: number,
+  bet: number,
+  toast: ToastFn,
+): Promise<void> => {
+  const store = getStore();
+  const name = getPlayerName(store, winnerId);
+  store.setToastMessage(toast(toastKey, { name, amount: bet }));
+  store.setLastWin(winnerId, sum);
+  store.applyRoundResult(winnerId, bet);
+  await delay(RESULT_DELAY_MS);
+  await startNextRound(getStore, winnerId, toast);
+};
+
+const startNextRound = async (
+  getStore: () => GameStore,
   winnerId: PlayerId,
   toast: ToastFn,
 ): Promise<void> => {
+  const store = getStore();
   store.incrementRounds();
   if (checkGameOver(store)) return;
   store.resetForNewRound(winnerId);
   store.setPhase(GamePhase.BET_PLACEMENT);
   await delay(RESULT_DELAY_MS / 2);
-  const bettorId = store.bettorId;
-  const bettorName = bettorId === "player1" ? store.player1.name || "Player 1" : store.player2.name || "Player 2";
-  store.setToastMessage(toast("game.toast.placeBet", { name: bettorName }));
-  store.openBetSheet();
+  const freshStore = getStore();
+  const bettorName = getPlayerName(freshStore, freshStore.bettorId!);
+  freshStore.setToastMessage(toast("game.toast.placeBet", { name: bettorName }));
+  freshStore.openBetSheet();
 };
+
+// ---------------------------------------------------------------------------
+// Engine factory
+// ---------------------------------------------------------------------------
 
 export const createLocalGameEngine = (
   getStore: () => GameStore,
@@ -65,18 +123,9 @@ export const createLocalGameEngine = (
     const sum = d1 + d2;
     store.setInitialRoll(activeInitialRollerId, sum);
 
-    const rollerName =
-      activeInitialRollerId === "player1"
-        ? store.player1.name || "Player 1"
-        : store.player2.name || "Player 2";
-
-    const otherRollerId: PlayerId =
-      activeInitialRollerId === "player1" ? "player2" : "player1";
-    const otherRollerName =
-      otherRollerId === "player1"
-        ? store.player1.name || "Player 1"
-        : store.player2.name || "Player 2";
-
+    const rollerName = getPlayerName(store, activeInitialRollerId);
+    const otherRollerId = getOpponentId(activeInitialRollerId);
+    const otherRollerName = getPlayerName(store, otherRollerId);
     const alreadyRolled = initialRolls[otherRollerId] !== undefined;
 
     if (!alreadyRolled) {
@@ -91,9 +140,7 @@ export const createLocalGameEngine = (
 
     const otherSum = initialRolls[otherRollerId]!;
 
-    store.setToastMessage(
-      toast("game.toast.comparingRolls", { name: rollerName, sum }),
-    );
+    store.setToastMessage(toast("game.toast.comparingRolls", { name: rollerName, sum }));
     await delay(RESULT_DELAY_MS);
 
     if (sum === otherSum) {
@@ -108,28 +155,18 @@ export const createLocalGameEngine = (
     const p1Sum = activeInitialRollerId === "player1" ? sum : otherSum;
     const p2Sum = activeInitialRollerId === "player2" ? sum : otherSum;
     const shooterId: PlayerId = p1Sum > p2Sum ? "player1" : "player2";
-    const bettorId: PlayerId = shooterId === "player1" ? "player2" : "player1";
+    const bettorId: PlayerId = getOpponentId(shooterId);
 
-    getStore().setShooterAndBettor(shooterId, bettorId);
-    const shooterName =
-      shooterId === "player1"
-        ? getStore().player1.name || "Player 1"
-        : getStore().player2.name || "Player 2";
-    getStore().setToastMessage(
-      toast("game.toast.shooterDetermined", { name: shooterName }),
-    );
+    const s = getStore();
+    s.setShooterAndBettor(shooterId, bettorId);
+    s.setToastMessage(toast("game.toast.shooterDetermined", { name: getPlayerName(s, shooterId) }));
     await delay(RESULT_DELAY_MS);
 
-    getStore().setPhase(GamePhase.BET_PLACEMENT);
-    const bettorName =
-      bettorId === "player1"
-        ? getStore().player1.name || "Player 1"
-        : getStore().player2.name || "Player 2";
-    getStore().setToastMessage(
-      toast("game.toast.placeBet", { name: bettorName }),
-    );
-    getStore().openBetSheet();
-    getStore().setIsProcessing(false);
+    const s2 = getStore();
+    s2.setPhase(GamePhase.BET_PLACEMENT);
+    s2.setToastMessage(toast("game.toast.placeBet", { name: getPlayerName(s2, bettorId) }));
+    s2.openBetSheet();
+    s2.setIsProcessing(false);
   };
 
   const handleShooterRoll = async (): Promise<void> => {
@@ -139,71 +176,25 @@ export const createLocalGameEngine = (
     const [d1, d2] = await performRoll(store);
     const sum = d1 + d2;
 
-    const currentStore = getStore();
-    const { phase, point, currentBet, shooterId, bettorId } = currentStore;
-
-    const shooterName =
-      shooterId === "player1"
-        ? currentStore.player1.name || "Player 1"
-        : currentStore.player2.name || "Player 2";
-    const bettorName =
-      bettorId === "player1"
-        ? currentStore.player1.name || "Player 1"
-        : currentStore.player2.name || "Player 2";
+    const s = getStore();
+    const { phase, point, currentBet, shooterId, bettorId } = s;
 
     if (phase === GamePhase.SHOOTER_ROLLING) {
       const outcome = evaluateFirstRoll(sum);
 
       if (outcome === RoundOutcome.SHOOTER_WINS_NATURAL) {
-        currentStore.setToastMessage(
-          toast("game.toast.shooterWinsNatural", { name: shooterName, amount: currentBet }),
-        );
-        currentStore.setLastWin(shooterId!, sum);
-        currentStore.applyRoundResult(shooterId!, currentBet);
-        await delay(RESULT_DELAY_MS);
-        await startNextRound(getStore(), shooterId!, toast);
+        await resolveRoundWin(getStore, shooterId!, "game.toast.shooterWinsNatural", sum, currentBet, toast);
       } else if (outcome === RoundOutcome.BETTOR_WINS_CRAPS) {
-        currentStore.setToastMessage(
-          toast("game.toast.bettorWinsCraps", { name: bettorName, amount: currentBet }),
-        );
-        currentStore.setLastWin(bettorId!, sum);
-        currentStore.applyRoundResult(bettorId!, currentBet);
-        await delay(RESULT_DELAY_MS);
-        await startNextRound(getStore(), bettorId!, toast);
+        await resolveRoundWin(getStore, bettorId!, "game.toast.bettorWinsCraps", sum, currentBet, toast);
       } else {
-        currentStore.setPoint(sum);
-        currentStore.setPlayerWinningNumbers(shooterId!, [sum]);
-        currentStore.setPlayerWinningNumbers(bettorId!, [7]);
-        currentStore.setToastMessage(
-          toast("game.toast.pointSet", { point: sum }),
-        );
+        s.setPoint(sum);
+        s.setPlayerWinningNumbers(shooterId!, [sum]);
+        s.setPlayerWinningNumbers(bettorId!, [7]);
+        s.setToastMessage(toast("game.toast.pointSet", { point: sum }));
         await delay(RESULT_DELAY_MS);
-        getStore().setPhase(GamePhase.POINT_PHASE);
-        const store = getStore();
-        if (store.keepBet) {
-          const shooterNameNext =
-            shooterId === "player1"
-              ? store.player1.name || "Player 1"
-              : store.player2.name || "Player 2";
-          store.setToastMessage(
-            toast("game.toast.shooterRoll", { name: shooterNameNext }),
-          );
-          store.setPlayerActive(shooterId!, true);
-          store.setPlayerActive(
-            shooterId === "player1" ? "player2" : "player1",
-            false,
-          );
-          store.setPhase(GamePhase.WAITING_FOR_ROLL);
-        } else {
-          const bettorNameNext =
-            bettorId === "player1"
-              ? store.player1.name || "Player 1"
-              : store.player2.name || "Player 2";
-          store.setToastMessage(
-            toast("game.toast.placeBet", { name: bettorNameNext }),
-          );
-          store.openBetSheet();
-        }
+        const fresh = getStore();
+        fresh.setPhase(GamePhase.POINT_PHASE);
+        handleKeepBetOrReopen(fresh, shooterId!, bettorId!, toast);
         getStore().setIsProcessing(false);
         return;
       }
@@ -211,52 +202,15 @@ export const createLocalGameEngine = (
       const outcome = evaluateSubsequentRoll(sum, point!);
 
       if (outcome === RoundOutcome.SHOOTER_WINS_POINT) {
-        currentStore.setToastMessage(
-          toast("game.toast.shooterWinsPoint", { name: shooterName, amount: currentBet }),
-        );
-        currentStore.setLastWin(shooterId!, sum);
-        currentStore.applyRoundResult(shooterId!, currentBet);
-        await delay(RESULT_DELAY_MS);
-        await startNextRound(getStore(), shooterId!, toast);
+        await resolveRoundWin(getStore, shooterId!, "game.toast.shooterWinsPoint", sum, currentBet, toast);
       } else if (outcome === RoundOutcome.BETTOR_WINS_SEVEN) {
-        currentStore.setToastMessage(
-          toast("game.toast.bettorWinsSeven", { name: bettorName, amount: currentBet }),
-        );
-        currentStore.setLastWin(bettorId!, sum);
-        currentStore.applyRoundResult(bettorId!, currentBet);
-        await delay(RESULT_DELAY_MS);
-        await startNextRound(getStore(), bettorId!, toast);
+        await resolveRoundWin(getStore, bettorId!, "game.toast.bettorWinsSeven", sum, currentBet, toast);
       } else {
-        currentStore.setToastMessage(
-          toast("game.toast.continueRolling", { sum }),
-        );
+        s.setToastMessage(toast("game.toast.continueRolling", { sum }));
         await delay(RESULT_DELAY_MS);
-        getStore().setPhase(GamePhase.POINT_PHASE);
-        const store = getStore();
-        if (store.keepBet) {
-          const shooterNameNext =
-            shooterId === "player1"
-              ? store.player1.name || "Player 1"
-              : store.player2.name || "Player 2";
-          store.setToastMessage(
-            toast("game.toast.shooterRoll", { name: shooterNameNext }),
-          );
-          store.setPlayerActive(shooterId!, true);
-          store.setPlayerActive(
-            shooterId === "player1" ? "player2" : "player1",
-            false,
-          );
-          store.setPhase(GamePhase.WAITING_FOR_ROLL);
-        } else {
-          const bettorNameNext =
-            bettorId === "player1"
-              ? store.player1.name || "Player 1"
-              : store.player2.name || "Player 2";
-          store.setToastMessage(
-            toast("game.toast.placeBet", { name: bettorNameNext }),
-          );
-          store.openBetSheet();
-        }
+        const fresh = getStore();
+        fresh.setPhase(GamePhase.POINT_PHASE);
+        handleKeepBetOrReopen(fresh, shooterId!, bettorId!, toast);
         getStore().setIsProcessing(false);
         return;
       }
@@ -274,10 +228,7 @@ export const createLocalGameEngine = (
       handleInitialRoll();
       return;
     }
-    if (
-      phase === GamePhase.SHOOTER_ROLLING ||
-      phase === GamePhase.WAITING_FOR_ROLL
-    ) {
+    if (phase === GamePhase.SHOOTER_ROLLING || phase === GamePhase.WAITING_FOR_ROLL) {
       handleShooterRoll();
     }
   };
@@ -288,41 +239,12 @@ export const createLocalGameEngine = (
     store.closeBetSheet();
 
     const { phase, shooterId } = store;
+    if (!shooterId) return;
 
     if (phase === GamePhase.BET_PLACEMENT) {
-      const shooterName =
-        shooterId === "player1"
-          ? store.player1.name || "Player 1"
-          : store.player2.name || "Player 2";
-      store.setToastMessage(
-        toast("game.toast.shooterRoll", { name: shooterName }),
-      );
-      store.setPlayerActive(
-        shooterId === "player1" ? "player1" : "player2",
-        true,
-      );
-      store.setPlayerActive(
-        shooterId === "player1" ? "player2" : "player1",
-        false,
-      );
-      store.setPhase(GamePhase.SHOOTER_ROLLING);
+      activateShooterForRoll(store, shooterId, toast, GamePhase.SHOOTER_ROLLING);
     } else if (phase === GamePhase.POINT_PHASE) {
-      const shooterName =
-        shooterId === "player1"
-          ? store.player1.name || "Player 1"
-          : store.player2.name || "Player 2";
-      store.setToastMessage(
-        toast("game.toast.shooterRoll", { name: shooterName }),
-      );
-      store.setPlayerActive(
-        shooterId === "player1" ? "player1" : "player2",
-        true,
-      );
-      store.setPlayerActive(
-        shooterId === "player1" ? "player2" : "player1",
-        false,
-      );
-      store.setPhase(GamePhase.WAITING_FOR_ROLL);
+      activateShooterForRoll(store, shooterId, toast, GamePhase.WAITING_FOR_ROLL);
     }
   };
 

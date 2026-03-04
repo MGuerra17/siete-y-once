@@ -5,7 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { ModeCard } from "@/src/features/home/components/ModeCard/ModeCard";
 import { StartGameButton } from "@/src/features/home/components/StartGameButton/StartGameButton";
 import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
 import type { HomeScreenProps } from "@/src/features/home/screens/HomeScreen/HomeScreen.types";
@@ -67,77 +68,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             <View style={styles.modeSelector}>
               <View style={styles.modeRow}>
-                <Pressable
+                <ModeCard
+                  icon="phone-portrait-outline"
+                  label={modeOfflineLabel}
+                  description={modeOfflineDescription}
+                  selected={isOfflineSelected}
                   onPress={() => onSelectMode(GameMode.OFFLINE)}
-                  style={[
-                    styles.modeCard,
-                    isOfflineSelected && styles.modeCardActive,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.modeCardIconWrapper,
-                      isOfflineSelected && styles.modeCardIconWrapperActive,
-                    ]}
-                  >
-                    <Ionicons
-                      name="phone-portrait-outline"
-                      size={24}
-                      color={
-                        isOfflineSelected ? colors.primary : colors.textPrimary
-                      }
-                    />
-                  </View>
-                  <Text
-                    style={[
-                      styles.modeLabel,
-                      isOfflineSelected && styles.modeLabelActive,
-                    ]}
-                  >
-                    {modeOfflineLabel}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.modeDescription,
-                      isOfflineSelected && styles.modeDescriptionActive,
-                    ]}
-                  >
-                    {modeOfflineDescription}
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={() => {}}
-                  style={[styles.modeCard, styles.modeCardDisabled]}
+                />
+                <ModeCard
+                  icon="globe-outline"
+                  label={modeOnlineLabel}
+                  description={modeOnlineDescription}
                   disabled
-                >
-                  <View style={styles.comingSoonBadge}>
-                    <Text style={styles.comingSoonText}>{comingSoonLabel}</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.modeCardIconWrapper,
-                      styles.modeCardIconWrapperDisabled,
-                    ]}
-                  >
-                    <Ionicons
-                      name="globe-outline"
-                      size={24}
-                      color={colors.textSecondary}
-                    />
-                  </View>
-                  <Text style={[styles.modeLabel, styles.modeLabelDisabled]}>
-                    {modeOnlineLabel}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.modeDescription,
-                      styles.modeDescriptionDisabled,
-                    ]}
-                  >
-                    {modeOnlineDescription}
-                  </Text>
-                </Pressable>
+                  badge={comingSoonLabel}
+                  onPress={() => {}}
+                />
               </View>
             </View>
 

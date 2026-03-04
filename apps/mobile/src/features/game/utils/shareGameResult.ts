@@ -5,7 +5,7 @@ import type { Player } from "@/src/features/game/types";
 
 type TranslateFn = (key: string) => string;
 
-
+/** Builds the localized share message by interpolating winner, loser, and rounds. */
 function buildShareMessage(
   t: TranslateFn,
   winnerName: string,
@@ -19,6 +19,7 @@ function buildShareMessage(
     .replace("{totalRounds}", String(totalRounds));
 }
 
+/** Returns the player's name or a localized default ("Player 1" / "Player 2"). */
 function getPlayerDisplayName(
   player: Player,
   t: TranslateFn,
@@ -30,6 +31,10 @@ function getPlayerDisplayName(
   return player.name ?? defaultName;
 }
 
+/**
+ * Captures a screenshot of the game-end view and opens the native share sheet.
+ * Falls back to text-only sharing if the screenshot fails.
+ */
 export async function shareGameResult(
   viewRef: RefObject<View | null>,
   winner: Player,
