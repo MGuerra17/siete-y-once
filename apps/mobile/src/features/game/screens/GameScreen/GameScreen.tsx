@@ -1,6 +1,4 @@
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
-import React from "react";
-import { StyleSheet, View } from "react-native";
 import { BetBottomSheet } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet";
 import { ExitConfirmModal } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal";
 import { GameEndModal } from "@/src/features/game/components/GameEndModal/GameEndModal";
@@ -8,10 +6,12 @@ import { GameToast } from "@/src/features/game/components/GameToast/GameToast";
 import { WinningNumberFlyer } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
-import { GameBoardTop } from "@/src/features/game/screens/GameScreen/GameBoardTop";
-import { GameBoardMiddle } from "@/src/features/game/screens/GameScreen/GameBoardMiddle";
 import { GameBoardBottom } from "@/src/features/game/screens/GameScreen/GameBoardBottom";
+import { GameBoardMiddle } from "@/src/features/game/screens/GameScreen/GameBoardMiddle";
+import { GameBoardTop } from "@/src/features/game/screens/GameScreen/GameBoardTop";
 import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   player1,

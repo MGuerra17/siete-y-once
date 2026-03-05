@@ -1,19 +1,19 @@
-import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
+import { styles } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.styles";
+import type { BetBottomSheetProps } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.types";
+import { BetControlButton } from "@/src/features/game/components/BetControlButton/BetControlButton";
+import { BetSubmitButton } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton";
+import { BET_STEPS } from "@/src/features/game/constants/game.constants";
+import { useBetControls } from "@/src/features/game/hooks/useBetControls";
+import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";
-import { BetControlButton } from "@/src/features/game/components/BetControlButton/BetControlButton";
-import { BetSubmitButton } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton";
-import { BET_STEPS } from "@/src/features/game/constants/game.constants";
-import { useBetControls } from "@/src/features/game/hooks/useBetControls";
-import { styles } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.styles";
-import type { BetBottomSheetProps } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.types";
 
 const renderBackdrop = (backdropProps: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop
@@ -45,7 +45,13 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
     isValidBet,
     primaryCtaLabel,
     resetTo,
-  } = useBetControls({ initialBet: isFirstBet ? minBet : currentBet, minBet, maxBet, isFirstBet, currentBet });
+  } = useBetControls({
+    initialBet: isFirstBet ? minBet : currentBet,
+    minBet,
+    maxBet,
+    isFirstBet,
+    currentBet,
+  });
 
   useEffect(() => {
     if (!bottomSheetRef.current) return;

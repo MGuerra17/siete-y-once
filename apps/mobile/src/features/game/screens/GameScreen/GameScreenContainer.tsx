@@ -1,17 +1,17 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef } from "react";
-import { View } from "react-native";
-import { useShallow } from "zustand/shallow";
 import { GameMode } from "@/src/features/game/enums/GameMode";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
 import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
 import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
 import { useLocalGameEngine } from "@/src/features/game/hooks/useLocalGameEngine";
+import { GameScreen } from "@/src/features/game/screens/GameScreen/GameScreen";
 import { useGameStore } from "@/src/features/game/store/gameStore";
 import { shareGameResult } from "@/src/features/game/utils/shareGameResult";
-import { GameScreen } from "@/src/features/game/screens/GameScreen/GameScreen";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef } from "react";
+import { View } from "react-native";
+import { useShallow } from "zustand/shallow";
 
 export const GameScreenContainer: React.FC = () => {
   const {
@@ -66,7 +66,10 @@ export const GameScreenContainer: React.FC = () => {
   const navigation = useNavigation();
 
   const engine = useLocalGameEngine();
-  const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(mode, isRolling);
+  const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(
+    mode,
+    isRolling,
+  );
 
   const { maxBet, winner, loser } = useGameDerivedState({
     player1,
@@ -109,7 +112,8 @@ export const GameScreenContainer: React.FC = () => {
 
   useEffect(() => {
     const justEnteredGameOver =
-      phase === GamePhase.GAME_OVER && prevPhase.current !== GamePhase.GAME_OVER;
+      phase === GamePhase.GAME_OVER &&
+      prevPhase.current !== GamePhase.GAME_OVER;
     prevPhase.current = phase;
     if (justEnteredGameOver) playWinGameSound();
   }, [phase, playWinGameSound]);
@@ -125,7 +129,13 @@ export const GameScreenContainer: React.FC = () => {
   const captureRef = useRef<View>(null);
 
   const handleShare = useCallback(() => {
-    shareGameResult(captureRef, winner, loser, totalRounds, t as (key: string) => string);
+    shareGameResult(
+      captureRef,
+      winner,
+      loser,
+      totalRounds,
+      t as (key: string) => string,
+    );
   }, [winner, loser, totalRounds, t]);
 
   return (

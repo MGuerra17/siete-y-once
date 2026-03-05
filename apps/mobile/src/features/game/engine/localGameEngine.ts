@@ -1,4 +1,7 @@
-import { RESULT_DELAY_MS, ROLL_DURATION_MS } from "@/src/features/game/constants/game.constants";
+import {
+  RESULT_DELAY_MS,
+  ROLL_DURATION_MS,
+} from "@/src/features/game/constants/game.constants";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { RoundOutcome } from "@/src/features/game/enums/RoundOutcome";
 import type { GameStore } from "@/src/features/game/store/gameStore";
@@ -13,7 +16,10 @@ import {
   rollDice,
 } from "@/src/features/game/utils/gameUtils";
 
-type ToastFn = (key: string, params?: Record<string, string | number>) => string;
+type ToastFn = (
+  key: string,
+  params?: Record<string, string | number>,
+) => string;
 
 // ---------------------------------------------------------------------------
 // Shared helpers used by multiple engine flows
@@ -30,7 +36,10 @@ const performRoll = async (store: GameStore): Promise<[number, number]> => {
 
 const checkGameOver = (store: GameStore): boolean => {
   const { player1, player2, minBet } = store;
-  if (isPlayerBroke(player1.currentMoney, minBet) || isPlayerBroke(player2.currentMoney, minBet)) {
+  if (
+    isPlayerBroke(player1.currentMoney, minBet) ||
+    isPlayerBroke(player2.currentMoney, minBet)
+  ) {
     store.setPhase(GamePhase.GAME_OVER);
     return true;
   }
@@ -101,7 +110,9 @@ const startNextRound = async (
   await delay(RESULT_DELAY_MS / 2);
   const freshStore = getStore();
   const bettorName = getPlayerName(freshStore, freshStore.bettorId!);
-  freshStore.setToastMessage(toast("game.toast.placeBet", { name: bettorName }));
+  freshStore.setToastMessage(
+    toast("game.toast.placeBet", { name: bettorName }),
+  );
   freshStore.openBetSheet();
 };
 
@@ -130,7 +141,11 @@ export const createLocalGameEngine = (
 
     if (!alreadyRolled) {
       store.setToastMessage(
-        toast("game.toast.playerRolled", { name: rollerName, sum, next: otherRollerName }),
+        toast("game.toast.playerRolled", {
+          name: rollerName,
+          sum,
+          next: otherRollerName,
+        }),
       );
       await delay(RESULT_DELAY_MS);
       store.setActiveInitialRoller(otherRollerId);
@@ -140,7 +155,9 @@ export const createLocalGameEngine = (
 
     const otherSum = initialRolls[otherRollerId]!;
 
-    store.setToastMessage(toast("game.toast.comparingRolls", { name: rollerName, sum }));
+    store.setToastMessage(
+      toast("game.toast.comparingRolls", { name: rollerName, sum }),
+    );
     await delay(RESULT_DELAY_MS);
 
     if (sum === otherSum) {
@@ -159,12 +176,18 @@ export const createLocalGameEngine = (
 
     const s = getStore();
     s.setShooterAndBettor(shooterId, bettorId);
-    s.setToastMessage(toast("game.toast.shooterDetermined", { name: getPlayerName(s, shooterId) }));
+    s.setToastMessage(
+      toast("game.toast.shooterDetermined", {
+        name: getPlayerName(s, shooterId),
+      }),
+    );
     await delay(RESULT_DELAY_MS);
 
     const s2 = getStore();
     s2.setPhase(GamePhase.BET_PLACEMENT);
-    s2.setToastMessage(toast("game.toast.placeBet", { name: getPlayerName(s2, bettorId) }));
+    s2.setToastMessage(
+      toast("game.toast.placeBet", { name: getPlayerName(s2, bettorId) }),
+    );
     s2.openBetSheet();
     s2.setIsProcessing(false);
   };
@@ -183,9 +206,23 @@ export const createLocalGameEngine = (
       const outcome = evaluateFirstRoll(sum);
 
       if (outcome === RoundOutcome.SHOOTER_WINS_NATURAL) {
-        await resolveRoundWin(getStore, shooterId!, "game.toast.shooterWinsNatural", sum, currentBet, toast);
+        await resolveRoundWin(
+          getStore,
+          shooterId!,
+          "game.toast.shooterWinsNatural",
+          sum,
+          currentBet,
+          toast,
+        );
       } else if (outcome === RoundOutcome.BETTOR_WINS_CRAPS) {
-        await resolveRoundWin(getStore, bettorId!, "game.toast.bettorWinsCraps", sum, currentBet, toast);
+        await resolveRoundWin(
+          getStore,
+          bettorId!,
+          "game.toast.bettorWinsCraps",
+          sum,
+          currentBet,
+          toast,
+        );
       } else {
         s.setPoint(sum);
         s.setPlayerWinningNumbers(shooterId!, [sum]);
@@ -202,9 +239,23 @@ export const createLocalGameEngine = (
       const outcome = evaluateSubsequentRoll(sum, point!);
 
       if (outcome === RoundOutcome.SHOOTER_WINS_POINT) {
-        await resolveRoundWin(getStore, shooterId!, "game.toast.shooterWinsPoint", sum, currentBet, toast);
+        await resolveRoundWin(
+          getStore,
+          shooterId!,
+          "game.toast.shooterWinsPoint",
+          sum,
+          currentBet,
+          toast,
+        );
       } else if (outcome === RoundOutcome.BETTOR_WINS_SEVEN) {
-        await resolveRoundWin(getStore, bettorId!, "game.toast.bettorWinsSeven", sum, currentBet, toast);
+        await resolveRoundWin(
+          getStore,
+          bettorId!,
+          "game.toast.bettorWinsSeven",
+          sum,
+          currentBet,
+          toast,
+        );
       } else {
         s.setToastMessage(toast("game.toast.continueRolling", { sum }));
         await delay(RESULT_DELAY_MS);
@@ -228,7 +279,10 @@ export const createLocalGameEngine = (
       handleInitialRoll();
       return;
     }
-    if (phase === GamePhase.SHOOTER_ROLLING || phase === GamePhase.WAITING_FOR_ROLL) {
+    if (
+      phase === GamePhase.SHOOTER_ROLLING ||
+      phase === GamePhase.WAITING_FOR_ROLL
+    ) {
       handleShooterRoll();
     }
   };
@@ -242,9 +296,19 @@ export const createLocalGameEngine = (
     if (!shooterId) return;
 
     if (phase === GamePhase.BET_PLACEMENT) {
-      activateShooterForRoll(store, shooterId, toast, GamePhase.SHOOTER_ROLLING);
+      activateShooterForRoll(
+        store,
+        shooterId,
+        toast,
+        GamePhase.SHOOTER_ROLLING,
+      );
     } else if (phase === GamePhase.POINT_PHASE) {
-      activateShooterForRoll(store, shooterId, toast, GamePhase.WAITING_FOR_ROLL);
+      activateShooterForRoll(
+        store,
+        shooterId,
+        toast,
+        GamePhase.WAITING_FOR_ROLL,
+      );
     }
   };
 

@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text } from "react-native";
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { scheduleOnRN } from "react-native-worklets";
 
 const { width, height } = Dimensions.get("window");
 
@@ -60,7 +60,7 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
       (finished) => {
         "worklet";
         if (finished) {
-          scheduleOnRN(() => setVisible(false));
+          runOnJS(setVisible)(false);
         }
       },
     );
