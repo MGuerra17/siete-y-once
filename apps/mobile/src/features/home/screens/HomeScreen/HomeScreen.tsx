@@ -37,6 +37,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <BlurView
           intensity={100}
           tint="dark"
+          experimentalBlurMethod="dimezisBlurView"
           pointerEvents="none"
           style={styles.blurLayer}
         />
