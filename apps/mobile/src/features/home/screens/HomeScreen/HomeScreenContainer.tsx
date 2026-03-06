@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useSound } from "@/src/core/hooks/useSound";
 import { HomeScreen } from "@/src/features/home/screens/HomeScreen/HomeScreen";
@@ -12,8 +12,21 @@ export const HomeScreenContainer: React.FC = () => {
   const { soundEnabled, setSoundEnabled } = useSound();
   const [configVisible, setConfigVisible] = useState(false);
   const [selectedMode, setSelectedMode] = useState<GameMode>(GameMode.OFFLINE);
+  const [isStarting, setIsStarting] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsStarting(false);
+    }, [setIsStarting]),
+  );
 
   const handleStart = () => {
+    if (isStarting) {
+      return;
+    }
+
+    setIsStarting(true);
+
     if (selectedMode === GameMode.OFFLINE) {
       router.push({ pathname: "/game", params: { mode: selectedMode } });
     }
@@ -23,6 +36,7 @@ export const HomeScreenContainer: React.FC = () => {
     <>
       <HomeScreen
         startLabel={t("home.startGame")}
+        startDisabled={isStarting}
         modeOnlineLabel={t("home.modeOnline")}
         modeOfflineLabel={t("home.modeOffline")}
         modeOfflineDescription={t("home.modeOfflineDescription")}

@@ -8,12 +8,14 @@ import { styles } from "@/src/features/home/components/StartGameButton/StartGame
 export const StartGameButton: React.FC<StartGameButtonProps> = ({
   label,
   onPress,
+  disabled,
 }) => {
   return (
     <View style={styles.container}>
       <PrimaryButton
         label={label}
         onPress={onPress}
+        disabled={disabled}
         style={styles.button}
       />
     </View>

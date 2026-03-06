@@ -13,6 +13,7 @@ import type { HomeScreenProps } from "@/src/features/home/screens/HomeScreen/Hom
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   startLabel,
+  startDisabled,
   modeOnlineLabel,
   modeOfflineLabel,
   modeOfflineDescription,
@@ -99,7 +100,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </View>
 
             <View style={styles.startButton}>
-              <StartGameButton label={startLabel} onPress={onStart} />
+              <StartGameButton
+                label={startLabel}
+                onPress={onStart}
+                disabled={startDisabled}
+              />
             </View>
           </View>
         </View>
