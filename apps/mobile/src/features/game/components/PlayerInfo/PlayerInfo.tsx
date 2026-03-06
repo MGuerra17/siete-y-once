@@ -19,6 +19,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   winningNumbers,
   isActive,
   activeWinningNumber = null,
+  countdownProgress = null,
 }) => {
   const variant = id === "player1" ? "primary" : "secondary";
   const { t } = useLanguage();
@@ -53,6 +54,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
           imageUri={imageUri ?? undefined}
           isActive={isActive}
           fallbackLabel={displayName}
+          countdownProgress={countdownProgress}
         />
       </View>
       <View

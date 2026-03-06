@@ -31,6 +31,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   totalRounds,
   lastWinnerId,
   lastWinningNumber,
+  actionCountdownProgress,
   onDicePress,
   onOpenBetSheet,
   onKeepBetChange,
@@ -64,6 +65,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           lastWinningNumber={lastWinningNumber}
           onExitPress={onExitPress}
           onKeepBetChange={onKeepBetChange}
+          countdownProgress={player2.isActive ? actionCountdownProgress : null}
         />
 
         <GameBoardMiddle
@@ -88,6 +90,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           lastWinnerId={lastWinnerId}
           lastWinningNumber={lastWinningNumber}
           onKeepBetChange={onKeepBetChange}
+          countdownProgress={player1.isActive ? actionCountdownProgress : null}
         />
 
         <GameToast message={toastMessage} onDismiss={onDismissToast} />
@@ -101,6 +104,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           isFirstBet={isFirstBet}
           onClose={() => {}}
           onSubmitBet={onSubmitBet}
+          countdownProgress={isBetSheetVisible ? actionCountdownProgress : null}
         />
 
         <ExitConfirmModal

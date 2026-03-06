@@ -9,4 +9,6 @@ export interface IGameEngine {
   onBetSubmit(amount: number): void;
   /** Re-opens the bet bottom sheet (e.g. if it was dismissed without submitting). */
   onOpenBetSheet(): void;
+  /** Performs the default action for the current phase (e.g. keep bet, roll dice) when timeout expires. */
+  performDefaultAction(): void;
 }

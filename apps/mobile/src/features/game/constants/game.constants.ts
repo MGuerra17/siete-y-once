@@ -13,6 +13,9 @@ export const ROLL_DURATION_MS = 500;
 /** Pause between revealing a result and transitioning to the next phase. */
 export const RESULT_DELAY_MS = 2_000;
 
+/** Time allowed for the active player to act before the default action runs. */
+export const ACTION_TIMEOUT_MS = 8_000;
+
 /** Dice sums that win for the shooter on the come-out roll (natural). */
 export const SHOOTER_NATURAL_WINS = [7, 11] as const;
 

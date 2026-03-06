@@ -16,6 +16,7 @@ type GameBoardBottomProps = {
   lastWinnerId: PlayerId | null;
   lastWinningNumber: number | null;
   onKeepBetChange: (value: boolean) => void;
+  countdownProgress?: number | null;
 };
 
 /** Bottom section of the game board: bet bill and local player info. */
@@ -29,6 +30,7 @@ export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
   lastWinnerId,
   lastWinningNumber,
   onKeepBetChange,
+  countdownProgress = null,
 }) => {
   const isBettor = bettorId === player.id;
 
@@ -54,6 +56,7 @@ export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
         winningNumbers={player.winningNumbers}
         isActive={player.isActive}
         activeWinningNumber={lastWinnerId === player.id ? lastWinningNumber : null}
+        countdownProgress={countdownProgress}
       />
     </View>
   );

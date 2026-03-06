@@ -1,6 +1,7 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { GameMode } from "@/src/features/game/enums/GameMode";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { useActionTimer } from "@/src/features/game/hooks/useActionTimer";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
 import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
 import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
@@ -66,6 +67,15 @@ export const GameScreenContainer: React.FC = () => {
   const navigation = useNavigation();
 
   const engine = useLocalGameEngine();
+
+  const actionCountdownProgress = useActionTimer({
+    phase,
+    isBetSheetVisible,
+    isProcessing,
+    isRolling,
+    onExpire: engine.performDefaultAction,
+  });
+
   const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(
     mode,
     isRolling,
@@ -157,6 +167,7 @@ export const GameScreenContainer: React.FC = () => {
       totalRounds={totalRounds}
       lastWinnerId={lastWinnerId}
       lastWinningNumber={lastWinningNumber}
+      actionCountdownProgress={actionCountdownProgress ?? null}
       onDicePress={engine.onDicePress}
       onOpenBetSheet={engine.onOpenBetSheet}
       onKeepBetChange={setKeepBet}

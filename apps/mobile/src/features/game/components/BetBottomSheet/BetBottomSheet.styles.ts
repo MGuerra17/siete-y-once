@@ -24,6 +24,19 @@ export const styles = StyleSheet.create({
     gap: spacing.md,
     backgroundColor: colors.surface,
   },
+  countdownTrack: {
+    height: 4,
+    width: "100%",
+    backgroundColor: colors.border,
+    borderRadius: 2,
+    overflow: "hidden",
+    marginBottom: spacing.sm,
+  },
+  countdownFill: {
+    height: "100%",
+    backgroundColor: colors.primary,
+    borderRadius: 2,
+  },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",

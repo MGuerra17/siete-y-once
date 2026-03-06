@@ -20,6 +20,7 @@ type GameBoardTopProps = {
   lastWinningNumber: number | null;
   onExitPress: () => void;
   onKeepBetChange: (value: boolean) => void;
+  countdownProgress?: number | null;
 };
 
 /** Top section of the game board: exit button, opponent info, and bet bill. */
@@ -34,6 +35,7 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
   lastWinningNumber,
   onExitPress,
   onKeepBetChange,
+  countdownProgress = null,
 }) => {
   const { t } = useLanguage();
   const isBettor = bettorId === player.id;
@@ -59,6 +61,7 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
         winningNumbers={player.winningNumbers}
         isActive={player.isActive}
         activeWinningNumber={lastWinnerId === player.id ? lastWinningNumber : null}
+        countdownProgress={countdownProgress}
       />
       <View style={styles.betBillContainer}>
         <BetBill

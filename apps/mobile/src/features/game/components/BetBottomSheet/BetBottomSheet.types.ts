@@ -9,5 +9,7 @@ export type BetBottomSheetProps = {
   isFirstBet: boolean;
   onClose: () => void;
   onSubmitBet: (bet: number) => void;
+  /** 0 = full, 1 = empty. When set, shows a decreasing countdown bar. */
+  countdownProgress?: number | null;
 };
 

@@ -22,6 +22,8 @@ export type GameScreenProps = {
   totalRounds: number;
   lastWinnerId: PlayerId | null;
   lastWinningNumber: number | null;
+  /** 0 = full ring, 1 = ring gone. Passed to the active player's avatar. */
+  actionCountdownProgress: number | null;
   onDicePress: () => void;
   onOpenBetSheet: () => void;
   onKeepBetChange: (value: boolean) => void;

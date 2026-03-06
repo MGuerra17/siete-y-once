@@ -33,6 +33,7 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
   isFirstBet,
   onClose,
   onSubmitBet,
+  countdownProgress = null,
 }) => {
   const { t } = useLanguage();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -75,6 +76,18 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
       backgroundStyle={styles.background}
     >
       <BottomSheetView style={styles.content}>
+        {countdownProgress != null && (
+          <View style={styles.countdownTrack}>
+            <View
+              style={[
+                styles.countdownFill,
+                {
+                  width: `${Math.max(0, (1 - countdownProgress) * 100)}%`,
+                },
+              ]}
+            />
+          </View>
+        )}
         <View style={styles.headerRow}>
           <Text style={styles.title}>{t("game.betSheet.title")}</Text>
           {player && (

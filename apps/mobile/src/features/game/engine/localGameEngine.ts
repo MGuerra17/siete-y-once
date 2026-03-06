@@ -319,5 +319,45 @@ export const createLocalGameEngine = (
     }
   };
 
-  return { onDicePress, onBetSubmit, onOpenBetSheet };
+  const performDefaultAction = (): void => {
+    const store = getStore();
+    if (store.isProcessing || store.isRolling) return;
+
+    const { phase, isBetSheetVisible, shooterId, minBet } = store;
+
+    if (phase === GamePhase.INITIAL_ROLL) {
+      handleInitialRoll();
+      return;
+    }
+
+    if (phase === GamePhase.BET_PLACEMENT && isBetSheetVisible) {
+      onBetSubmit(minBet);
+      return;
+    }
+
+    if (
+      phase === GamePhase.POINT_PHASE &&
+      isBetSheetVisible &&
+      shooterId !== null
+    ) {
+      store.setKeepBet(true);
+      store.closeBetSheet();
+      activateShooterForRoll(
+        store,
+        shooterId,
+        toast,
+        GamePhase.WAITING_FOR_ROLL,
+      );
+      return;
+    }
+
+    if (
+      phase === GamePhase.SHOOTER_ROLLING ||
+      phase === GamePhase.WAITING_FOR_ROLL
+    ) {
+      handleShooterRoll();
+    }
+  };
+
+  return { onDicePress, onBetSubmit, onOpenBetSheet, performDefaultAction };
 };

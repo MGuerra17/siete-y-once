@@ -12,5 +12,7 @@ export type PlayerInfoProps = {
   isActive: boolean;
   activeWinningNumber?: number | null;
   variant?: PlayerInfoVariant;
+  /** 0 = full ring, 1 = ring gone. Donut countdown on avatar when set (active player only). */
+  countdownProgress?: number | null;
 };
 
