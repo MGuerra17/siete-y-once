@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ModeCard } from "@/src/features/home/components/ModeCard/ModeCard";
 import { StartGameButton } from "@/src/features/home/components/StartGameButton/StartGameButton";
@@ -28,21 +28,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <View style={styles.wrapper}>
-      <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-        <View style={styles.backgroundLayer}>
-          <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
-          <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
-          <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
-          <View style={[styles.backgroundCircle, styles.backgroundCircle4]} />
+      {Platform.OS !== "android" && (
+        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+          <View style={styles.backgroundLayer}>
+            <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle4]} />
+          </View>
+          <BlurView
+            intensity={100}
+            tint="dark"
+            experimentalBlurMethod="dimezisBlurView"
+            pointerEvents="none"
+            style={styles.blurLayer}
+          />
         </View>
-        <BlurView
-          intensity={100}
-          tint="dark"
-          experimentalBlurMethod="dimezisBlurView"
-          pointerEvents="none"
-          style={styles.blurLayer}
-        />
-      </View>
+      )}
       <View
         style={[
           styles.container,

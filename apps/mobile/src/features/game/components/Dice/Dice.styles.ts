@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: spacing.sm,
+    overflow: "hidden",
   },
   dieDisabled: {
     opacity: 0.5,

@@ -16,7 +16,7 @@ export const DicePips: React.FC<DicePipsProps> = ({ value }) => {
           {[0, 1, 2].map((row) => (
             <View
               key={row}
-              style={[styles.pip, !grid[row][col] && styles.pipTransparent]}
+              style={[styles.pip, { opacity: grid[row][col] ? 1 : 0 }]}
             />
           ))}
         </View>

@@ -16,10 +16,7 @@ export const styles = StyleSheet.create({
   pip: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: 999,
     backgroundColor: colors.textPrimary,
-  },
-  pipTransparent: {
-    backgroundColor: "transparent",
   },
 });
