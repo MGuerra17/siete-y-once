@@ -7,13 +7,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  background: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
   container: {
     flex: 1,
-    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
   },
 });

@@ -1,11 +1,11 @@
-import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
 import { GameMode } from "@/src/features/game/enums/GameMode";
 import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ModeCard } from "@/src/features/home/components/ModeCard/ModeCard";
 import { StartGameButton } from "@/src/features/home/components/StartGameButton/StartGameButton";
 import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
@@ -24,11 +24,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onSelectMode,
 }) => {
   const isOfflineSelected = selectedMode === GameMode.OFFLINE;
+  const insets = useSafeAreaInsets();
 
   return (
-    <ScreenContainer>
-      <View style={styles.container}>
-        <View style={styles.backgroundLayer} pointerEvents="none">
+    <View style={styles.wrapper}>
+      <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+        <View style={styles.backgroundLayer}>
           <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
           <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
           <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
@@ -41,6 +42,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           pointerEvents="none"
           style={styles.blurLayer}
         />
+      </View>
+      <View
+        style={[
+          styles.container,
+          styles.contentWrapper,
+          { paddingTop: insets.top },
+        ]}
+      >
         <View style={styles.contentLayer}>
           <View style={styles.header}>
             <Pressable
@@ -93,6 +102,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </View>
         </View>
       </View>
-    </ScreenContainer>
+    </View>
   );
 };
