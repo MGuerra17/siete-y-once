@@ -15,6 +15,8 @@ export const createOnlineGameEngine = (
     const { phase, isProcessing, isRolling } = getStore();
     if (isProcessing || isRolling) return;
 
+    getStore().setIsRolling(true);
+
     if (phase === GamePhase.INITIAL_ROLL) {
       wsService.send("initialRoll");
     } else if (
@@ -63,6 +65,7 @@ export const createOnlineGameEngine = (
     if (isProcessing || isRolling) return;
 
     if (phase === GamePhase.INITIAL_ROLL) {
+      getStore().setIsRolling(true);
       wsService.send("initialRoll");
       return;
     }
@@ -89,6 +92,7 @@ export const createOnlineGameEngine = (
       phase === GamePhase.SHOOTER_ROLLING ||
       phase === GamePhase.WAITING_FOR_ROLL
     ) {
+      getStore().setIsRolling(true);
       wsService.send("rollDice");
     }
   };

@@ -1,8 +1,14 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import type { TranslationKey } from "@/src/core/i18n/translations";
+import { ROLL_DURATION_MS } from "@/src/features/game/constants/game.constants";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useGameStore } from "@/src/features/game/store/gameStore";
+import type {
+  GameStore,
+  GameStoreState,
+} from "@/src/features/game/store/gameStore";
+import type { PlayerId } from "@/src/features/game/types";
 import {
   createOnlineGameEngine,
   type OnlineGameEngine,
@@ -25,6 +31,85 @@ const formatMessage = (
     template,
   );
 
+function applyStoreUpdate(
+  store: GameStore,
+  storeUpdate: Partial<GameStoreState>,
+): void {
+  if (storeUpdate.phase !== undefined) store.setPhase(storeUpdate.phase);
+  if (storeUpdate.diceValues) store.setDiceValues(storeUpdate.diceValues);
+  if (storeUpdate.point !== undefined) store.setPoint(storeUpdate.point);
+  if (storeUpdate.currentBet !== undefined)
+    store.setBet(storeUpdate.currentBet);
+  if (storeUpdate.minBet !== undefined)
+    store.setMinBet(storeUpdate.minBet);
+  if (storeUpdate.totalRounds !== undefined) {
+    const diff = storeUpdate.totalRounds - store.totalRounds;
+    for (let i = 0; i < diff; i++) store.incrementRounds();
+    if (diff > 0) {
+      store.setKeepBet(false);
+    }
+  }
+  if (storeUpdate.player1) {
+    useGameStore.setState({ player1: storeUpdate.player1 });
+  }
+  if (storeUpdate.player2) {
+    useGameStore.setState({ player2: storeUpdate.player2 });
+  }
+  if (storeUpdate.shooterId !== undefined) {
+    useGameStore.setState({ shooterId: storeUpdate.shooterId });
+  }
+  if (storeUpdate.bettorId !== undefined) {
+    useGameStore.setState({ bettorId: storeUpdate.bettorId });
+  }
+  if (storeUpdate.initialRolls !== undefined) {
+    useGameStore.setState({ initialRolls: storeUpdate.initialRolls });
+  }
+  if (storeUpdate.activeInitialRollerId !== undefined) {
+    useGameStore.setState({
+      activeInitialRollerId: storeUpdate.activeInitialRollerId,
+    });
+  }
+  if (storeUpdate.lastWinnerId !== undefined) {
+    useGameStore.setState({ lastWinnerId: storeUpdate.lastWinnerId });
+  }
+  if (storeUpdate.lastWinningNumber !== undefined) {
+    useGameStore.setState({
+      lastWinningNumber: storeUpdate.lastWinningNumber,
+    });
+  }
+}
+
+function runPostApplyLogic(mySlot: PlayerId): void {
+  const freshStore = useGameStore.getState();
+  const {
+    phase,
+    bettorId,
+    isBetSheetVisible,
+    keepBet,
+    currentBet,
+    player1,
+    player2,
+  } = freshStore;
+  const isBettor = bettorId === "player1";
+  const bettorMoney =
+    bettorId === "player1"
+      ? player1.currentMoney
+      : (player2?.currentMoney ?? 0);
+  const maxBet = bettorMoney;
+  const shouldNotOpenSheet = keepBet || currentBet >= maxBet;
+  if (
+    isBettor &&
+    !isBetSheetVisible &&
+    !shouldNotOpenSheet &&
+    (phase === GamePhase.BET_PLACEMENT || phase === GamePhase.POINT_PHASE)
+  ) {
+    freshStore.openBetSheet();
+  }
+  if (phase === GamePhase.POINT_PHASE && keepBet && isBettor) {
+    wsService.send("keepBet");
+  }
+}
+
 export const useOnlineGameEngine = (): OnlineGameEngine => {
   const { t } = useLanguage();
 
@@ -41,6 +126,11 @@ export const useOnlineGameEngine = (): OnlineGameEngine => {
     [],
   );
 
+  const pendingStoreUpdateRef = useRef<Partial<GameStoreState> | null>(null);
+  const pendingMsgRef = useRef<ServerGameStateMessage | null>(null);
+  const pendingMySlotRef = useRef<PlayerId | null>(null);
+  const pendingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const unsubMessage = wsService.onMessage((data: ServerMessage) => {
       if (data.type === "error") {
@@ -51,87 +141,73 @@ export const useOnlineGameEngine = (): OnlineGameEngine => {
       const msg = data as ServerGameStateMessage;
       const onlineState = useOnlineStore.getState();
       const mySlot = onlineState.myPlayerSlot;
+      const store = useGameStore.getState();
+
+      if (pendingTimeoutRef.current != null) {
+        clearTimeout(pendingTimeoutRef.current);
+        pendingTimeoutRef.current = null;
+        const pendingUpdate = pendingStoreUpdateRef.current;
+        const pendingMsg = pendingMsgRef.current;
+        const pendingSlot = pendingMySlotRef.current;
+        pendingStoreUpdateRef.current = null;
+        pendingMsgRef.current = null;
+        pendingMySlotRef.current = null;
+        if (pendingUpdate != null && pendingMsg != null && pendingSlot != null) {
+          applyStoreUpdate(store, pendingUpdate);
+          store.setIsRolling(false);
+          handleEvent(pendingMsg, toast);
+          runPostApplyLogic(pendingSlot);
+        }
+      }
 
       if (msg.game && mySlot) {
         const storeUpdate = mapServerStateToStore(msg.game, mySlot);
-        const store = useGameStore.getState();
+        const remotePlayerRolled =
+          (msg.event === "roll" &&
+            storeUpdate.shooterId === "player2") ||
+          (msg.event === "initialRoll" &&
+            storeUpdate.activeInitialRollerId === "player2") ||
+          (msg.event === "roundEnd" &&
+            storeUpdate.bettorId === "player2");
+        const isBettorViewingRoll = remotePlayerRolled && storeUpdate.diceValues;
 
-        if (storeUpdate.phase !== undefined) store.setPhase(storeUpdate.phase);
-        if (storeUpdate.diceValues) store.setDiceValues(storeUpdate.diceValues);
-        if (storeUpdate.point !== undefined) store.setPoint(storeUpdate.point);
-        if (storeUpdate.currentBet !== undefined)
-          store.setBet(storeUpdate.currentBet);
-        if (storeUpdate.minBet !== undefined)
-          store.setMinBet(storeUpdate.minBet);
-        if (storeUpdate.totalRounds !== undefined) {
-          const diff = storeUpdate.totalRounds - store.totalRounds;
-          for (let i = 0; i < diff; i++) store.incrementRounds();
-          if (diff > 0) {
-            store.setKeepBet(false);
-          }
+        if (isBettorViewingRoll && storeUpdate.diceValues) {
+          store.setDiceValues(storeUpdate.diceValues);
+          store.setIsRolling(true);
+          pendingStoreUpdateRef.current = storeUpdate;
+          pendingMsgRef.current = msg;
+          pendingMySlotRef.current = mySlot;
+          pendingTimeoutRef.current = setTimeout(() => {
+            pendingTimeoutRef.current = null;
+            const pendingUpdate = pendingStoreUpdateRef.current;
+            const pendingMsg = pendingMsgRef.current;
+            const pendingSlot = pendingMySlotRef.current;
+            pendingStoreUpdateRef.current = null;
+            pendingMsgRef.current = null;
+            pendingMySlotRef.current = null;
+            if (
+              pendingUpdate != null &&
+              pendingMsg != null &&
+              pendingSlot != null
+            ) {
+              const s = useGameStore.getState();
+              applyStoreUpdate(s, pendingUpdate);
+              s.setIsRolling(false);
+              handleEvent(pendingMsg, toast);
+              runPostApplyLogic(pendingSlot);
+            }
+          }, ROLL_DURATION_MS);
+          return;
         }
 
-        if (storeUpdate.player1) {
-          useGameStore.setState({ player1: storeUpdate.player1 });
-        }
-        if (storeUpdate.player2) {
-          useGameStore.setState({ player2: storeUpdate.player2 });
-        }
-        if (storeUpdate.shooterId !== undefined) {
-          useGameStore.setState({ shooterId: storeUpdate.shooterId });
-        }
-        if (storeUpdate.bettorId !== undefined) {
-          useGameStore.setState({ bettorId: storeUpdate.bettorId });
-        }
-        if (storeUpdate.initialRolls !== undefined) {
-          useGameStore.setState({ initialRolls: storeUpdate.initialRolls });
-        }
-        if (storeUpdate.activeInitialRollerId !== undefined) {
-          useGameStore.setState({
-            activeInitialRollerId: storeUpdate.activeInitialRollerId,
-          });
-        }
-        if (storeUpdate.lastWinnerId !== undefined) {
-          useGameStore.setState({ lastWinnerId: storeUpdate.lastWinnerId });
-        }
-        if (storeUpdate.lastWinningNumber !== undefined) {
-          useGameStore.setState({
-            lastWinningNumber: storeUpdate.lastWinningNumber,
-          });
-        }
+        applyStoreUpdate(store, storeUpdate);
+        store.setIsRolling(false);
       }
 
       handleEvent(msg, toast);
 
       if (msg.game && mySlot) {
-        const freshStore = useGameStore.getState();
-        const {
-          phase,
-          bettorId,
-          isBetSheetVisible,
-          keepBet,
-          currentBet,
-          player1,
-          player2,
-        } = freshStore;
-        const isBettor = bettorId === "player1";
-        const bettorMoney =
-          bettorId === "player1"
-            ? player1.currentMoney
-            : (player2?.currentMoney ?? 0);
-        const maxBet = bettorMoney;
-        const shouldNotOpenSheet = keepBet || currentBet >= maxBet;
-        if (
-          isBettor &&
-          !isBetSheetVisible &&
-          !shouldNotOpenSheet &&
-          (phase === GamePhase.BET_PLACEMENT || phase === GamePhase.POINT_PHASE)
-        ) {
-          freshStore.openBetSheet();
-        }
-        if (phase === GamePhase.POINT_PHASE && keepBet && isBettor) {
-          wsService.send("keepBet");
-        }
+        runPostApplyLogic(mySlot);
       }
     });
 
@@ -148,6 +224,13 @@ export const useOnlineGameEngine = (): OnlineGameEngine => {
     });
 
     return () => {
+      if (pendingTimeoutRef.current != null) {
+        clearTimeout(pendingTimeoutRef.current);
+        pendingTimeoutRef.current = null;
+      }
+      pendingStoreUpdateRef.current = null;
+      pendingMsgRef.current = null;
+      pendingMySlotRef.current = null;
       unsubMessage();
       unsubClose();
       unsubOpen();
