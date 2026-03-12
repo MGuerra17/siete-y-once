@@ -162,11 +162,14 @@ export const useOnlineGameEngine = (): OnlineGameEngine => {
 
       if (msg.game && mySlot) {
         const storeUpdate = mapServerStateToStore(msg.game, mySlot);
+        const prevRemoteInitialRoll = store.initialRolls.player2;
+        const nextRemoteInitialRoll = storeUpdate.initialRolls?.player2;
         const remotePlayerRolled =
           (msg.event === "roll" &&
             storeUpdate.shooterId === "player2") ||
           (msg.event === "initialRoll" &&
-            storeUpdate.activeInitialRollerId === "player2") ||
+            nextRemoteInitialRoll !== undefined &&
+            nextRemoteInitialRoll !== prevRemoteInitialRoll) ||
           (msg.event === "roundEnd" &&
             storeUpdate.bettorId === "player2");
         const isBettorViewingRoll = remotePlayerRolled && storeUpdate.diceValues;
