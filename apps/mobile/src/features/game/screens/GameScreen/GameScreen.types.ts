@@ -22,6 +22,10 @@ export type GameScreenProps = {
   totalRounds: number;
   lastWinnerId: PlayerId | null;
   lastWinningNumber: number | null;
+  /** In online mode, player1 is local; lock bet is only shown for the local player. */
+  isOnline?: boolean;
+  /** When true, dice can be rolled (phase is roll and local player is shooter). When false/undefined, dice stay blocked. */
+  isDiceEnabled?: boolean;
   /** 0 = full ring, 1 = ring gone. Passed to the active player's avatar. */
   actionCountdownProgress: number | null;
   onDicePress: () => void;

@@ -21,6 +21,8 @@ type GameBoardTopProps = {
   onExitPress: () => void;
   onKeepBetChange: (value: boolean) => void;
   countdownProgress?: number | null;
+  /** When false, hide lock bet (e.g. online mode: opponent's panel). */
+  showLockButton?: boolean;
 };
 
 /** Top section of the game board: exit button, opponent info, and bet bill. */
@@ -36,9 +38,14 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
   onExitPress,
   onKeepBetChange,
   countdownProgress = null,
+  showLockButton: showLockButtonOverride,
 }) => {
   const { t } = useLanguage();
   const isBettor = bettorId === player.id;
+  const showLockButton =
+    showLockButtonOverride !== undefined
+      ? showLockButtonOverride
+      : isBettor && currentBet > 0;
 
   return (
     <View style={styles.top}>
@@ -70,7 +77,7 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
           visible={isBettor}
           keepBet={keepBet}
           onKeepBetToggle={() => onKeepBetChange(!keepBet)}
-          showLockButton={isBettor && currentBet > 0}
+          showLockButton={showLockButton}
           lockPermanent={keepBet && !canUnlock}
         />
       </View>

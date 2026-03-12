@@ -4,48 +4,61 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useSound } from "@/src/core/hooks/useSound";
 import { HomeScreen } from "@/src/features/home/screens/HomeScreen/HomeScreen";
 import { ConfigMenu } from "@/src/features/home/components/ConfigMenu/ConfigMenu";
-import { GameMode } from "@/src/features/game/enums/GameMode";
+import { UsernameBottomSheet } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet";
+import {
+  getUsername,
+  setUsername as persistUsername,
+} from "@/src/features/online/utils/storage";
 
 export const HomeScreenContainer: React.FC = () => {
   const router = useRouter();
   const { language, setLanguage, t } = useLanguage();
   const { soundEnabled, setSoundEnabled } = useSound();
   const [configVisible, setConfigVisible] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<GameMode>(GameMode.OFFLINE);
-  const [isStarting, setIsStarting] = useState(false);
+  const [usernameSheetVisible, setUsernameSheetVisible] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      setIsStarting(false);
-    }, [setIsStarting]),
+      setIsNavigating(false);
+    }, []),
   );
 
-  const handleStart = () => {
-    if (isStarting) {
-      return;
-    }
+  const handleOfflinePress = () => {
+    if (isNavigating) return;
+    setIsNavigating(true);
+    router.push({ pathname: "/game", params: { mode: "offline" } });
+  };
 
-    setIsStarting(true);
-
-    if (selectedMode === GameMode.OFFLINE) {
-      router.push({ pathname: "/game", params: { mode: selectedMode } });
+  const handleOnlinePress = async () => {
+    if (isNavigating) return;
+    const savedName = await getUsername();
+    if (savedName) {
+      setIsNavigating(true);
+      router.push({ pathname: "/online/lobby" });
+    } else {
+      setUsernameSheetVisible(true);
     }
+  };
+
+  const handleUsernameSubmit = async (name: string) => {
+    await persistUsername(name);
+    setUsernameSheetVisible(false);
+    setIsNavigating(true);
+    router.push({ pathname: "/online/lobby" });
   };
 
   return (
     <>
       <HomeScreen
-        startLabel={t("home.startGame")}
-        startDisabled={isStarting}
         modeOnlineLabel={t("home.modeOnline")}
         modeOfflineLabel={t("home.modeOffline")}
         modeOfflineDescription={t("home.modeOfflineDescription")}
         modeOnlineDescription={t("home.modeOnlineDescription")}
-        comingSoonLabel={t("home.comingSoon")}
-        onStart={handleStart}
+        onOfflinePress={handleOfflinePress}
+        onOnlinePress={handleOnlinePress}
         onOpenConfig={() => setConfigVisible(true)}
-        selectedMode={selectedMode}
-        onSelectMode={setSelectedMode}
+        isNavigating={isNavigating}
       />
       <ConfigMenu
         visible={configVisible}
@@ -54,6 +67,11 @@ export const HomeScreenContainer: React.FC = () => {
         onSelectLanguage={setLanguage}
         soundEnabled={soundEnabled}
         onSoundToggle={setSoundEnabled}
+      />
+      <UsernameBottomSheet
+        visible={usernameSheetVisible}
+        onClose={() => setUsernameSheetVisible(false)}
+        onSubmit={handleUsernameSubmit}
       />
     </>
   );

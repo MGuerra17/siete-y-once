@@ -1,4 +1,3 @@
-import { GameMode } from "@/src/features/game/enums/GameMode";
 import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -7,24 +6,19 @@ import React from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ModeCard } from "@/src/features/home/components/ModeCard/ModeCard";
-import { StartGameButton } from "@/src/features/home/components/StartGameButton/StartGameButton";
 import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
 import type { HomeScreenProps } from "@/src/features/home/screens/HomeScreen/HomeScreen.types";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
-  startLabel,
-  startDisabled,
   modeOnlineLabel,
   modeOfflineLabel,
   modeOfflineDescription,
   modeOnlineDescription,
-  comingSoonLabel,
-  onStart,
+  onOfflinePress,
+  onOnlinePress,
   onOpenConfig,
-  selectedMode,
-  onSelectMode,
+  isNavigating,
 }) => {
-  const isOfflineSelected = selectedMode === GameMode.OFFLINE;
   const insets = useSafeAreaInsets();
 
   return (
@@ -82,29 +76,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <View style={styles.modeSelector}>
               <View style={styles.modeRow}>
                 <ModeCard
-                  icon="phone-portrait-outline"
-                  label={modeOfflineLabel}
-                  description={modeOfflineDescription}
-                  selected={isOfflineSelected}
-                  onPress={() => onSelectMode(GameMode.OFFLINE)}
-                />
-                <ModeCard
                   icon="globe-outline"
                   label={modeOnlineLabel}
                   description={modeOnlineDescription}
-                  disabled
-                  badge={comingSoonLabel}
-                  onPress={() => {}}
+                  onPress={onOnlinePress}
+                  disabled={isNavigating}
+                />
+                <ModeCard
+                  icon="phone-portrait-outline"
+                  label={modeOfflineLabel}
+                  description={modeOfflineDescription}
+                  onPress={onOfflinePress}
+                  disabled={isNavigating}
                 />
               </View>
-            </View>
-
-            <View style={styles.startButton}>
-              <StartGameButton
-                label={startLabel}
-                onPress={onStart}
-                disabled={startDisabled}
-              />
             </View>
           </View>
         </View>

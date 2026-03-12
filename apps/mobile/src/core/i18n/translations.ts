@@ -60,7 +60,31 @@ type TranslationKeys =
   | "game.exitModal.exitCta"
   | "game.a11y.exitButton"
   | "game.a11y.rollDice"
-  | "game.a11y.keepBetToggle";
+  | "game.a11y.keepBetToggle"
+  | "game.toast.opponentDisconnected"
+  | "game.toast.opponentReconnected"
+  | "game.toast.gameOverAbandonment"
+  | "game.toast.waitingForOpponent"
+  | "online.lobby.title"
+  | "online.lobby.createGame"
+  | "online.lobby.joinGame"
+  | "online.lobby.enterCode"
+  | "online.lobby.codePlaceholder"
+  | "online.lobby.join"
+  | "online.waiting.title"
+  | "online.waiting.waitingForOpponent"
+  | "online.waiting.shareCodeLabel"
+  | "online.waiting.copyCode"
+  | "online.waiting.codeCopied"
+  | "online.waiting.connecting"
+  | "online.waiting.cancel"
+  | "online.username.title"
+  | "online.username.placeholder"
+  | "online.username.continue"
+  | "online.error.connectionFailed"
+  | "online.error.invalidCode"
+  | "online.error.gameFull"
+  | "online.claimAbandonment";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
@@ -127,6 +151,30 @@ export const translations: TranslationRecord = {
     "game.a11y.exitButton": "Exit game",
     "game.a11y.rollDice": "Roll dice",
     "game.a11y.keepBetToggle": "Keep bet locked",
+    "game.toast.opponentDisconnected": "Opponent disconnected",
+    "game.toast.opponentReconnected": "Opponent reconnected",
+    "game.toast.gameOverAbandonment": "You win! Opponent abandoned the game.",
+    "game.toast.waitingForOpponent": "Waiting for opponent...",
+    "online.lobby.title": "Online Game",
+    "online.lobby.createGame": "Create Game",
+    "online.lobby.joinGame": "Join Game",
+    "online.lobby.enterCode": "Enter room code",
+    "online.lobby.codePlaceholder": "ABCDEF",
+    "online.lobby.join": "Join",
+    "online.waiting.title": "Waiting Room",
+    "online.waiting.waitingForOpponent": "Waiting for opponent to join...",
+    "online.waiting.shareCodeLabel": "Share this code with the other player",
+    "online.waiting.copyCode": "Tap to copy code",
+    "online.waiting.codeCopied": "Code copied!",
+    "online.waiting.connecting": "Connecting...",
+    "online.waiting.cancel": "Cancel",
+    "online.username.title": "Choose your name",
+    "online.username.placeholder": "Enter your name",
+    "online.username.continue": "Continue",
+    "online.error.connectionFailed": "Connection failed. Please try again.",
+    "online.error.invalidCode": "Invalid or expired code",
+    "online.error.gameFull": "Game not found or already full",
+    "online.claimAbandonment": "Claim Win",
   },
   es: {
     "home.welcomeTitle": "Bienvenido a Duelo de Dados",
@@ -190,6 +238,32 @@ export const translations: TranslationRecord = {
     "game.a11y.exitButton": "Salir del juego",
     "game.a11y.rollDice": "Lanzar dados",
     "game.a11y.keepBetToggle": "Mantener apuesta bloqueada",
+    "game.toast.opponentDisconnected": "Oponente desconectado",
+    "game.toast.opponentReconnected": "Oponente reconectado",
+    "game.toast.gameOverAbandonment":
+      "¡Ganaste! El oponente abandonó la partida.",
+    "game.toast.waitingForOpponent": "Esperando al oponente...",
+    "online.lobby.title": "Juego en línea",
+    "online.lobby.createGame": "Crear partida",
+    "online.lobby.joinGame": "Unirse a partida",
+    "online.lobby.enterCode": "Ingresa el código de sala",
+    "online.lobby.codePlaceholder": "ABCDEF",
+    "online.lobby.join": "Unirse",
+    "online.waiting.title": "Sala de espera",
+    "online.waiting.waitingForOpponent":
+      "Esperando a que se una un oponente...",
+    "online.waiting.shareCodeLabel": "Comparte este código con el otro jugador",
+    "online.waiting.copyCode": "Toca para copiar el código",
+    "online.waiting.codeCopied": "¡Código copiado!",
+    "online.waiting.connecting": "Conectando...",
+    "online.waiting.cancel": "Cancelar",
+    "online.username.title": "Elige tu nombre",
+    "online.username.placeholder": "Ingresa tu nombre",
+    "online.username.continue": "Continuar",
+    "online.error.connectionFailed": "Error de conexión. Intenta de nuevo.",
+    "online.error.invalidCode": "Código inválido o expirado",
+    "online.error.gameFull": "Partida no encontrada o llena",
+    "online.claimAbandonment": "Reclamar victoria",
   },
 };
 

@@ -31,6 +31,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   totalRounds,
   lastWinnerId,
   lastWinningNumber,
+  isOnline = false,
+  isDiceEnabled,
   actionCountdownProgress,
   onDicePress,
   onOpenBetSheet,
@@ -51,6 +53,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const { activeBetter, maxBet, isFirstBet, canUnlock, winner, loser } =
     useGameDerivedState({ player1, player2, bettorId, currentBet, minBet });
 
+  const isDiceInteractionBlocked =
+    isDiceEnabled !== undefined
+      ? !isDiceEnabled || isBetSheetVisible
+      : isProcessing || isBetSheetVisible;
+
   return (
     <ScreenContainer>
       <View style={{ flex: 1 }}>
@@ -66,6 +73,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           onExitPress={onExitPress}
           onKeepBetChange={onKeepBetChange}
           countdownProgress={player2.isActive ? actionCountdownProgress : null}
+          showLockButton={isOnline ? false : undefined}
         />
 
         <GameBoardMiddle
@@ -75,7 +83,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           point={point}
           diceValues={diceValues}
           isRolling={isRolling}
-          isInteractionBlocked={isProcessing || isBetSheetVisible}
+          isInteractionBlocked={isDiceInteractionBlocked}
           initialRolls={initialRolls}
           onDicePress={onDicePress}
         />
