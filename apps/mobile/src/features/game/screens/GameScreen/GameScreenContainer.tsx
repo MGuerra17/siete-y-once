@@ -119,6 +119,7 @@ export const GameScreenContainer: React.FC = () => {
     bettorId,
     currentBet,
     minBet,
+    lastWinnerId,
   });
 
   const handleGoHome = useCallback(() => {

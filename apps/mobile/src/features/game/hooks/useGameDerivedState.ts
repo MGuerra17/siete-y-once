@@ -8,6 +8,7 @@ type UseGameDerivedStateParams = {
   bettorId: PlayerId | null;
   currentBet: number;
   minBet: number;
+  lastWinnerId?: PlayerId | null;
 };
 
 /**
@@ -21,6 +22,7 @@ export const useGameDerivedState = ({
   bettorId,
   currentBet,
   minBet,
+  lastWinnerId,
 }: UseGameDerivedStateParams) => {
   const activeBetter: Player | null =
     bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
@@ -29,10 +31,11 @@ export const useGameDerivedState = ({
   const isFirstBet = currentBet === 0;
   const canUnlock = currentBet < maxBet;
 
-  const { winner, loser } = useMemo(
-    () => getWinnerAndLoser(player1, player2),
-    [player1, player2],
-  );
+  const { winner, loser } = useMemo(() => {
+    if (lastWinnerId === "player1") return { winner: player1, loser: player2 };
+    if (lastWinnerId === "player2") return { winner: player2, loser: player1 };
+    return getWinnerAndLoser(player1, player2);
+  }, [player1, player2, lastWinnerId]);
 
   return { activeBetter, maxBet, isFirstBet, canUnlock, winner, loser };
 };

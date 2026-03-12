@@ -51,7 +51,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const isGameOver = phase === GamePhase.GAME_OVER;
 
   const { activeBetter, maxBet, isFirstBet, canUnlock, winner, loser } =
-    useGameDerivedState({ player1, player2, bettorId, currentBet, minBet });
+    useGameDerivedState({
+      player1,
+      player2,
+      bettorId,
+      currentBet,
+      minBet,
+      lastWinnerId,
+    });
 
   const isDiceInteractionBlocked =
     isDiceEnabled !== undefined
