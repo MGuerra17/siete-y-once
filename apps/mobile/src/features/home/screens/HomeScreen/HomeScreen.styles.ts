@@ -65,13 +65,13 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.xl,
     borderWidth: 2,
     borderColor: colors.border,
-    backgroundColor: colors.surface + "cc",
+    backgroundColor: colors.surface + "40",
     alignItems: "center",
     gap: spacing.sm,
     minHeight: 120,
   },
   modeCardActive: {
-    backgroundColor: colors.primary + "20",
+    backgroundColor: colors.primary + "40",
     borderColor: colors.primary,
   },
   modeCardDisabled: {
@@ -81,12 +81,12 @@ export const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.border + "80",
+    backgroundColor: colors.border + "40",
     alignItems: "center",
     justifyContent: "center",
   },
   modeCardIconWrapperActive: {
-    backgroundColor: colors.primary + "40",
+    backgroundColor: colors.primary + "60",
   },
   modeCardIconWrapperDisabled: {
     backgroundColor: colors.border + "50",
