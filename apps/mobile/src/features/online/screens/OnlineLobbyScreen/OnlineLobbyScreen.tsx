@@ -1,13 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
@@ -115,9 +107,9 @@ export const OnlineLobbyScreen: React.FC = () => {
             });
             activeUnsubscribeRef.current = null;
             unsubscribe();
-            router.push({
-              pathname: "/online/waiting-room",
-              params: { role: "creator" },
+            router.replace({
+              pathname: "/game",
+              params: { mode: "online", showCode: "1" },
             });
           } else if (data.event === "joined") {
             const msg = data as ServerGameStateMessage;
@@ -293,19 +285,11 @@ export const OnlineLobbyScreen: React.FC = () => {
             <PrimaryButton
               label={t("online.lobby.createGame")}
               onPress={handleCreate}
-              disabled={isConnecting}
+            disabled={isConnecting}
+            loading={isConnecting}
               style={styles.createGameButton}
             />
           </View>
-
-          {isConnecting && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator color={colors.primary} size="small" />
-              <Text style={styles.loadingText}>
-                {t("online.waiting.connecting")}
-              </Text>
-            </View>
-          )}
         </ScrollView>
 
         <View
@@ -348,6 +332,8 @@ export const OnlineLobbyScreen: React.FC = () => {
         visible={joinCodeModalVisible}
         onClose={() => setJoinCodeModalVisible(false)}
         onSubmit={handleJoin}
+        loading={isConnecting}
+        errorMessage={error}
       />
     </ScreenContainer>
   );

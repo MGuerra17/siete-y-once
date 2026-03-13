@@ -19,10 +19,23 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primaryMuted,
     opacity: 0.7,
   },
+  content: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   label: {
     color: colors.textPrimary,
     fontSize: fontSize.md,
     fontWeight: "600",
+  },
+  labelInvisible: {
+    opacity: 0,
+  },
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

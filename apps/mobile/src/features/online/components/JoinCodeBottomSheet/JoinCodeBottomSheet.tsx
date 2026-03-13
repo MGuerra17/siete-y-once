@@ -18,12 +18,16 @@ type JoinCodeBottomSheetProps = {
   visible: boolean;
   onClose: () => void;
   onSubmit: (code: string) => void;
+  loading?: boolean;
+  errorMessage?: string | null;
 };
 
 export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
   visible,
   onClose,
   onSubmit,
+  loading = false,
+  errorMessage,
 }) => {
   const { t } = useLanguage();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -41,7 +45,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
 
   const handleSubmit = () => {
     const trimmed = code.trim().toUpperCase();
-    if (trimmed.length > 0) {
+    if (trimmed.length === 6 && !loading) {
       onSubmit(trimmed);
     }
   };
@@ -104,6 +108,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
               styles.pasteButton,
               pressed && styles.pasteButtonPressed,
             ]}
+            disabled={loading}
             accessibilityRole="button"
             accessibilityLabel={t("online.lobby.pasteCode")}
           >
@@ -114,11 +119,15 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
             />
           </Pressable>
         </View>
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
         <View style={styles.buttonContainer}>
           <PrimaryButton
             label={t("online.lobby.join")}
             onPress={handleSubmit}
-            disabled={code.trim().length !== 6}
+            disabled={code.trim().length !== 6 || loading}
+            loading={loading}
           />
         </View>
       </BottomSheetView>
@@ -185,5 +194,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: spacing.sm,
+  },
+  errorText: {
+    marginTop: spacing.xs,
+    fontSize: fontSize.xs,
+    color: colors.danger,
+    textAlign: "center",
   },
 });

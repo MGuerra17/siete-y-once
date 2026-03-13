@@ -14,8 +14,13 @@ import { wsService } from "@/src/features/online/services/WebSocketService";
 import { useOnlineStore } from "@/src/features/online/store/onlineStore";
 import { clearSession } from "@/src/features/online/utils/storage";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef } from "react";
-import { View } from "react-native";
+import * as Clipboard from "expo-clipboard";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Modal, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "@/src/theme/colors";
+import { fontSize } from "@/src/theme/fontSize";
+import { spacing } from "@/src/theme/spacing";
 import { useShallow } from "zustand/shallow";
 
 export const GameScreenContainer: React.FC = () => {
@@ -69,7 +74,10 @@ export const GameScreenContainer: React.FC = () => {
     })),
   );
 
-  const { mode } = useLocalSearchParams<{ mode?: GameMode }>();
+  const { mode, showCode } = useLocalSearchParams<{
+    mode?: GameMode;
+    showCode?: string;
+  }>();
   const isOnline = mode === GameMode.ONLINE;
   const router = useRouter();
   const { t } = useLanguage();
@@ -78,6 +86,11 @@ export const GameScreenContainer: React.FC = () => {
   const localEngine = useLocalGameEngine();
   const onlineEngine = useOnlineGameEngine();
   const engine = isOnline ? onlineEngine : localEngine;
+
+  const shortCode = useOnlineStore((s) => s.shortCode);
+  const isCreator = useOnlineStore((s) => s.isCreator);
+  const opponentConnected = useOnlineStore((s) => s.opponentConnected);
+  const [showCodeModal, setShowCodeModal] = useState(false);
 
   const isLocalPlayerActive = isOnline
     ? phase === GamePhase.INITIAL_ROLL
@@ -88,6 +101,9 @@ export const GameScreenContainer: React.FC = () => {
             phase === GamePhase.WAITING_FOR_ROLL) &&
           shooterId === "player1"
     : player1.isActive;
+
+  const isWaitingForOpponent =
+    isOnline && isCreator && !opponentConnected && showCode === "1";
   const effectiveProcessing = isOnline
     ? isProcessing || !isLocalPlayerActive
     : isProcessing;
@@ -103,7 +119,8 @@ export const GameScreenContainer: React.FC = () => {
   const actionCountdownProgress = useActionTimer({
     phase,
     isBetSheetVisible,
-    isProcessing: effectiveProcessing,
+    // Mientras esperamos al oponente no debe correr el contador ni disparar acciones por timeout.
+    isProcessing: effectiveProcessing || isWaitingForOpponent,
     isRolling,
     onExpire: engine.performDefaultAction,
   });
@@ -137,6 +154,14 @@ export const GameScreenContainer: React.FC = () => {
   }, [resetGame, router, isOnline]);
 
   const exitConfirm = useExitConfirm(handleGoHome);
+
+  useEffect(() => {
+    if (isWaitingForOpponent && shortCode) {
+      setShowCodeModal(true);
+    } else if (opponentConnected) {
+      setShowCodeModal(false);
+    }
+  }, [isWaitingForOpponent, opponentConnected, shortCode]);
 
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false });
@@ -193,40 +218,194 @@ export const GameScreenContainer: React.FC = () => {
     );
   }, [winner, loser, totalRounds, t]);
 
+  const handleCopyCode = useCallback(async () => {
+    if (!shortCode) return;
+    try {
+      await Clipboard.setStringAsync(shortCode);
+    } catch {
+      // ignore
+    }
+  }, [shortCode]);
+
   return (
-    <GameScreen
-      player1={player1}
-      player2={player2}
-      phase={phase}
-      point={point}
-      diceValues={diceValues}
-      isRolling={isRolling}
-      isProcessing={effectiveProcessing}
-      initialRolls={initialRolls}
-      currentBet={currentBet}
-      minBet={minBet}
-      bettorId={bettorId}
-      keepBet={keepBet}
-      isBetSheetVisible={isBetSheetVisible}
-      toastMessage={toastMessage}
-      totalRounds={totalRounds}
-      lastWinnerId={lastWinnerId}
-      lastWinningNumber={lastWinningNumber}
-      isOnline={isOnline}
-      isDiceEnabled={isDiceEnabled}
-      actionCountdownProgress={actionCountdownProgress ?? null}
-      onDicePress={engine.onDicePress}
-      onOpenBetSheet={engine.onOpenBetSheet}
-      onKeepBetChange={handleKeepBetChange}
-      onSubmitBet={handleSubmitBet}
-      onDismissToast={() => setToastMessage(null)}
-      onGoHome={handleGoHome}
-      onShare={handleShare}
-      captureRef={captureRef}
-      isExitConfirmVisible={exitConfirm.isVisible}
-      onExitPress={exitConfirm.show}
-      onExitConfirm={exitConfirm.confirm}
-      onExitCancel={exitConfirm.hide}
-    />
+    <>
+      <GameScreen
+        player1={player1}
+        player2={player2}
+        phase={phase}
+        point={point}
+        diceValues={diceValues}
+        isRolling={isRolling}
+        isProcessing={effectiveProcessing}
+        initialRolls={initialRolls}
+        currentBet={currentBet}
+        minBet={minBet}
+        bettorId={bettorId}
+        keepBet={keepBet}
+        isBetSheetVisible={isBetSheetVisible}
+        toastMessage={toastMessage}
+        totalRounds={totalRounds}
+        lastWinnerId={lastWinnerId}
+        lastWinningNumber={lastWinningNumber}
+        isOnline={isOnline}
+        isDiceEnabled={isDiceEnabled}
+        actionCountdownProgress={actionCountdownProgress ?? null}
+        onDicePress={engine.onDicePress}
+        onOpenBetSheet={engine.onOpenBetSheet}
+        onKeepBetChange={handleKeepBetChange}
+        onSubmitBet={handleSubmitBet}
+        onDismissToast={() => setToastMessage(null)}
+        onGoHome={handleGoHome}
+        onShare={handleShare}
+        captureRef={captureRef}
+        isExitConfirmVisible={exitConfirm.isVisible}
+        onExitPress={exitConfirm.show}
+        onExitConfirm={exitConfirm.confirm}
+        onExitCancel={exitConfirm.hide}
+      />
+
+      {isOnline && isCreator && showCodeModal && shortCode && (
+        <Modal
+          transparent
+          animationType="fade"
+          visible
+          onRequestClose={() => {
+            // Modal solo se cierra automáticamente cuando se conecta el oponente.
+          }}
+        >
+          <View style={styles.codeModalBackdrop}>
+            <View style={styles.codeModalCard}>
+              <Text style={styles.codeModalTitle}>Código de partida</Text>
+              <Text style={styles.codeModalCode}>{shortCode}</Text>
+
+              <Pressable
+                  style={styles.codeModalGhostButton}
+                  onPress={handleCopyCode}
+                >
+                  <Ionicons
+                    name="copy-outline"
+                    size={16}
+                    color={colors.textSecondary}
+                    style={styles.codeModalGhostIcon}
+                  />
+                  <Text style={styles.codeModalGhostLabel}>Copiar código</Text>
+                </Pressable>
+
+                <View style={styles.codeModalActionsRow}>
+                  <Pressable
+                    style={[styles.codeModalActionButton, styles.codeModalExitButton]}
+                    onPress={handleGoHome}
+                  >
+                    <Text
+                      style={[
+                        styles.codeModalActionLabel,
+                        styles.codeModalExitLabel,
+                      ]}
+                    >
+                      Salir
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    style={[
+                      styles.codeModalActionButton,
+                      styles.codeModalPrimaryButton,
+                    ]}
+                    onPress={async () => {
+                      try {
+                        await Share.share({
+                          message: `Únete a mi partida con este código: ${shortCode}`,
+                        });
+                      } catch {
+                        // ignore
+                      }
+                    }}
+                  >
+                    <Text style={styles.codeModalPrimaryLabel}>Compartir</Text>
+                  </Pressable>
+                </View>
+
+            </View>
+          </View>
+        </Modal>
+      )}
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  codeModalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  codeModalCard: {
+    width: "80%",
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    borderRadius: spacing.xl,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: "center",
+    gap: spacing.md,
+  },
+  codeModalTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: "700",
+    color: colors.textPrimary,
+  },
+  codeModalCode: {
+    fontSize: fontSize.xl,
+    fontWeight: "700",
+    letterSpacing: 8,
+    color: colors.primary,
+  },
+  codeModalGhostButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+  },
+  codeModalGhostIcon: {
+    opacity: 0.8,
+  },
+  codeModalGhostLabel: {
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
+  },
+  codeModalActionsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  codeModalActionButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  codeModalExitButton: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: "transparent",
+  },
+  codeModalPrimaryButton: {
+    backgroundColor: colors.primary,
+  },
+  codeModalActionLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+  },
+  codeModalExitLabel: {
+    color: colors.textSecondary,
+  },
+  codeModalPrimaryLabel: {
+    color: colors.background,
+  },
+});
