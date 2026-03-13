@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.xl,
     paddingVertical: spacing.xxl,
     paddingHorizontal: spacing.xxl,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
