@@ -31,6 +31,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   totalRounds,
   lastWinnerId,
   lastWinningNumber,
+  actionCountdownPlayerId,
   isOnline = false,
   isDiceEnabled,
   actionCountdownProgress,
@@ -65,6 +66,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       ? !isDiceEnabled || isBetSheetVisible
       : isProcessing || isBetSheetVisible;
 
+  const topHasCountdown =
+    actionCountdownProgress != null &&
+    actionCountdownPlayerId === player2.id;
+  const bottomHasCountdown =
+    actionCountdownProgress != null &&
+    actionCountdownPlayerId === player1.id;
+
   return (
     <ScreenContainer>
       <View style={{ flex: 1 }}>
@@ -79,7 +87,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           lastWinningNumber={lastWinningNumber}
           onExitPress={onExitPress}
           onKeepBetChange={onKeepBetChange}
-          countdownProgress={player2.isActive ? actionCountdownProgress : null}
+          countdownProgress={topHasCountdown ? actionCountdownProgress : null}
           showLockButton={isOnline ? false : undefined}
         />
 
@@ -105,7 +113,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           lastWinnerId={lastWinnerId}
           lastWinningNumber={lastWinningNumber}
           onKeepBetChange={onKeepBetChange}
-          countdownProgress={player1.isActive ? actionCountdownProgress : null}
+          countdownProgress={
+            bottomHasCountdown ? actionCountdownProgress : null
+          }
         />
 
         <GameToast message={toastMessage} onDismiss={onDismissToast} />

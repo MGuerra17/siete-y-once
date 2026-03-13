@@ -17,7 +17,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   countdownProgress = null,
 }) => {
   const showCountdownRing =
-    isActive &&
     countdownProgress != null &&
     countdownProgress >= 0 &&
     countdownProgress <= 1;

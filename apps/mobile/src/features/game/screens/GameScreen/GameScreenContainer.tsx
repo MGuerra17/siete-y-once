@@ -22,6 +22,7 @@ import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontSize";
 import { spacing } from "@/src/theme/spacing";
 import { useShallow } from "zustand/shallow";
+import type { PlayerId } from "@/src/features/game/types";
 
 export const GameScreenContainer: React.FC = () => {
   const {
@@ -92,15 +93,20 @@ export const GameScreenContainer: React.FC = () => {
   const opponentConnected = useOnlineStore((s) => s.opponentConnected);
   const [showCodeModal, setShowCodeModal] = useState(false);
 
-  const isLocalPlayerActive = isOnline
-    ? phase === GamePhase.INITIAL_ROLL
-      ? activeInitialRollerId === "player1"
+  const currentActionPlayerId: PlayerId | null =
+    phase === GamePhase.INITIAL_ROLL
+      ? activeInitialRollerId
       : phase === GamePhase.BET_PLACEMENT || phase === GamePhase.POINT_PHASE
-        ? bettorId === "player1"
-        : (phase === GamePhase.SHOOTER_ROLLING ||
-            phase === GamePhase.WAITING_FOR_ROLL) &&
-          shooterId === "player1"
-    : player1.isActive;
+        ? bettorId
+        : phase === GamePhase.SHOOTER_ROLLING ||
+            phase === GamePhase.WAITING_FOR_ROLL
+          ? shooterId
+          : null;
+
+  const isLocalPlayerActive =
+    isOnline && currentActionPlayerId
+      ? currentActionPlayerId === "player1"
+      : player1.isActive;
 
   const isWaitingForOpponent =
     isOnline && isCreator && !opponentConnected && showCode === "1";
@@ -250,6 +256,7 @@ export const GameScreenContainer: React.FC = () => {
         isOnline={isOnline}
         isDiceEnabled={isDiceEnabled}
         actionCountdownProgress={actionCountdownProgress ?? null}
+        actionCountdownPlayerId={currentActionPlayerId}
         onDicePress={engine.onDicePress}
         onOpenBetSheet={engine.onOpenBetSheet}
         onKeepBetChange={handleKeepBetChange}

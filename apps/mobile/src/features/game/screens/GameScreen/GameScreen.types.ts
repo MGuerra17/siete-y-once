@@ -22,6 +22,8 @@ export type GameScreenProps = {
   totalRounds: number;
   lastWinnerId: PlayerId | null;
   lastWinningNumber: number | null;
+  /** Id of the player that must act (drives where the countdown ring appears). */
+  actionCountdownPlayerId?: PlayerId | null;
   /** In online mode, player1 is local; lock bet is only shown for the local player. */
   isOnline?: boolean;
   /** When true, dice can be rolled (phase is roll and local player is shooter). When false/undefined, dice stay blocked. */
