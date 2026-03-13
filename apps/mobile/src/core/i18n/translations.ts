@@ -66,11 +66,20 @@ type TranslationKeys =
   | "game.toast.gameOverAbandonment"
   | "game.toast.waitingForOpponent"
   | "online.lobby.title"
+  | "online.lobby.heroTitle"
+  | "online.lobby.heroSubtitle"
   | "online.lobby.createGame"
   | "online.lobby.joinGame"
+  | "online.lobby.joinWithCode"
   | "online.lobby.enterCode"
   | "online.lobby.codePlaceholder"
   | "online.lobby.join"
+  | "online.lobby.joinCodeModal.title"
+  | "online.lobby.betPerGame"
+  | "online.lobby.haveCodeQuestion"
+  | "online.lobby.joinCta"
+  | "online.lobby.pasteCode"
+  | "online.lobby.playerCount"
   | "online.waiting.title"
   | "online.waiting.waitingForOpponent"
   | "online.waiting.shareCodeLabel"
@@ -156,11 +165,20 @@ export const translations: TranslationRecord = {
     "game.toast.gameOverAbandonment": "You win! Opponent abandoned the game.",
     "game.toast.waitingForOpponent": "Waiting for opponent...",
     "online.lobby.title": "Online Game",
+    "online.lobby.heroTitle": "Play with friends",
+    "online.lobby.heroSubtitle": "Create a game or join with a code",
     "online.lobby.createGame": "Create Game",
     "online.lobby.joinGame": "Join Game",
+    "online.lobby.joinWithCode": "Join with code",
     "online.lobby.enterCode": "Enter room code",
     "online.lobby.codePlaceholder": "ABCDEF",
     "online.lobby.join": "Join",
+    "online.lobby.joinCodeModal.title": "Enter room code",
+    "online.lobby.betPerGame": "Total money",
+    "online.lobby.haveCodeQuestion": "Do you have a game code?",
+    "online.lobby.joinCta": "Join",
+    "online.lobby.pasteCode": "Paste",
+    "online.lobby.playerCount": "Players",
     "online.waiting.title": "Waiting Room",
     "online.waiting.waitingForOpponent": "Waiting for opponent to join...",
     "online.waiting.shareCodeLabel": "Share this code with the other player",
@@ -244,11 +262,20 @@ export const translations: TranslationRecord = {
       "¡Ganaste! El oponente abandonó la partida.",
     "game.toast.waitingForOpponent": "Esperando al oponente...",
     "online.lobby.title": "Juego en línea",
+    "online.lobby.heroTitle": "Juega con amigos",
+    "online.lobby.heroSubtitle": "Crea una partida o únete con un código",
     "online.lobby.createGame": "Crear partida",
     "online.lobby.joinGame": "Unirse a partida",
+    "online.lobby.joinWithCode": "Unirse con código",
     "online.lobby.enterCode": "Ingresa el código de sala",
     "online.lobby.codePlaceholder": "ABCDEF",
     "online.lobby.join": "Unirse",
+    "online.lobby.joinCodeModal.title": "Ingresa el código de la partida",
+    "online.lobby.betPerGame": "Dinero total",
+    "online.lobby.haveCodeQuestion": "¿Tienes un código de partida?",
+    "online.lobby.joinCta": "Unirme",
+    "online.lobby.pasteCode": "Pegar",
+    "online.lobby.playerCount": "Jugadores",
     "online.waiting.title": "Sala de espera",
     "online.waiting.waitingForOpponent":
       "Esperando a que se una un oponente...",

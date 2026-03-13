@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { Image } from "expo-image";
 import { useFocusEffect, useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
@@ -24,21 +28,25 @@ import {
   setUsername as persistUsername,
 } from "@/src/features/online/utils/storage";
 import { UsernameBottomSheet } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet";
+import { JoinCodeBottomSheet } from "@/src/features/online/components/JoinCodeBottomSheet/JoinCodeBottomSheet";
 import type {
   ServerGameStateMessage,
   ServerMessage,
 } from "@/src/features/online/types/server";
 import { mapServerStateToStore } from "@/src/features/online/utils/mapServerState";
 import { useGameStore } from "@/src/features/game/store/gameStore";
+import { INITIAL_MONEY } from "@/src/features/game/constants/game.constants";
+import { formatMoneyCompact } from "@/src/core/utils/formatMoney";
 
 export const OnlineLobbyScreen: React.FC = () => {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { t } = useLanguage();
   const [displayName, setDisplayName] = useState<string>("");
-  const [joinCode, setJoinCode] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [usernameSheetVisible, setUsernameSheetVisible] = useState(false);
+  const [joinCodeModalVisible, setJoinCodeModalVisible] = useState(false);
   const activeUnsubscribeRef = useRef<(() => void) | null>(null);
 
   useFocusEffect(
@@ -111,9 +119,9 @@ export const OnlineLobbyScreen: React.FC = () => {
               pathname: "/online/waiting-room",
               params: { role: "creator" },
             });
-          } else if (data.event === "joined" && data.game) {
+          } else if (data.event === "joined") {
             const msg = data as ServerGameStateMessage;
-            if (msg.shortCode && msg.rejoinToken) {
+            if (msg.game && msg.shortCode && msg.rejoinToken) {
               useOnlineStore
                 .getState()
                 .setSession(
@@ -162,11 +170,12 @@ export const OnlineLobbyScreen: React.FC = () => {
     connectAndSend("createGame");
   };
 
-  const handleJoin = () => {
-    const code = joinCode.trim().toUpperCase();
-    if (code.length === 0) return;
+  const handleJoin = (code: string) => {
+    const trimmed = code.trim().toUpperCase();
+    if (trimmed.length === 0) return;
+    setJoinCodeModalVisible(false);
     useOnlineStore.getState().reset();
-    connectAndSend("joinGame", { shortCode: code });
+    connectAndSend("joinGame", { shortCode: trimmed });
   };
 
   const handleBack = () => {
@@ -191,76 +200,142 @@ export const OnlineLobbyScreen: React.FC = () => {
 
   return (
     <ScreenContainer>
+      {Platform.OS !== "android" && (
+        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+          <View style={styles.backgroundLayer}>
+            <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
+            <View style={[styles.backgroundCircle, styles.backgroundCircle4]} />
+          </View>
+          <BlurView
+            intensity={100}
+            tint="dark"
+            experimentalBlurMethod="dimezisBlurView"
+            pointerEvents="none"
+            style={styles.blurLayer}
+          />
+        </View>
+      )}
       <View style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={handleBack} style={styles.backButton}>
+          <Pressable
+            onPress={handleBack}
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.backButtonPressed,
+            ]}
+          >
             <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
           </Pressable>
-          <Text style={styles.title}>{t("online.lobby.title")}</Text>
-          <View style={styles.backButton} />
+          <Pressable
+            onPress={handleEditUsername}
+            style={({ pressed }) => [
+              styles.usernameButton,
+              pressed && styles.usernameButtonPressed,
+            ]}
+          >
+            <Text style={styles.usernameButtonText}>{displayName}</Text>
+            <Ionicons
+              name="pencil-outline"
+              size={14}
+              color={colors.textSecondary}
+            />
+          </Pressable>
         </View>
 
-        <Pressable onPress={handleEditUsername} style={styles.usernameRow}>
-          <Ionicons
-            name="person-outline"
-            size={18}
-            color={colors.textSecondary}
-          />
-          <Text style={styles.usernameText}>{displayName}</Text>
-          <Ionicons
-            name="pencil-outline"
-            size={14}
-            color={colors.textSecondary}
-          />
-        </Pressable>
-
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.heroImageContainer}>
+            <Image
+              source={require("@/assets/images/online-main.png")}
+              style={styles.heroImage}
+              contentFit="contain"
+            />
           </View>
-        )}
 
-        <View style={styles.section}>
-          <PrimaryButton
-            label={t("online.lobby.createGame")}
-            onPress={handleCreate}
-            disabled={isConnecting}
-          />
-        </View>
+          <Text style={styles.heroTitle}>{t("online.lobby.heroTitle")}</Text>
+          <Text style={styles.heroSubtitle}>
+            {t("online.lobby.heroSubtitle")}
+          </Text>
 
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or</Text>
-          <View style={styles.dividerLine} />
-        </View>
+          {error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t("online.lobby.enterCode")}</Text>
-          <TextInput
-            style={styles.codeInput}
-            placeholder={t("online.lobby.codePlaceholder")}
-            placeholderTextColor={colors.textSecondary}
-            value={joinCode}
-            onChangeText={(text) => setJoinCode(text.toUpperCase())}
-            maxLength={6}
-            autoCapitalize="characters"
-            autoCorrect={false}
-          />
-          <PrimaryButton
-            label={t("online.lobby.join")}
-            onPress={handleJoin}
-            disabled={isConnecting || joinCode.trim().length === 0}
-          />
-        </View>
-
-        {isConnecting && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator color={colors.primary} size="small" />
-            <Text style={styles.loadingText}>
-              {t("online.waiting.connecting")}
+          <View style={styles.configCard}>
+            <Text style={styles.configCardLabel}>
+              {t("online.lobby.playerCount")}
             </Text>
+            <View style={styles.configValue}>
+              <Text style={styles.configValueNumber}>2</Text>
+            </View>
+
+            <Text
+              style={[styles.configCardLabel, styles.configCardLabelSecond]}
+            >
+              {t("online.lobby.betPerGame")}
+            </Text>
+            <View style={styles.configValue}>
+              <Text style={styles.configValueNumber}>
+                {formatMoneyCompact(INITIAL_MONEY)}
+              </Text>
+            </View>
           </View>
-        )}
+
+          <View style={styles.actions}>
+            <PrimaryButton
+              label={t("online.lobby.createGame")}
+              onPress={handleCreate}
+              disabled={isConnecting}
+              style={styles.createGameButton}
+            />
+          </View>
+
+          {isConnecting && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator color={colors.primary} size="small" />
+              <Text style={styles.loadingText}>
+                {t("online.waiting.connecting")}
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+
+        <View
+          style={[
+            styles.footerJoin,
+            { paddingBottom: insets.bottom + spacing.lg },
+          ]}
+        >
+          <Text style={styles.haveCodeText}>
+            {t("online.lobby.haveCodeQuestion")}
+          </Text>
+          <Pressable
+            onPress={() => setJoinCodeModalVisible(true)}
+            disabled={isConnecting}
+            style={({ pressed }) => [
+              styles.joinCtaButton,
+              pressed && !isConnecting && styles.joinCtaButtonPressed,
+              isConnecting && styles.joinCtaButtonDisabled,
+            ]}
+          >
+            <Text
+              style={[
+                styles.joinCtaLabel,
+                isConnecting && styles.joinCtaLabelDisabled,
+              ]}
+            >
+              {t("online.lobby.joinCta")}
+            </Text>
+          </Pressable>
+        </View>
       </View>
 
       <UsernameBottomSheet
@@ -268,6 +343,11 @@ export const OnlineLobbyScreen: React.FC = () => {
         onClose={() => setUsernameSheetVisible(false)}
         onSubmit={handleUsernameSubmit}
         initialValue={displayName}
+      />
+      <JoinCodeBottomSheet
+        visible={joinCodeModalVisible}
+        onClose={() => setJoinCodeModalVisible(false)}
+        onSubmit={handleJoin}
       />
     </ScreenContainer>
   );
@@ -277,42 +357,116 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
+  },
+  backgroundLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  blurLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  backgroundCircle: {
+    position: "absolute",
+    opacity: 0.35,
+  },
+  backgroundCircle1: {
+    top: "8%",
+    left: "-12%",
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: colors.primary,
+  },
+  backgroundCircle2: {
+    top: "22%",
+    right: "-10%",
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: colors.primary,
+  },
+  backgroundCircle3: {
+    bottom: "25%",
+    left: "-8%",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.primary,
+  },
+  backgroundCircle4: {
+    bottom: "40%",
+    right: "-6%",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: colors.primary,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: spacing.xl,
+    paddingVertical: spacing.md,
+    marginBottom: spacing.sm,
   },
   backButton: {
     width: 40,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: spacing.lg,
   },
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-    color: colors.textPrimary,
+  backButtonPressed: {
+    backgroundColor: colors.surface + "80",
   },
-  usernameRow: {
+  usernameButton: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "center",
     gap: spacing.sm,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
-    borderRadius: spacing.lg,
+    borderRadius: 999,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: spacing.xl,
+    flexShrink: 0,
   },
-  usernameText: {
+  usernameButtonPressed: {
+    opacity: 0.9,
+  },
+  usernameButtonText: {
     fontSize: fontSize.sm,
     color: colors.textPrimary,
     fontWeight: "600",
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: spacing.xxl,
+    alignItems: "center",
+  },
+  heroImageContainer: {
+    width: "55%",
+    maxWidth: 200,
+    aspectRatio: 1,
+    marginBottom: spacing.lg,
+  },
+  heroImage: {
+    width: "100%",
+    height: "100%",
+  },
+  heroTitle: {
+    fontSize: fontSize.xxl,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    textAlign: "center",
+    marginBottom: spacing.sm,
+  },
+  heroSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    textAlign: "center",
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.md,
   },
   errorContainer: {
     backgroundColor: colors.danger + "20",
@@ -320,50 +474,92 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     marginBottom: spacing.md,
+    width: "100%",
   },
   errorText: {
     color: colors.danger,
     fontSize: fontSize.sm,
     textAlign: "center",
   },
-  section: {
-    gap: spacing.md,
+  configCard: {
+    width: "100%",
+    maxWidth: 340,
+    backgroundColor: colors.surface,
+    borderRadius: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
   },
-  sectionLabel: {
-    fontSize: fontSize.sm,
+  configCardLabel: {
+    fontSize: fontSize.xs,
     fontWeight: "600",
     color: colors.textSecondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
-  },
-  codeInput: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-    color: colors.textPrimary,
+    marginBottom: spacing.xs,
     textAlign: "center",
-    letterSpacing: 8,
   },
-  dividerRow: {
+  configCardLabelSecond: {
+    marginTop: spacing.md,
+  },
+  configValue: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: spacing.xs,
+  },
+  configValueNumber: {
+    fontSize: fontSize.lg,
+    fontWeight: "700",
+    color: colors.primary,
+  },
+  actions: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: spacing.lg,
+    marginBottom: spacing.xxl,
+  },
+  createGameButton: {
+    alignSelf: "center",
+  },
+  footerJoin: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: spacing.xl,
-    gap: spacing.md,
+    justifyContent: "space-between",
+    paddingTop: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    width: "100%",
   },
-  dividerLine: {
+  haveCodeText: {
     flex: 1,
-    height: 1,
-    backgroundColor: colors.border,
-  },
-  dividerText: {
     fontSize: fontSize.sm,
     color: colors.textSecondary,
-    fontWeight: "500",
+    marginRight: spacing.md,
+  },
+  joinCtaButton: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: colors.primary,
+    backgroundColor: "transparent",
+  },
+  joinCtaButtonPressed: {
+    backgroundColor: colors.primary + "25",
+  },
+  joinCtaButtonDisabled: {
+    opacity: 0.6,
+  },
+  joinCtaLabel: {
+    fontSize: fontSize.md,
+    fontWeight: "700",
+    color: colors.primary,
+  },
+  joinCtaLabelDisabled: {
+    color: colors.textSecondary,
   },
   loadingContainer: {
     flexDirection: "row",

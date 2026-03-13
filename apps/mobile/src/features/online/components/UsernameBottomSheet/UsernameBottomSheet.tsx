@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   background: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   handleIndicator: {
     backgroundColor: colors.border,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingBottom: spacing.xxl,
     gap: spacing.lg,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: fontSize.xl,

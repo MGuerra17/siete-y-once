@@ -1,6 +1,6 @@
 export const colors = {
   background: "#050816",
-  surface: "#111827",
+  surface: "rgba(255, 255, 255, 0.02)",
   primary: "#22c55e",
   primaryMuted: "#15803d",
   border: "#1f2937",
@@ -11,4 +11,3 @@ export const colors = {
 } as const;
 
 export type ColorKey = keyof typeof colors;
-

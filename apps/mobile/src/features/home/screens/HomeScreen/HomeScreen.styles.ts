@@ -39,9 +39,9 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoContainer: {
-    width: "80%",
+    width: "70%",
     aspectRatio: 1,
-    maxWidth: 280,
+    maxWidth: 240,
   },
   logo: {
     width: "100%",
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.xl,
     borderWidth: 2,
     borderColor: colors.border,
-    backgroundColor: colors.surface + "40",
+    backgroundColor: colors.surface,
     alignItems: "center",
     gap: spacing.sm,
     minHeight: 120,
@@ -81,15 +81,15 @@ export const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.border + "40",
+    backgroundColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
   },
   modeCardIconWrapperActive: {
-    backgroundColor: colors.primary + "60",
+    backgroundColor: colors.primary,
   },
   modeCardIconWrapperDisabled: {
-    backgroundColor: colors.border + "50",
+    backgroundColor: colors.border,
   },
   modeLabel: {
     fontSize: fontSize.md,
@@ -114,7 +114,7 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   modeDescriptionDisabled: {
-    color: colors.textSecondary + "cc",
+    color: colors.textSecondary,
   },
   comingSoonBadge: {
     position: "absolute",
