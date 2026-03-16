@@ -14,6 +14,8 @@ export type ModeCardProps = {
   selected?: boolean;
   disabled?: boolean;
   badge?: string;
+  isTablet?: boolean;
+  isLargeTablet?: boolean;
   onPress: () => void;
 };
 
@@ -25,6 +27,8 @@ export const ModeCard: React.FC<ModeCardProps> = ({
   selected = false,
   disabled = false,
   badge,
+  isTablet = false,
+  isLargeTablet = false,
   onPress,
 }) => {
   const iconColor = disabled
@@ -39,6 +43,8 @@ export const ModeCard: React.FC<ModeCardProps> = ({
       disabled={disabled}
       style={[
         styles.modeCard,
+        isTablet && styles.modeCardTablet,
+        isLargeTablet && styles.modeCardLargeTablet,
         selected && styles.modeCardActive,
         disabled && styles.modeCardDisabled,
       ]}
@@ -60,6 +66,7 @@ export const ModeCard: React.FC<ModeCardProps> = ({
       <Text
         style={[
           styles.modeLabel,
+          isTablet && styles.modeLabelTablet,
           selected && styles.modeLabelActive,
           disabled && styles.modeLabelDisabled,
         ]}
@@ -69,6 +76,7 @@ export const ModeCard: React.FC<ModeCardProps> = ({
       <Text
         style={[
           styles.modeDescription,
+          isTablet && styles.modeDescriptionTablet,
           selected && styles.modeDescriptionActive,
           disabled && styles.modeDescriptionDisabled,
         ]}

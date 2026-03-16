@@ -145,40 +145,101 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing.lg,
   },
+  contentLayerTablet: {
+    paddingHorizontal: spacing.xl,
+  },
+  contentLayerLargeTablet: {
+    paddingHorizontal: spacing.xxl,
+    maxWidth: 900,
+    alignSelf: "center",
+    width: "100%",
+  },
   backgroundCircle: {
     position: "absolute",
-    opacity: 0.4,
+  },
+  backgroundCircleTablet: {
   },
   backgroundCircle1: {
     top: "10%",
     left: "-10%",
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.primary,
+    width: 120,
+    height: 120,
   },
   backgroundCircle2: {
     top: "25%",
     right: "-15%",
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: colors.primary,
+    width: 110,
+    height: 110,
   },
   backgroundCircle3: {
     bottom: "20%",
     left: "-5%",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.primary,
+    width: 100,
+    height: 100,
   },
   backgroundCircle4: {
     bottom: "35%",
     right: "-8%",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: colors.primary,
+    width: 90,
+    height: 90,
+  },
+  backgroundCircle1Tablet: {
+    left: "-4%",
+    width: 190,
+    height: 190,
+  },
+  backgroundCircle2Tablet: {
+    right: "-4%",
+    width: 180,
+    height: 180,
+  },
+  backgroundCircle3Tablet: {
+    left: "0%",
+    width: 170,
+    height: 170,
+  },
+  backgroundCircle4Tablet: {
+    right: "0%",
+    width: 160,
+    height: 160,
+  },
+  contentWrapperTablet: {
+    paddingVertical: spacing.xl,
+  },
+  logoContainerTablet: {
+    width: "50%",
+    maxWidth: 320,
+    marginBottom: spacing.xl,
+  },
+  logoContainerLargeTablet: {
+    width: "40%",
+    maxWidth: 380,
+  },
+  modeSelectorTablet: {
+    maxWidth: 480,
+  },
+  modeSelectorLargeTablet: {
+    maxWidth: 640,
+  },
+  modeRowTablet: {
+    gap: spacing.lg,
+  },
+  modeCardTablet: {
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    minHeight: 140,
+  },
+  modeCardLargeTablet: {
+    minHeight: 160,
+  },
+  modeLabelTablet: {
+    fontSize: fontSize.lg,
+  },
+  modeDescriptionTablet: {
+    fontSize: fontSize.sm,
+    lineHeight: 18,
+  },
+  configButtonTablet: {
+    padding: spacing.md,
   },
 });
