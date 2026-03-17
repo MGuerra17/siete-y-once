@@ -9,6 +9,7 @@ import {
   getUsername,
   setUsername as persistUsername,
 } from "@/src/features/online/utils/storage";
+import { useGameStore } from "@/src/features/game/store/gameStore";
 
 export const HomeScreenContainer: React.FC = () => {
   const router = useRouter();
@@ -26,6 +27,8 @@ export const HomeScreenContainer: React.FC = () => {
 
   const handleOfflinePress = () => {
     if (isNavigating) return;
+    // Siempre que iniciamos una partida offline, resetear el estado global del juego.
+    useGameStore.getState().resetGame();
     setIsNavigating(true);
     router.push({ pathname: "/game", params: { mode: "offline" } });
   };

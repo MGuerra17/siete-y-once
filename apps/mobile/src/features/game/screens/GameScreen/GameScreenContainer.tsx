@@ -117,10 +117,10 @@ export const GameScreenContainer: React.FC = () => {
   const isDiceEnabled =
     !isRolling &&
     ((phase === GamePhase.INITIAL_ROLL &&
-      (isOnline ? activeInitialRollerId === "player1" : player1.isActive)) ||
+      (isOnline ? activeInitialRollerId === "player1" : true)) ||
       ((phase === GamePhase.SHOOTER_ROLLING ||
         phase === GamePhase.WAITING_FOR_ROLL) &&
-        (isOnline ? shooterId === "player1" : player1.isActive)));
+        (isOnline ? shooterId === "player1" : true)));
 
   const actionCountdownProgress = useActionTimer({
     phase,

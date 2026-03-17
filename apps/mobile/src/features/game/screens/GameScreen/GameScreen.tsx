@@ -63,7 +63,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   const isDiceInteractionBlocked =
     isDiceEnabled !== undefined
-      ? !isDiceEnabled || isBetSheetVisible
+      ? !isDiceEnabled || isBetSheetVisible || isProcessing
       : isProcessing || isBetSheetVisible;
 
   const topHasCountdown =
