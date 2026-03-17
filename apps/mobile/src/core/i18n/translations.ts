@@ -33,7 +33,9 @@ type TranslationKeys =
   | "game.betSheet.keepCta"
   | "game.betSheet.increaseCta"
   | "game.endModal.title"
+  | "game.endModal.titleLoserOnline"
   | "game.endModal.subtitle"
+  | "game.endModal.subtitleLoserOnline"
   | "game.endModal.roundsLabel"
   | "game.endModal.goHomeCta"
   | "game.endModal.shareCta"
@@ -131,7 +133,9 @@ export const translations: TranslationRecord = {
     "game.betSheet.keepCta": "Keep",
     "game.betSheet.increaseCta": "Increase",
     "game.endModal.title": "Game over",
+    "game.endModal.titleLoserOnline": "You lost",
     "game.endModal.subtitle": "Congrats!",
+    "game.endModal.subtitleLoserOnline": "Better luck next time!",
     "game.endModal.roundsLabel": "Rounds played",
     "game.endModal.goHomeCta": "Finish",
     "game.endModal.shareCta": "Share",
@@ -227,7 +231,9 @@ export const translations: TranslationRecord = {
     "game.betSheet.keepCta": "Mantener",
     "game.betSheet.increaseCta": "Aumentar",
     "game.endModal.title": "Fin de la partida",
+    "game.endModal.titleLoserOnline": "Has perdido",
     "game.endModal.subtitle": "¡Felicidades!",
+    "game.endModal.subtitleLoserOnline": "¡Más suerte la próxima!",
     "game.endModal.roundsLabel": "Rondas jugadas",
     "game.endModal.goHomeCta": "Finalizar",
     "game.endModal.shareCta": "Compartir",

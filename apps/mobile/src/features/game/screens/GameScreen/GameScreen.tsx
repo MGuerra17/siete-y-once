@@ -144,6 +144,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             winner={winner}
             loser={loser}
             totalRounds={totalRounds}
+            isOnline={isOnline}
             onGoHome={onGoHome}
             onShare={onShare}
             captureRef={captureRef}

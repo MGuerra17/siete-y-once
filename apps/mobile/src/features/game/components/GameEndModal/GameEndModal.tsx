@@ -12,6 +12,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
   winner,
   loser,
   totalRounds,
+  isOnline = false,
   onGoHome,
   onShare = () => {},
   captureRef,
@@ -22,13 +23,15 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
     return null;
   }
 
-  const winnerDefaultName = winner.id === "player1"
-    ? t("game.player1DefaultName")
-    : t("game.player2DefaultName");
+  const winnerDefaultName =
+    winner.id === "player1"
+      ? t("game.player1DefaultName")
+      : t("game.player2DefaultName");
 
-  const loserDefaultName = loser.id === "player1"
-    ? t("game.player1DefaultName")
-    : t("game.player2DefaultName");
+  const loserDefaultName =
+    loser.id === "player1"
+      ? t("game.player1DefaultName")
+      : t("game.player2DefaultName");
 
   const winnerName = winner.name || winnerDefaultName;
   const loserName = loser.name || loserDefaultName;
@@ -37,9 +40,19 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
     <View style={styles.backdrop} pointerEvents="box-none">
       <View ref={captureRef} style={styles.card} collapsable={false}>
         <View style={styles.header}>
-          <Text style={styles.title}>{t("game.endModal.title")}</Text>
+          <Text style={styles.title}>
+            {t(
+              isOnline && loser.id === "player1"
+                ? "game.endModal.titleLoserOnline"
+                : "game.endModal.title",
+            )}
+          </Text>
           <Text style={styles.subtitle}>
-            {t("game.endModal.subtitle")}
+            {t(
+              isOnline && loser.id === "player1"
+                ? "game.endModal.subtitleLoserOnline"
+                : "game.endModal.subtitle",
+            )}
           </Text>
         </View>
 

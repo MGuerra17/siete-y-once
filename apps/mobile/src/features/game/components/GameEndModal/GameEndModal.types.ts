@@ -7,6 +7,7 @@ export type GameEndModalProps = {
   winner: Player;
   loser: Player;
   totalRounds: number;
+  isOnline?: boolean;
   onGoHome: () => void;
   onShare?: () => void;
   captureRef?: RefObject<View | null>;
