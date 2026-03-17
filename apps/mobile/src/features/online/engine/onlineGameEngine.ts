@@ -1,6 +1,7 @@
 import type { IGameEngine } from "@/src/features/game/engine/IGameEngine";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import type { GameStore } from "@/src/features/game/store/gameStore";
+import { isShooterRollPhase } from "@/src/features/game/utils/enginePhaseUtils";
 import { wsService } from "@/src/features/online/services/WebSocketService";
 
 export interface OnlineGameEngine extends IGameEngine {
@@ -19,10 +20,7 @@ export const createOnlineGameEngine = (
 
     if (phase === GamePhase.INITIAL_ROLL) {
       wsService.send("initialRoll");
-    } else if (
-      phase === GamePhase.SHOOTER_ROLLING ||
-      phase === GamePhase.WAITING_FOR_ROLL
-    ) {
+    } else if (isShooterRollPhase(phase)) {
       wsService.send("rollDice");
     }
   };
@@ -88,10 +86,7 @@ export const createOnlineGameEngine = (
       }
     }
 
-    if (
-      phase === GamePhase.SHOOTER_ROLLING ||
-      phase === GamePhase.WAITING_FOR_ROLL
-    ) {
+    if (isShooterRollPhase(phase)) {
       getStore().setIsRolling(true);
       wsService.send("rollDice");
     }

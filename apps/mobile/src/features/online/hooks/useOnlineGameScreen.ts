@@ -1,4 +1,5 @@
 import { useLanguage } from "@/src/core/hooks/useLanguage";
+import type { TranslationKey } from "@/src/core/i18n/translations";
 import { GameMode } from "@/src/features/game/enums/GameMode";
 import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useActionTimer } from "@/src/features/game/hooks/useActionTimer";
@@ -168,11 +169,11 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
 
   const exitConfirm = useExitConfirm(handleGoHome);
 
+  // When online, run once to disable back gesture (offline handles initial toast).
   useEffect(() => {
     if (!isOnline) return;
     navigation.setOptions({ gestureEnabled: false });
-    // Mensaje inicial para offline ya se maneja en el hook offline.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional run when isOnline becomes true only
   }, [isOnline]);
 
   const handleSubmitBet = useCallback(
@@ -202,9 +203,9 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
     try {
       await Clipboard.setStringAsync(shortCode);
     } catch {
-      // ignore
+      setToastMessage(t("online.error.copyFailed" as TranslationKey));
     }
-  }, [shortCode]);
+  }, [shortCode, setToastMessage, t]);
 
   useEffect(() => {
     if (isWaitingForOpponent && shortCode) {

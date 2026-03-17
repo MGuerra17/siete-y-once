@@ -64,7 +64,7 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
         }
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- animation runs once on mount with initial props
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => {

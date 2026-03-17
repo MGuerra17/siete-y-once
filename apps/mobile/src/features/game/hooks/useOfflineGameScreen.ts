@@ -130,12 +130,13 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
 
   const exitConfirm = useExitConfirm(handleGoHome);
 
+  // Run once on mount: disable back gesture and show initial roll toast.
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false });
     if (phase === GamePhase.INITIAL_ROLL) {
       setToastMessage(t("game.toast.rollToDetermineShooter"));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only effect
   }, []);
 
   const handleSubmitBet = useCallback(

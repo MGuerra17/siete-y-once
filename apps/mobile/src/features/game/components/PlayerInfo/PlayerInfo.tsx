@@ -9,6 +9,10 @@ import { Text, View } from "react-native";
 import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
 import { styles } from "@/src/features/game/components/PlayerInfo/PlayerInfo.styles";
 import { PlayerInfoProps } from "@/src/features/game/components/PlayerInfo/PlayerInfo.types";
+import {
+  getPlayerDisplayName,
+  type TranslateFn,
+} from "@/src/features/game/utils/playerDisplayName";
 
 export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   id,
@@ -24,12 +28,10 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   const variant = id === "player1" ? "primary" : "secondary";
   const { t } = useLanguage();
 
-  const defaultName =
-    id === "player1"
-      ? t("game.player1DefaultName")
-      : t("game.player2DefaultName");
-
-  const displayName = name || defaultName;
+  const displayName = getPlayerDisplayName(
+    { id, name: name ?? null },
+    t as TranslateFn,
+  );
 
   const roleLabel =
     role === PlayerRole.BETTER

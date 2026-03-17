@@ -62,7 +62,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
         .slice(0, JOIN_CODE_LENGTH);
       setCode(pasted);
     } catch {
-      // ignore clipboard errors
+      // Clipboard read failed (e.g. permission denied); leave code unchanged
     }
   };
 

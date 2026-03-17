@@ -2,8 +2,8 @@ import type { RefObject } from "react";
 import { Platform, Share, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import type { Player } from "@/src/features/game/types";
-
-type TranslateFn = (key: string) => string;
+import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
+import type { TranslateFn } from "@/src/features/game/utils/playerDisplayName";
 
 /** Builds the localized share message by interpolating winner, loser, and rounds. */
 function buildShareMessage(
@@ -17,18 +17,6 @@ function buildShareMessage(
     .replace("{winner}", winnerName)
     .replace("{loser}", loserName)
     .replace("{totalRounds}", String(totalRounds));
-}
-
-/** Returns the player's name or a localized default ("Player 1" / "Player 2"). */
-function getPlayerDisplayName(
-  player: Player,
-  t: TranslateFn,
-): string {
-  const defaultName =
-    player.id === "player1"
-      ? t("game.player1DefaultName")
-      : t("game.player2DefaultName");
-  return player.name ?? defaultName;
 }
 
 /**

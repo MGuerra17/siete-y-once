@@ -6,6 +6,7 @@ import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { RoundOutcome } from "@/src/features/game/enums/RoundOutcome";
 import type { GameStore } from "@/src/features/game/store/gameStore";
 import type { PlayerId } from "@/src/features/game/types";
+import { isShooterRollPhase } from "@/src/features/game/utils/enginePhaseUtils";
 import {
   delay,
   evaluateFirstRoll,
@@ -292,10 +293,7 @@ export const createLocalGameEngine = (
       handleInitialRoll();
       return;
     }
-    if (
-      phase === GamePhase.SHOOTER_ROLLING ||
-      phase === GamePhase.WAITING_FOR_ROLL
-    ) {
+    if (isShooterRollPhase(phase)) {
       handleShooterRoll();
     }
   };
@@ -364,10 +362,7 @@ export const createLocalGameEngine = (
       return;
     }
 
-    if (
-      phase === GamePhase.SHOOTER_ROLLING ||
-      phase === GamePhase.WAITING_FOR_ROLL
-    ) {
+    if (isShooterRollPhase(phase)) {
       handleShooterRoll();
     }
   };

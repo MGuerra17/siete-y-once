@@ -83,18 +83,24 @@ type TranslationKeys =
   | "online.lobby.pasteCode"
   | "online.lobby.playerCount"
   | "online.waiting.title"
+  | "online.waiting.gameCodeTitle"
+  | "online.waiting.copyCodeCta"
   | "online.waiting.waitingForOpponent"
   | "online.waiting.shareCodeLabel"
   | "online.waiting.copyCode"
   | "online.waiting.codeCopied"
   | "online.waiting.connecting"
   | "online.waiting.cancel"
+  | "online.waiting.exitCta"
+  | "online.waiting.shareCta"
+  | "online.waiting.shareCodeMessage"
   | "online.username.title"
   | "online.username.placeholder"
   | "online.username.continue"
   | "online.error.connectionFailed"
   | "online.error.invalidCode"
   | "online.error.gameFull"
+  | "online.error.copyFailed"
   | "online.claimAbandonment";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
@@ -184,18 +190,24 @@ export const translations: TranslationRecord = {
     "online.lobby.pasteCode": "Paste",
     "online.lobby.playerCount": "Players",
     "online.waiting.title": "Waiting Room",
+    "online.waiting.gameCodeTitle": "Game code",
+    "online.waiting.copyCodeCta": "Copy code",
     "online.waiting.waitingForOpponent": "Waiting for opponent to join...",
     "online.waiting.shareCodeLabel": "Share this code with the other player",
     "online.waiting.copyCode": "Tap to copy code",
     "online.waiting.codeCopied": "Code copied!",
     "online.waiting.connecting": "Connecting...",
     "online.waiting.cancel": "Cancel",
+    "online.waiting.exitCta": "Exit",
+    "online.waiting.shareCta": "Share",
+    "online.waiting.shareCodeMessage": "Join my game with this code: {code}",
     "online.username.title": "Choose your name",
     "online.username.placeholder": "Enter your name",
     "online.username.continue": "Continue",
     "online.error.connectionFailed": "Connection failed. Please try again.",
     "online.error.invalidCode": "Invalid or expired code",
     "online.error.gameFull": "Game not found or already full",
+    "online.error.copyFailed": "Could not copy to clipboard",
     "online.claimAbandonment": "Claim Win",
   },
   es: {
@@ -283,6 +295,8 @@ export const translations: TranslationRecord = {
     "online.lobby.pasteCode": "Pegar",
     "online.lobby.playerCount": "Jugadores",
     "online.waiting.title": "Sala de espera",
+    "online.waiting.gameCodeTitle": "Código de partida",
+    "online.waiting.copyCodeCta": "Copiar código",
     "online.waiting.waitingForOpponent":
       "Esperando a que se una un oponente...",
     "online.waiting.shareCodeLabel": "Comparte este código con el otro jugador",
@@ -290,12 +304,16 @@ export const translations: TranslationRecord = {
     "online.waiting.codeCopied": "¡Código copiado!",
     "online.waiting.connecting": "Conectando...",
     "online.waiting.cancel": "Cancelar",
+    "online.waiting.exitCta": "Salir",
+    "online.waiting.shareCta": "Compartir",
+    "online.waiting.shareCodeMessage": "Únete a mi partida con este código: {code}",
     "online.username.title": "Elige tu nombre",
     "online.username.placeholder": "Ingresa tu nombre",
     "online.username.continue": "Continuar",
     "online.error.connectionFailed": "Error de conexión. Intenta de nuevo.",
     "online.error.invalidCode": "Código inválido o expirado",
     "online.error.gameFull": "Partida no encontrada o llena",
+    "online.error.copyFailed": "No se pudo copiar al portapapeles",
     "online.claimAbandonment": "Reclamar victoria",
   },
 };

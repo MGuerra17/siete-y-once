@@ -6,6 +6,10 @@ import { Avatar } from "@/src/core/components/Avatar/Avatar";
 import { colors } from "@/src/theme/colors";
 import { styles } from "@/src/features/game/components/GameEndModal/GameEndModal.styles";
 import type { GameEndModalProps } from "@/src/features/game/components/GameEndModal/GameEndModal.types";
+import {
+  getPlayerDisplayName,
+  type TranslateFn,
+} from "@/src/features/game/utils/playerDisplayName";
 
 export const GameEndModal: React.FC<GameEndModalProps> = ({
   visible,
@@ -23,18 +27,8 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
     return null;
   }
 
-  const winnerDefaultName =
-    winner.id === "player1"
-      ? t("game.player1DefaultName")
-      : t("game.player2DefaultName");
-
-  const loserDefaultName =
-    loser.id === "player1"
-      ? t("game.player1DefaultName")
-      : t("game.player2DefaultName");
-
-  const winnerName = winner.name || winnerDefaultName;
-  const loserName = loser.name || loserDefaultName;
+  const winnerName = getPlayerDisplayName(winner, t as TranslateFn);
+  const loserName = getPlayerDisplayName(loser, t as TranslateFn);
 
   return (
     <View style={styles.backdrop} pointerEvents="box-none">
