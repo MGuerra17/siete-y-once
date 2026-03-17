@@ -109,9 +109,6 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
               returnKeyType="done"
               onSubmitEditing={handleSubmit}
             />
-            <Text style={styles.charCounter}>
-              {code.length}/{JOIN_CODE_LENGTH}
-            </Text>
           </View>
           <Pressable
             onPress={handlePaste}
@@ -188,20 +185,12 @@ const styles = StyleSheet.create({
     borderRadius: spacing.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
-    paddingRight: spacing.xl * 2,
+    paddingRight: spacing.md,
     fontSize: fontSize.xl,
     fontWeight: "700",
     color: colors.textPrimary,
     textAlign: "center",
     letterSpacing: 8,
-  },
-  charCounter: {
-    position: "absolute",
-    right: spacing.sm,
-    top: "50%",
-    transform: [{ translateY: -fontSize.xs / 2 }],
-    fontSize: fontSize.xs,
-    color: colors.textSecondary,
   },
   pasteButton: {
     width: 48,
