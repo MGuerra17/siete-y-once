@@ -161,3 +161,9 @@ Fix any reported issues to keep the codebase consistent and avoid runtime proble
 
 - Online mode depends entirely on the WebSocket backend being reachable via `EXPO_PUBLIC_WS_URL`.
 - If you are working only on local UI / offline gameplay, you can temporarily skip backend configuration and focus on `src/features/offline` and core game components.
+
+### Splash screen
+
+- The native splash screen is configured via Expo in `app.json` using the `expo-splash-screen` plugin.
+- The current splash image is `assets/images/splash.png` (Quantum Rolls artwork), with a dark background to match the design.
+- To change the splash in the future, update the `image`, `imageWidth`, `resizeMode` and `backgroundColor` fields under the `expo-splash-screen` plugin in `app.json`, then rebuild your native apps if you use the prebuild/bare workflow.
