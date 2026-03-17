@@ -22,6 +22,8 @@ type JoinCodeBottomSheetProps = {
   errorMessage?: string | null;
 };
 
+const JOIN_CODE_LENGTH = 6;
+
 export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
   visible,
   onClose,
@@ -45,7 +47,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
 
   const handleSubmit = () => {
     const trimmed = code.trim().toUpperCase();
-    if (trimmed.length === 6 && !loading) {
+    if (trimmed.length === JOIN_CODE_LENGTH && !loading) {
       onSubmit(trimmed);
     }
   };
@@ -53,7 +55,11 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
   const handlePaste = async () => {
     try {
       const text = await Clipboard.getStringAsync();
-      const pasted = text.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+      const pasted = text
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, JOIN_CODE_LENGTH);
       setCode(pasted);
     } catch {
       // ignore clipboard errors
@@ -89,19 +95,24 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
           {t("online.lobby.joinCodeModal.title")}
         </Text>
         <View style={styles.inputRow}>
-          <BottomSheetTextInput
-            style={styles.input}
-            placeholder={t("online.lobby.codePlaceholder")}
-            placeholderTextColor={colors.textSecondary}
-            value={code}
-            onChangeText={(text) => setCode(text.toUpperCase())}
-            maxLength={6}
-            autoCapitalize="characters"
-            autoCorrect={false}
-            autoFocus
-            returnKeyType="done"
-            onSubmitEditing={handleSubmit}
-          />
+          <View style={styles.inputWrapper}>
+            <BottomSheetTextInput
+              style={styles.input}
+              placeholder={t("online.lobby.codePlaceholder")}
+              placeholderTextColor={colors.textSecondary}
+              value={code}
+              onChangeText={(text) => setCode(text.toUpperCase())}
+              maxLength={JOIN_CODE_LENGTH}
+              autoCapitalize="characters"
+              autoCorrect={false}
+              autoFocus
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
+            />
+            <Text style={styles.charCounter}>
+              {code.length}/{JOIN_CODE_LENGTH}
+            </Text>
+          </View>
           <Pressable
             onPress={handlePaste}
             style={({ pressed }) => [
@@ -126,7 +137,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
           <PrimaryButton
             label={t("online.lobby.join")}
             onPress={handleSubmit}
-            disabled={code.trim().length !== 6 || loading}
+            disabled={code.trim().length !== JOIN_CODE_LENGTH || loading}
             loading={loading}
           />
         </View>
@@ -166,19 +177,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.sm,
   },
-  input: {
+  inputWrapper: {
     flex: 1,
+    position: "relative",
+  },
+  input: {
     backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: spacing.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
+    paddingRight: spacing.xl * 2,
     fontSize: fontSize.xl,
     fontWeight: "700",
     color: colors.textPrimary,
     textAlign: "center",
     letterSpacing: 8,
+  },
+  charCounter: {
+    position: "absolute",
+    right: spacing.sm,
+    top: "50%",
+    transform: [{ translateY: -fontSize.xs / 2 }],
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
   },
   pasteButton: {
     width: 48,

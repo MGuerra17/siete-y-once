@@ -45,23 +45,29 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
 
         <View style={styles.avatarsRow}>
           <View style={styles.winnerAvatarWrapper}>
-            <View>
+            <View style={styles.winnerAvatarColumn}>
+              <View style={styles.crownBadge}>
+                <Ionicons name="trophy" size={18} color={colors.background} />
+              </View>
               <Avatar
                 imageUri={winner.imageUri ?? undefined}
                 isActive
                 size={104}
                 fallbackLabel={winnerName}
               />
-              <View style={styles.crownBadge}>
-                <Ionicons name="trophy" size={18} color={colors.background} />
-              </View>
             </View>
             <View style={styles.winnerLabelPill}>
               <Text style={styles.labelPillText}>
                 {t("game.endModal.winnerLabel")}
               </Text>
             </View>
-            <Text style={styles.playerName}>{winnerName}</Text>
+            <Text
+              style={styles.playerName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {winnerName}
+            </Text>
           </View>
 
           <View style={styles.loserAvatarWrapper}>
@@ -72,11 +78,17 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({
               fallbackLabel={loserName}
             />
             <View style={styles.loserLabelPill}>
-              <Text style={styles.labelPillText}>
+              <Text style={styles.loserLabelText}>
                 {t("game.endModal.loserLabel")}
               </Text>
             </View>
-            <Text style={styles.playerName}>{loserName}</Text>
+            <Text
+              style={styles.playerName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {loserName}
+            </Text>
           </View>
         </View>
 

@@ -87,7 +87,15 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
             variant === "secondary" && styles.nameRowSecondary,
           ]}
         >
-          <AppText variant="subtitle">{displayName}</AppText>
+          <View style={styles.nameTextWrap}>
+            <AppText
+              variant="subtitle"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {displayName}
+            </AppText>
+          </View>
           <View style={styles.winningNumbersRow}>
             {winningNumbers.map((num) => (
               <View

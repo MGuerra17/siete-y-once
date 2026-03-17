@@ -49,6 +49,7 @@ export const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   playerBadge: {
+    maxWidth: "50%",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     borderRadius: 999,

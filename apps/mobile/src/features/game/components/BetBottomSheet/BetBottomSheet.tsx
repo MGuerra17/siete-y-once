@@ -92,7 +92,11 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
           <Text style={styles.title}>{t("game.betSheet.title")}</Text>
           {player && (
             <View style={styles.playerBadge}>
-              <Text style={styles.playerName}>
+              <Text
+                style={styles.playerName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {player.name ?? t("game.player1DefaultName")}
               </Text>
             </View>

@@ -1,5 +1,13 @@
 import React, { useCallback, useRef, useState } from "react";
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
@@ -21,6 +29,7 @@ import {
 } from "@/src/features/online/utils/storage";
 import { UsernameBottomSheet } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet";
 import { JoinCodeBottomSheet } from "@/src/features/online/components/JoinCodeBottomSheet/JoinCodeBottomSheet";
+import { RadialCircle } from "@/src/features/home/components/RadialCircle/RadialCircle";
 import type {
   ServerGameStateMessage,
   ServerMessage,
@@ -34,6 +43,7 @@ export const OnlineLobbyScreen: React.FC = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useLanguage();
+  const { width } = useWindowDimensions();
   const [displayName, setDisplayName] = useState<string>("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -190,15 +200,58 @@ export const OnlineLobbyScreen: React.FC = () => {
     setUsernameSheetVisible(false);
   };
 
+  const isTablet = width >= 600;
+  const isLargeTablet = width >= 840;
+
   return (
     <ScreenContainer>
       {Platform.OS !== "android" && (
         <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
           <View style={styles.backgroundLayer}>
-            <View style={[styles.backgroundCircle, styles.backgroundCircle1]} />
-            <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
-            <View style={[styles.backgroundCircle, styles.backgroundCircle3]} />
-            <View style={[styles.backgroundCircle, styles.backgroundCircle4]} />
+            <RadialCircle
+              size={isTablet ? 280 : 150}
+              color={colors.primary}
+              opacity={isTablet ? 0.35 : 0.4}
+              style={[
+                styles.backgroundCircle,
+                isTablet && styles.backgroundCircleTablet,
+                styles.backgroundCircle1,
+                isTablet && styles.backgroundCircle1Tablet,
+              ]}
+            />
+            <RadialCircle
+              size={isTablet ? 260 : 140}
+              color={colors.primary}
+              opacity={isTablet ? 0.35 : 0.4}
+              style={[
+                styles.backgroundCircle,
+                isTablet && styles.backgroundCircleTablet,
+                styles.backgroundCircle2,
+                isTablet && styles.backgroundCircle2Tablet,
+              ]}
+            />
+            <RadialCircle
+              size={isTablet ? 240 : 130}
+              color={colors.primary}
+              opacity={isTablet ? 0.35 : 0.4}
+              style={[
+                styles.backgroundCircle,
+                isTablet && styles.backgroundCircleTablet,
+                styles.backgroundCircle3,
+                isTablet && styles.backgroundCircle3Tablet,
+              ]}
+            />
+            <RadialCircle
+              size={isTablet ? 220 : 120}
+              color={colors.primary}
+              opacity={isTablet ? 0.35 : 0.4}
+              style={[
+                styles.backgroundCircle,
+                isTablet && styles.backgroundCircleTablet,
+                styles.backgroundCircle4,
+                isTablet && styles.backgroundCircle4Tablet,
+              ]}
+            />
           </View>
           <BlurView
             intensity={100}
@@ -209,7 +262,13 @@ export const OnlineLobbyScreen: React.FC = () => {
           />
         </View>
       )}
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          isTablet && styles.containerTablet,
+          isLargeTablet && styles.containerLargeTablet,
+        ]}
+      >
         <View style={styles.header}>
           <Pressable
             onPress={handleBack}
@@ -227,7 +286,13 @@ export const OnlineLobbyScreen: React.FC = () => {
               pressed && styles.usernameButtonPressed,
             ]}
           >
-            <Text style={styles.usernameButtonText}>{displayName}</Text>
+            <Text
+              style={styles.usernameButtonText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {displayName}
+            </Text>
             <Ionicons
               name="pencil-outline"
               size={14}
@@ -238,11 +303,20 @@ export const OnlineLobbyScreen: React.FC = () => {
 
         <ScrollView
           style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            isTablet && styles.scrollContentTablet,
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.heroImageContainer}>
+          <View
+            style={[
+              styles.heroImageContainer,
+              isTablet && styles.heroImageContainerTablet,
+              isLargeTablet && styles.heroImageContainerLargeTablet,
+            ]}
+          >
             <Image
               source={require("@/assets/images/online-main.png")}
               style={styles.heroImage}
@@ -261,7 +335,13 @@ export const OnlineLobbyScreen: React.FC = () => {
             </View>
           )}
 
-          <View style={styles.configCard}>
+          <View
+            style={[
+              styles.configCard,
+              isTablet && styles.configCardTablet,
+              isLargeTablet && styles.configCardLargeTablet,
+            ]}
+          >
             <Text style={styles.configCardLabel}>
               {t("online.lobby.playerCount")}
             </Text>
@@ -285,9 +365,12 @@ export const OnlineLobbyScreen: React.FC = () => {
             <PrimaryButton
               label={t("online.lobby.createGame")}
               onPress={handleCreate}
-            disabled={isConnecting}
-            loading={isConnecting}
-              style={styles.createGameButton}
+              disabled={isConnecting}
+              loading={isConnecting}
+              style={[
+                styles.createGameButton,
+                ...(isTablet ? [styles.createGameButtonTablet] : []),
+              ]}
             />
           </View>
         </ScrollView>
@@ -295,6 +378,8 @@ export const OnlineLobbyScreen: React.FC = () => {
         <View
           style={[
             styles.footerJoin,
+            isTablet && styles.footerJoinTablet,
+            isLargeTablet && styles.footerJoinLargeTablet,
             { paddingBottom: insets.bottom + spacing.lg },
           ]}
         >
@@ -344,6 +429,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing.lg,
   },
+  containerTablet: {
+    paddingHorizontal: spacing.xl,
+  },
+  containerLargeTablet: {
+    paddingHorizontal: spacing.xxl,
+    maxWidth: 900,
+    alignSelf: "center",
+    width: "100%",
+  },
   backgroundLayer: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -352,39 +446,52 @@ const styles = StyleSheet.create({
   },
   backgroundCircle: {
     position: "absolute",
-    opacity: 0.35,
+  },
+  backgroundCircleTablet: {
   },
   backgroundCircle1: {
-    top: "8%",
-    left: "-12%",
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: colors.primary,
+    top: "10%",
+    left: "-10%",
+    width: 120,
+    height: 120,
+  },
+  backgroundCircle1Tablet: {
+    left: "-4%",
+    width: 190,
+    height: 190,
   },
   backgroundCircle2: {
-    top: "22%",
-    right: "-10%",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: colors.primary,
+    top: "25%",
+    right: "-15%",
+    width: 110,
+    height: 110,
+  },
+  backgroundCircle2Tablet: {
+    right: "-4%",
+    width: 180,
+    height: 180,
   },
   backgroundCircle3: {
-    bottom: "25%",
-    left: "-8%",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.primary,
+    bottom: "20%",
+    left: "-5%",
+    width: 100,
+    height: 100,
+  },
+  backgroundCircle3Tablet: {
+    left: "0%",
+    width: 170,
+    height: 170,
   },
   backgroundCircle4: {
-    bottom: "40%",
-    right: "-6%",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: colors.primary,
+    bottom: "35%",
+    right: "-8%",
+    width: 90,
+    height: 90,
+  },
+  backgroundCircle4Tablet: {
+    right: "0%",
+    width: 160,
+    height: 160,
   },
   header: {
     flexDirection: "row",
@@ -413,7 +520,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    flexShrink: 0,
+    flexShrink: 1,
+    minWidth: 0,
   },
   usernameButtonPressed: {
     opacity: 0.9,
@@ -427,14 +535,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
     paddingBottom: spacing.xxl,
     alignItems: "center",
+  },
+  scrollContentTablet: {
+    paddingBottom: spacing.xxl + spacing.lg,
   },
   heroImageContainer: {
     width: "55%",
     maxWidth: 200,
     aspectRatio: 1,
     marginBottom: spacing.lg,
+  },
+  heroImageContainerTablet: {
+    width: "50%",
+    maxWidth: 260,
+  },
+  heroImageContainerLargeTablet: {
+    width: "40%",
+    maxWidth: 320,
   },
   heroImage: {
     width: "100%",
@@ -478,6 +599,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     marginBottom: spacing.md,
   },
+  configCardTablet: {
+    maxWidth: 420,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+  },
+  configCardLargeTablet: {
+    maxWidth: 480,
+  },
   configCardLabel: {
     fontSize: fontSize.xs,
     fontWeight: "600",
@@ -509,6 +638,10 @@ const styles = StyleSheet.create({
   createGameButton: {
     alignSelf: "center",
   },
+  createGameButtonTablet: {
+    width: "100%",
+    maxWidth: 480,
+  },
   footerJoin: {
     flexDirection: "row",
     alignItems: "center",
@@ -518,6 +651,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     width: "100%",
+  },
+  footerJoinTablet: {
+    paddingHorizontal: spacing.xl,
+  },
+  footerJoinLargeTablet: {
+    paddingHorizontal: spacing.xxl,
   },
   haveCodeText: {
     flex: 1,

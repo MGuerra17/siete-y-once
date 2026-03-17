@@ -54,6 +54,10 @@ export const styles = StyleSheet.create({
     marginTop: spacing.xs,
     justifyContent: "space-between",
   },
+  nameTextWrap: {
+    flex: 1,
+    minWidth: 0,
+  },
   nameRowSecondary: {
     flexDirection: "row-reverse",
   },

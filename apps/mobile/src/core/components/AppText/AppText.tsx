@@ -8,9 +8,15 @@ export const AppText: React.FC<AppTextProps> = ({
   children,
   variant = "body",
   align = "left",
+  numberOfLines,
+  ellipsizeMode,
 }) => {
   return (
-    <Text style={[styles.base, variantStyles[variant], { textAlign: align }]}>
+    <Text
+      style={[styles.base, variantStyles[variant], { textAlign: align }]}
+      numberOfLines={numberOfLines}
+      ellipsizeMode={ellipsizeMode}
+    >
       {children}
     </Text>
   );

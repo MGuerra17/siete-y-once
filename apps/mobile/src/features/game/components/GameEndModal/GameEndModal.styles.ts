@@ -62,10 +62,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     opacity: 0.7,
   },
+  winnerAvatarColumn: {
+    alignItems: "center",
+  },
   crownBadge: {
-    position: "absolute",
-    top: -spacing.md,
-    right: "26%",
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -74,6 +74,8 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 2,
     borderColor: colors.background,
+    marginBottom: -spacing.md,
+    zIndex: 1,
   },
   winnerLabelPill: {
     marginTop: spacing.sm,
@@ -87,18 +89,26 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     borderRadius: 999,
-    backgroundColor: colors.border,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   playerName: {
     marginTop: spacing.xs,
     fontSize: fontSize.sm,
     fontWeight: "600",
     color: colors.textPrimary,
+    maxWidth: "100%",
   },
   labelPillText: {
     fontSize: fontSize.xs,
     fontWeight: "600",
     color: colors.background,
+  },
+  loserLabelText: {
+    fontSize: fontSize.xs,
+    fontWeight: "600",
+    color: colors.textSecondary,
   },
   statsContainer: {
     width: "100%",

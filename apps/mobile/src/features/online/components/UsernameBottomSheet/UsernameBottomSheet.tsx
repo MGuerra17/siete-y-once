@@ -19,6 +19,8 @@ type UsernameBottomSheetProps = {
   initialValue?: string;
 };
 
+const USERNAME_MAX_LENGTH = 15;
+
 export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
   visible,
   onClose,
@@ -72,17 +74,22 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
     >
       <BottomSheetView style={styles.content}>
         <Text style={styles.title}>{t("online.username.title")}</Text>
-        <BottomSheetTextInput
-          style={styles.input}
-          placeholder={t("online.username.placeholder")}
-          placeholderTextColor={colors.textSecondary}
-          value={name}
-          onChangeText={setName}
-          maxLength={50}
-          autoFocus
-          returnKeyType="done"
-          onSubmitEditing={handleSubmit}
-        />
+        <View style={styles.inputWrapper}>
+          <BottomSheetTextInput
+            style={styles.input}
+            placeholder={t("online.username.placeholder")}
+            placeholderTextColor={colors.textSecondary}
+            value={name}
+            onChangeText={setName}
+            maxLength={USERNAME_MAX_LENGTH}
+            autoFocus
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit}
+          />
+          <Text style={styles.charCounter}>
+            {name.length}/{USERNAME_MAX_LENGTH}
+          </Text>
+        </View>
         <View style={styles.buttonContainer}>
           <PrimaryButton
             label={t("online.username.continue")}
@@ -121,6 +128,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.textPrimary,
   },
+  inputWrapper: {
+    position: "relative",
+  },
   input: {
     backgroundColor: colors.background,
     borderWidth: 1,
@@ -128,8 +138,17 @@ const styles = StyleSheet.create({
     borderRadius: spacing.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
+    paddingRight: spacing.xl * 2,
     fontSize: fontSize.md,
     color: colors.textPrimary,
+  },
+  charCounter: {
+    position: "absolute",
+    right: spacing.md,
+    top: "50%",
+    transform: [{ translateY: -fontSize.xs / 2 }],
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
   },
   buttonContainer: {
     marginTop: spacing.sm,
