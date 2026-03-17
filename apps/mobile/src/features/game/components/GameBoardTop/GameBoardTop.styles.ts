@@ -1,6 +1,6 @@
+import { StyleSheet } from "react-native";
 import { colors } from "@/src/theme/colors";
 import { spacing } from "@/src/theme/spacing";
-import { StyleSheet } from "react-native";
 
 const MIN_TOUCH_TARGET = 44;
 
@@ -30,28 +30,9 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderColor: colors.border,
   },
-  middle: {
-    flex: 1,
-    minHeight: 0,
-    flexShrink: 1,
-    justifyContent: "center",
-  },
-  middleSlot: {
-    minHeight: 80,
-    maxHeight: 120,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: spacing.sm,
-  },
-  bottom: {
-    flex: 1,
-    minHeight: 0,
-    flexShrink: 1,
-    justifyContent: "flex-end",
-    paddingBottom: spacing.lg,
-  },
   betBillContainer: {
     alignItems: "center",
     marginVertical: spacing.sm,
   },
 });
+

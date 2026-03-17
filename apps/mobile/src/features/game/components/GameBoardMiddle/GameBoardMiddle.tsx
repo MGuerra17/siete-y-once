@@ -4,20 +4,8 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { DiceSumDisplay } from "@/src/features/game/components/DiceSumDisplay/DiceSumDisplay";
 import { Dices } from "@/src/features/game/components/Dices/Dices";
 import { PointDisplay } from "@/src/features/game/components/PointDisplay/PointDisplay";
-import type { Player, PlayerId } from "@/src/features/game/types";
-import { styles } from "@/src/features/game/screens/GameScreen/GameScreen.styles";
-
-type GameBoardMiddleProps = {
-  player1: Player;
-  player2: Player;
-  isInitialPhase: boolean;
-  point: number | null;
-  diceValues: [number, number];
-  isRolling: boolean;
-  isInteractionBlocked: boolean;
-  initialRolls: Partial<Record<PlayerId, number>>;
-  onDicePress: () => void;
-};
+import type { GameBoardMiddleProps } from "./GameBoardMiddle.types";
+import { styles } from "./GameBoardMiddle.styles";
 
 /** Middle section of the game board: dice sum displays / point, and the dice. */
 export const GameBoardMiddle: React.FC<GameBoardMiddleProps> = ({
@@ -66,3 +54,4 @@ export const GameBoardMiddle: React.FC<GameBoardMiddleProps> = ({
     </View>
   );
 };
+

@@ -6,24 +6,8 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { BetBill } from "@/src/features/game/components/BetBill/BetBill";
 import { PlayerInfo } from "@/src/features/game/components/PlayerInfo/PlayerInfo";
 import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
-import type { Player, PlayerId } from "@/src/features/game/types";
-import { styles } from "@/src/features/game/screens/GameScreen/GameScreen.styles";
-
-type GameBoardTopProps = {
-  player: Player;
-  isInitialPhase: boolean;
-  currentBet: number;
-  bettorId: PlayerId | null;
-  keepBet: boolean;
-  canUnlock: boolean;
-  lastWinnerId: PlayerId | null;
-  lastWinningNumber: number | null;
-  onExitPress: () => void;
-  onKeepBetChange: (value: boolean) => void;
-  countdownProgress?: number | null;
-  /** When false, hide lock bet (e.g. online mode: opponent's panel). */
-  showLockButton?: boolean;
-};
+import type { GameBoardTopProps } from "./GameBoardTop.types";
+import { styles } from "./GameBoardTop.styles";
 
 /** Top section of the game board: exit button, opponent info, and bet bill. */
 export const GameBoardTop: React.FC<GameBoardTopProps> = ({
@@ -84,3 +68,4 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
     </View>
   );
 };
+
