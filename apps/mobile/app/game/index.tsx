@@ -1,8 +1,18 @@
 import React from "react";
-import { GameScreenContainer } from "@/src/features/game/screens/GameScreen/GameScreenContainer";
+import { useLocalSearchParams } from "expo-router";
+import { GameMode } from "@/src/features/game/enums/GameMode";
+import { OfflineGameScreen } from "@/src/features/game/screens/GameScreen/OfflineGameScreen";
+import { OnlineGameScreen } from "@/src/features/online/screens/OnlineGameScreen/OnlineGameScreen";
 
 export default function Game() {
-  return <GameScreenContainer />;
+  const { mode } = useLocalSearchParams<{ mode?: GameMode }>();
+  const isOnline = mode === GameMode.ONLINE;
+
+  if (isOnline) {
+    return <OnlineGameScreen />;
+  }
+
+  return <OfflineGameScreen />;
 }
 
 
