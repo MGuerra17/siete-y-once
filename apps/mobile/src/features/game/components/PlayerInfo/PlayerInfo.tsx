@@ -92,6 +92,7 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
               variant="subtitle"
               numberOfLines={1}
               ellipsizeMode="tail"
+              align={variant === "secondary" ? "right" : "left"}
             >
               {displayName}
             </AppText>

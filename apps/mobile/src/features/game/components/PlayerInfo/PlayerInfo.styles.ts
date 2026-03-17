@@ -58,6 +58,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  nameTextWrapSecondary: {
+    textAlign: "right",
+  },
   nameRowSecondary: {
     flexDirection: "row-reverse",
   },
@@ -100,4 +103,3 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
