@@ -9,8 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "icon": "./assets/images/icon.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.guerra-m17.sevenelevenrn"
+      "bundleIdentifier": "dev.miguelguerra.sevenelevenrn"
     },
     "android": {
       "adaptiveIcon": {
