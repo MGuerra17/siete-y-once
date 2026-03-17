@@ -4,20 +4,22 @@ import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useActionTimer } from "@/src/features/game/hooks/useActionTimer";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
 import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
-import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
+import {
+  getCurrentActionPlayerId,
+  useAutoKeepBet,
+  useGameWinEffects,
+  useShareGameResultHandler,
+} from "@/src/features/game/hooks/useBaseGameScreen";
 import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
 import { useGameStore } from "@/src/features/game/store/gameStore";
-import { shareGameResult } from "@/src/features/game/utils/shareGameResult";
-import { GameMode as RouteGameMode } from "@/src/features/game/enums/GameMode";
 import { useOnlineGameEngine } from "@/src/features/online/hooks/useOnlineGameEngine";
 import { wsService } from "@/src/features/online/services/WebSocketService";
 import { useOnlineStore } from "@/src/features/online/store/onlineStore";
 import { clearSession } from "@/src/features/online/utils/storage";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as Clipboard from "expo-clipboard";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { PlayerId } from "@/src/features/game/types";
-import type { View as RNView } from "react-native";
 import { useShallow } from "zustand/shallow";
 
 type UseOnlineGameScreenResult = {
@@ -82,11 +84,11 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
   );
 
   const { mode, showCode } = useLocalSearchParams<{
-    mode?: RouteGameMode;
+    mode?: GameMode;
     showCode?: string;
   }>();
 
-  const isOnline = mode === RouteGameMode.ONLINE;
+  const isOnline = mode === GameMode.ONLINE;
 
   const router = useRouter();
   const { t } = useLanguage();
@@ -99,15 +101,12 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
   const opponentConnected = useOnlineStore((s) => s.opponentConnected);
   const [showCodeModal, setShowCodeModal] = useState(false);
 
-  const currentActionPlayerId: PlayerId | null =
-    phase === GamePhase.INITIAL_ROLL
-      ? activeInitialRollerId
-      : phase === GamePhase.BET_PLACEMENT || phase === GamePhase.POINT_PHASE
-        ? bettorId
-        : phase === GamePhase.SHOOTER_ROLLING ||
-            phase === GamePhase.WAITING_FOR_ROLL
-          ? shooterId
-          : null;
+  const currentActionPlayerId: PlayerId | null = getCurrentActionPlayerId({
+    phase,
+    activeInitialRollerId,
+    bettorId,
+    shooterId,
+  });
 
   const isLocalPlayerActive =
     isOnline && currentActionPlayerId
@@ -137,11 +136,6 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
     onExpire: engine.performDefaultAction,
   });
 
-  const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(
-    GameMode.ONLINE,
-    isRolling,
-  );
-
   const { maxBet, winner, loser } = useGameDerivedState({
     player1,
     player2,
@@ -150,6 +144,15 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
     minBet,
     lastWinnerId,
   });
+
+  const { playBetSound } = useGameWinEffects({
+    mode: GameMode.ONLINE,
+    isRolling,
+    phase,
+    lastWinnerId: lastWinnerId ?? null,
+  });
+
+  useAutoKeepBet({ currentBet, maxBet, setKeepBet });
 
   const handleGoHome = useCallback(() => {
     wsService.disconnect();
@@ -172,26 +175,6 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline]);
 
-  useEffect(() => {
-    if (currentBet > 0 && currentBet >= maxBet) {
-      setKeepBet(true);
-    }
-  }, [currentBet, maxBet, setKeepBet]);
-
-  useEffect(() => {
-    if (lastWinnerId) playWinRoundSound();
-  }, [lastWinnerId, playWinRoundSound]);
-
-  const prevPhase = useRef(phase);
-
-  useEffect(() => {
-    const justEnteredGameOver =
-      phase === GamePhase.GAME_OVER &&
-      prevPhase.current !== GamePhase.GAME_OVER;
-    prevPhase.current = phase;
-    if (justEnteredGameOver) playWinGameSound();
-  }, [phase, playWinGameSound]);
-
   const handleSubmitBet = useCallback(
     (amount: number) => {
       engine.onBetSubmit(amount);
@@ -207,17 +190,12 @@ export const useOnlineGameScreen = (): UseOnlineGameScreenResult => {
     [setKeepBet],
   );
 
-  const captureRef = useRef<RNView>(null);
-
-  const handleShare = useCallback(() => {
-    shareGameResult(
-      captureRef,
-      winner,
-      loser,
-      totalRounds,
-      t as (key: string) => string,
-    );
-  }, [winner, loser, totalRounds, t]);
+  const { captureRef, handleShare } = useShareGameResultHandler({
+    winner,
+    loser,
+    totalRounds,
+    t: t as (key: string) => string,
+  });
 
   const handleCopyCode = useCallback(async () => {
     if (!shortCode) return;

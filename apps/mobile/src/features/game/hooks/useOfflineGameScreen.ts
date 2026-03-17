@@ -4,14 +4,17 @@ import { GamePhase } from "@/src/features/game/enums/GamePhase";
 import { useActionTimer } from "@/src/features/game/hooks/useActionTimer";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
 import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
-import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
+import {
+  getCurrentActionPlayerId,
+  useAutoKeepBet,
+  useGameWinEffects,
+  useShareGameResultHandler,
+} from "@/src/features/game/hooks/useBaseGameScreen";
 import { useLocalGameEngine } from "@/src/features/game/hooks/useLocalGameEngine";
 import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
 import { useGameStore } from "@/src/features/game/store/gameStore";
-import { shareGameResult } from "@/src/features/game/utils/shareGameResult";
 import { useNavigation, useRouter } from "expo-router";
-import { useCallback, useEffect, useRef } from "react";
-import type { View } from "react-native";
+import { useCallback, useEffect } from "react";
 import type { PlayerId } from "@/src/features/game/types";
 import { useShallow } from "zustand/shallow";
 
@@ -76,15 +79,12 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
 
   const engine = useLocalGameEngine();
 
-  const currentActionPlayerId: PlayerId | null =
-    phase === GamePhase.INITIAL_ROLL
-      ? activeInitialRollerId
-      : phase === GamePhase.BET_PLACEMENT || phase === GamePhase.POINT_PHASE
-        ? bettorId
-        : phase === GamePhase.SHOOTER_ROLLING ||
-            phase === GamePhase.WAITING_FOR_ROLL
-          ? shooterId
-          : null;
+  const currentActionPlayerId: PlayerId | null = getCurrentActionPlayerId({
+    phase,
+    activeInitialRollerId,
+    bettorId,
+    shooterId,
+  });
 
   const isDiceEnabled =
     !isRolling &&
@@ -101,11 +101,6 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
     onExpire: engine.performDefaultAction,
   });
 
-  const { playBetSound, playWinRoundSound, playWinGameSound } = useGameSounds(
-    GameMode.OFFLINE,
-    isRolling,
-  );
-
   const { maxBet, winner, loser } = useGameDerivedState({
     player1,
     player2,
@@ -114,6 +109,15 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
     minBet,
     lastWinnerId,
   });
+
+  const { playBetSound } = useGameWinEffects({
+    mode: GameMode.OFFLINE,
+    isRolling,
+    phase,
+    lastWinnerId: lastWinnerId ?? null,
+  });
+
+  useAutoKeepBet({ currentBet, maxBet, setKeepBet });
 
   const handleGoHome = useCallback(() => {
     resetGame();
@@ -134,26 +138,6 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (currentBet > 0 && currentBet >= maxBet) {
-      setKeepBet(true);
-    }
-  }, [currentBet, maxBet, setKeepBet]);
-
-  useEffect(() => {
-    if (lastWinnerId) playWinRoundSound();
-  }, [lastWinnerId, playWinRoundSound]);
-
-  const prevPhase = useRef(phase);
-
-  useEffect(() => {
-    const justEnteredGameOver =
-      phase === GamePhase.GAME_OVER &&
-      prevPhase.current !== GamePhase.GAME_OVER;
-    prevPhase.current = phase;
-    if (justEnteredGameOver) playWinGameSound();
-  }, [phase, playWinGameSound]);
-
   const handleSubmitBet = useCallback(
     (amount: number) => {
       engine.onBetSubmit(amount);
@@ -168,18 +152,12 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
     },
     [setKeepBet],
   );
-
-  const captureRef = useRef<View>(null);
-
-  const handleShare = useCallback(() => {
-    shareGameResult(
-      captureRef,
-      winner,
-      loser,
-      totalRounds,
-      t as (key: string) => string,
-    );
-  }, [winner, loser, totalRounds, t]);
+  const { captureRef, handleShare } = useShareGameResultHandler({
+    winner,
+    loser,
+    totalRounds,
+    t: t as (key: string) => string,
+  });
 
   const screenProps: GameScreenProps = {
     player1,
@@ -219,4 +197,3 @@ export const useOfflineGameScreen = (): UseOfflineGameScreenResult => {
 
   return { screenProps };
 };
-
