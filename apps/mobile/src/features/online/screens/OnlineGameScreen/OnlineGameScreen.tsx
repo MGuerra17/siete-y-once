@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GameScreen } from "@/src/features/game/screens/GameScreen/GameScreen";
 import { useOnlineGameScreen } from "@/src/features/online/hooks/useOnlineGameScreen";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontSize";
 import { spacing } from "@/src/theme/spacing";
-import * as Share from "expo-sharing";
 
 export const OnlineGameScreen: React.FC = () => {
   const {
@@ -20,6 +19,19 @@ export const OnlineGameScreen: React.FC = () => {
   } = useOnlineGameScreen();
 
   const showOverlay = isOnline && isCreator && showCodeModal && shortCode;
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyWithFeedback = async () => {
+    await handleCopyCode();
+    setCopied(true);
+  };
+
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [copied]);
 
   return (
     <>
@@ -40,7 +52,7 @@ export const OnlineGameScreen: React.FC = () => {
 
               <Pressable
                 style={styles.codeModalGhostButton}
-                onPress={handleCopyCode}
+                onPress={handleCopyWithFeedback}
               >
                 <Ionicons
                   name="copy-outline"
@@ -48,12 +60,17 @@ export const OnlineGameScreen: React.FC = () => {
                   color={colors.textSecondary}
                   style={styles.codeModalGhostIcon}
                 />
-                <Text style={styles.codeModalGhostLabel}>Copiar código</Text>
+                <Text style={styles.codeModalGhostLabel}>
+                  {copied ? "Código copiado" : "Copiar código"}
+                </Text>
               </Pressable>
 
               <View style={styles.codeModalActionsRow}>
                 <Pressable
-                  style={[styles.codeModalActionButton, styles.codeModalExitButton]}
+                  style={[
+                    styles.codeModalActionButton,
+                    styles.codeModalExitButton,
+                  ]}
                   onPress={handleGoHome}
                 >
                   <Text
@@ -73,12 +90,9 @@ export const OnlineGameScreen: React.FC = () => {
                   onPress={async () => {
                     if (!shortCode) return;
                     try {
-                      await Share.shareAsync(
-                        undefined,
-                        {
-                          dialogTitle: `Únete a mi partida con este código: ${shortCode}`,
-                        },
-                      );
+                      await Share.share({
+                        message: `Únete a mi partida con este código: ${shortCode}`,
+                      });
                     } catch {
                       // ignore
                     }
@@ -172,4 +186,3 @@ const styles = StyleSheet.create({
     color: colors.background,
   },
 });
-
