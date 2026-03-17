@@ -36,7 +36,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   isDiceEnabled,
   actionCountdownProgress,
   onDicePress,
-  onOpenBetSheet,
   onKeepBetChange,
   onSubmitBet,
   onDismissToast,
@@ -67,11 +66,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       : isProcessing || isBetSheetVisible;
 
   const topHasCountdown =
-    actionCountdownProgress != null &&
-    actionCountdownPlayerId === player2.id;
+    actionCountdownProgress != null && actionCountdownPlayerId === player2.id;
   const bottomHasCountdown =
-    actionCountdownProgress != null &&
-    actionCountdownPlayerId === player1.id;
+    actionCountdownProgress != null && actionCountdownPlayerId === player1.id;
 
   return (
     <ScreenContainer>
