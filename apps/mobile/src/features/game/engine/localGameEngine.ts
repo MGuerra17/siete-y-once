@@ -124,6 +124,43 @@ export const createLocalGameEngine = (
   getStore: () => GameStore,
   toast: ToastFn,
 ) => {
+  const resolveInitialRollTie = async (): Promise<void> => {
+    const store = getStore();
+    store.setToastMessage(toast("game.toast.tie"));
+    await delay(RESULT_DELAY_MS);
+    store.resetInitialRolls();
+    store.setActiveInitialRoller("player1");
+    store.setIsProcessing(false);
+  };
+
+  const finalizeInitialRollWinner = async (
+    activeInitialRollerId: PlayerId,
+    sum: number,
+    otherSum: number,
+  ): Promise<void> => {
+    const p1Sum = activeInitialRollerId === "player1" ? sum : otherSum;
+    const p2Sum = activeInitialRollerId === "player2" ? sum : otherSum;
+    const shooterId: PlayerId = p1Sum > p2Sum ? "player1" : "player2";
+    const bettorId: PlayerId = getOpponentId(shooterId);
+
+    const s = getStore();
+    s.setShooterAndBettor(shooterId, bettorId);
+    s.setToastMessage(
+      toast("game.toast.shooterDetermined", {
+        name: getPlayerName(s, shooterId),
+      }),
+    );
+    await delay(RESULT_DELAY_MS);
+
+    const s2 = getStore();
+    s2.setPhase(GamePhase.BET_PLACEMENT);
+    s2.setToastMessage(
+      toast("game.toast.placeBet", { name: getPlayerName(s2, bettorId) }),
+    );
+    s2.openBetSheet();
+    s2.setIsProcessing(false);
+  };
+
   const handleInitialRoll = async (): Promise<void> => {
     const store = getStore();
     const { activeInitialRollerId, initialRolls } = store;
@@ -161,35 +198,11 @@ export const createLocalGameEngine = (
     await delay(RESULT_DELAY_MS);
 
     if (sum === otherSum) {
-      store.setToastMessage(toast("game.toast.tie"));
-      await delay(RESULT_DELAY_MS);
-      getStore().resetInitialRolls();
-      getStore().setActiveInitialRoller("player1");
-      getStore().setIsProcessing(false);
+      await resolveInitialRollTie();
       return;
     }
 
-    const p1Sum = activeInitialRollerId === "player1" ? sum : otherSum;
-    const p2Sum = activeInitialRollerId === "player2" ? sum : otherSum;
-    const shooterId: PlayerId = p1Sum > p2Sum ? "player1" : "player2";
-    const bettorId: PlayerId = getOpponentId(shooterId);
-
-    const s = getStore();
-    s.setShooterAndBettor(shooterId, bettorId);
-    s.setToastMessage(
-      toast("game.toast.shooterDetermined", {
-        name: getPlayerName(s, shooterId),
-      }),
-    );
-    await delay(RESULT_DELAY_MS);
-
-    const s2 = getStore();
-    s2.setPhase(GamePhase.BET_PLACEMENT);
-    s2.setToastMessage(
-      toast("game.toast.placeBet", { name: getPlayerName(s2, bettorId) }),
-    );
-    s2.openBetSheet();
-    s2.setIsProcessing(false);
+    await finalizeInitialRollWinner(activeInitialRollerId, sum, otherSum);
   };
 
   const handleShooterRoll = async (): Promise<void> => {
