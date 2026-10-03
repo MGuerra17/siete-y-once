@@ -4,20 +4,14 @@ import {
   BottomSheetView,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import { styles } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.styles";
+import type { UsernameBottomSheetProps } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.types";
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View } from "react-native";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
 import { colors } from "@/src/theme/colors";
-import { fontSize } from "@/src/theme/fontSize";
-import { spacing } from "@/src/theme/spacing";
 
-type UsernameBottomSheetProps = {
-  visible: boolean;
-  onClose: () => void;
-  onSubmit: (name: string) => void;
-  initialValue?: string;
-};
 
 const USERNAME_MAX_LENGTH = 15;
 
@@ -29,17 +23,19 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
 }) => {
   const { t } = useLanguage();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const [name, setName] = useState(initialValue);
+  // null until the player types, so the sheet always opens with the current name.
+  const [draft, setDraft] = useState<string | null>(null);
+  const name = draft ?? initialValue;
 
   useEffect(() => {
-    if (!bottomSheetRef.current) return;
-    if (visible) {
-      setName(initialValue);
-      bottomSheetRef.current.present();
-    } else {
-      bottomSheetRef.current.dismiss();
-    }
-  }, [visible, initialValue]);
+    if (visible) bottomSheetRef.current?.present();
+    else bottomSheetRef.current?.dismiss();
+  }, [visible]);
+
+  const handleDismiss = () => {
+    setDraft(null);
+    onClose();
+  };
 
   const handleSubmit = () => {
     const trimmed = name.trim();
@@ -65,7 +61,7 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
       index={0}
       backdropComponent={renderBackdrop}
       enablePanDownToClose
-      onDismiss={onClose}
+      onDismiss={handleDismiss}
       handleIndicatorStyle={styles.handleIndicator}
       style={styles.modal}
       backgroundStyle={styles.background}
@@ -80,7 +76,7 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
             placeholder={t("online.username.placeholder")}
             placeholderTextColor={colors.textSecondary}
             value={name}
-            onChangeText={setName}
+            onChangeText={setDraft}
             maxLength={USERNAME_MAX_LENGTH}
             autoFocus
             returnKeyType="done"
@@ -101,56 +97,3 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
     </BottomSheetModal>
   );
 };
-
-const styles = StyleSheet.create({
-  modal: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  background: {
-    backgroundColor: colors.background,
-  },
-  handleIndicator: {
-    backgroundColor: colors.border,
-  },
-  content: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xxl,
-    gap: spacing.lg,
-    backgroundColor: colors.background,
-  },
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-    color: colors.textPrimary,
-  },
-  inputWrapper: {
-    position: "relative",
-  },
-  input: {
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    paddingRight: spacing.xl * 2,
-    fontSize: fontSize.md,
-    color: colors.textPrimary,
-  },
-  charCounter: {
-    position: "absolute",
-    right: spacing.md,
-    top: "50%",
-    transform: [{ translateY: -fontSize.xs / 2 }],
-    fontSize: fontSize.xs,
-    color: colors.textSecondary,
-  },
-  buttonContainer: {
-    marginTop: spacing.sm,
-  },
-});

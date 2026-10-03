@@ -5,24 +5,17 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import * as Clipboard from "expo-clipboard";
+import { styles } from "@/src/features/online/components/JoinCodeBottomSheet/JoinCodeBottomSheet.styles";
+import type { JoinCodeBottomSheetProps } from "@/src/features/online/components/JoinCodeBottomSheet/JoinCodeBottomSheet.types";
+import { SHORT_CODE_LENGTH } from "@seven/protocol";
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, Text, View, StyleSheet } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
 import { colors } from "@/src/theme/colors";
-import { fontSize } from "@/src/theme/fontSize";
-import { spacing } from "@/src/theme/spacing";
 
-type JoinCodeBottomSheetProps = {
-  visible: boolean;
-  onClose: () => void;
-  onSubmit: (code: string) => void;
-  loading?: boolean;
-  errorMessage?: string | null;
-};
 
-const JOIN_CODE_LENGTH = 6;
 
 export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
   visible,
@@ -36,18 +29,18 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
   const [code, setCode] = useState("");
 
   useEffect(() => {
-    if (!bottomSheetRef.current) return;
-    if (visible) {
-      setCode("");
-      bottomSheetRef.current.present();
-    } else {
-      bottomSheetRef.current.dismiss();
-    }
+    if (visible) bottomSheetRef.current?.present();
+    else bottomSheetRef.current?.dismiss();
   }, [visible]);
+
+  const handleDismiss = () => {
+    setCode("");
+    onClose();
+  };
 
   const handleSubmit = () => {
     const trimmed = code.trim().toUpperCase();
-    if (trimmed.length === JOIN_CODE_LENGTH && !loading) {
+    if (trimmed.length === SHORT_CODE_LENGTH && !loading) {
       onSubmit(trimmed);
     }
   };
@@ -59,7 +52,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
         .trim()
         .toUpperCase()
         .replace(/[^A-Z0-9]/g, "")
-        .slice(0, JOIN_CODE_LENGTH);
+        .slice(0, SHORT_CODE_LENGTH);
       setCode(pasted);
     } catch {
       // Clipboard read failed (e.g. permission denied); leave code unchanged
@@ -83,7 +76,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
       index={0}
       backdropComponent={renderBackdrop}
       enablePanDownToClose
-      onDismiss={onClose}
+      onDismiss={handleDismiss}
       handleIndicatorStyle={styles.handleIndicator}
       style={styles.modal}
       backgroundStyle={styles.background}
@@ -102,7 +95,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
               placeholderTextColor={colors.textSecondary}
               value={code}
               onChangeText={(text) => setCode(text.toUpperCase())}
-              maxLength={JOIN_CODE_LENGTH}
+              maxLength={SHORT_CODE_LENGTH}
               autoCapitalize="characters"
               autoCorrect={false}
               autoFocus
@@ -134,7 +127,7 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
           <PrimaryButton
             label={t("online.lobby.join")}
             onPress={handleSubmit}
-            disabled={code.trim().length !== JOIN_CODE_LENGTH || loading}
+            disabled={code.trim().length !== SHORT_CODE_LENGTH || loading}
             loading={loading}
           />
         </View>
@@ -142,75 +135,3 @@ export const JoinCodeBottomSheet: React.FC<JoinCodeBottomSheetProps> = ({
     </BottomSheetModal>
   );
 };
-
-const styles = StyleSheet.create({
-  modal: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  background: {
-    backgroundColor: colors.background,
-  },
-  handleIndicator: {
-    backgroundColor: colors.border,
-  },
-  content: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xxl,
-    gap: spacing.lg,
-    backgroundColor: colors.background,
-  },
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-    color: colors.textPrimary,
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-  },
-  inputWrapper: {
-    flex: 1,
-    position: "relative",
-  },
-  input: {
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    paddingRight: spacing.md,
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-    color: colors.textPrimary,
-    textAlign: "center",
-    letterSpacing: 8,
-  },
-  pasteButton: {
-    width: 48,
-    height: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  pasteButtonPressed: {
-    opacity: 0.7,
-  },
-  buttonContainer: {
-    marginTop: spacing.sm,
-  },
-  errorText: {
-    marginTop: spacing.xs,
-    fontSize: fontSize.xs,
-    color: colors.danger,
-    textAlign: "center",
-  },
-});

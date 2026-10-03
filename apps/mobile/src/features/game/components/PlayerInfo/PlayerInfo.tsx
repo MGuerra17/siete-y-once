@@ -6,13 +6,11 @@ import { colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, View } from "react-native";
-import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
+import { PlayerRole } from "@seven/game-core";
+import { useCountdownProgress } from "@/src/features/game/hooks/useCountdownProgress";
 import { styles } from "@/src/features/game/components/PlayerInfo/PlayerInfo.styles";
-import { PlayerInfoProps } from "@/src/features/game/components/PlayerInfo/PlayerInfo.types";
-import {
-  getPlayerDisplayName,
-  type TranslateFn,
-} from "@/src/features/game/utils/playerDisplayName";
+import type { PlayerInfoProps } from "@/src/features/game/components/PlayerInfo/PlayerInfo.types";
+import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
 
 export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   id,
@@ -23,18 +21,15 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   winningNumbers,
   isActive,
   activeWinningNumber = null,
-  countdownProgress = null,
 }) => {
   const variant = id === "player1" ? "primary" : "secondary";
   const { t } = useLanguage();
+  const countdownProgress = useCountdownProgress(id);
 
-  const displayName = getPlayerDisplayName(
-    { id, name: name ?? null },
-    t as TranslateFn,
-  );
+  const displayName = getPlayerDisplayName({ id, name }, t);
 
   const roleLabel =
-    role === PlayerRole.BETTER
+    role === PlayerRole.BETTOR
       ? t("game.betRoleLabel")
       : t("game.rollRoleLabel");
 

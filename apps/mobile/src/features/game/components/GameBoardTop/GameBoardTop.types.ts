@@ -11,8 +11,7 @@ export type GameBoardTopProps = {
   lastWinningNumber: number | null;
   onExitPress: () => void;
   onKeepBetChange: (value: boolean) => void;
-  countdownProgress?: number | null;
-  /** When false, hide lock bet (e.g. online mode: opponent's panel). */
-  showLockButton?: boolean;
+  /** Whether this seat may toggle the bet lock (online: only the local player). */
+  canToggleLock: boolean;
 };
 

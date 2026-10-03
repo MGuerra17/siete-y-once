@@ -67,6 +67,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = ({
           <View style={styles.languageRow}>
             <Pressable
               onPress={() => onSelectLanguage("en")}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: isActiveLanguage(language, "en") }}
               style={[
                 styles.languageButton,
                 isActiveLanguage(language, "en") && styles.languageButtonActive,
@@ -83,6 +85,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = ({
             </Pressable>
             <Pressable
               onPress={() => onSelectLanguage("es")}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: isActiveLanguage(language, "es") }}
               style={[
                 styles.languageButton,
                 isActiveLanguage(language, "es") && styles.languageButtonActive,

@@ -2,22 +2,8 @@ import type { RefObject } from "react";
 import { Platform, Share, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import type { Player } from "@/src/features/game/types";
+import type { TranslateFn } from "@/src/core/hooks/useLanguage";
 import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
-import type { TranslateFn } from "@/src/features/game/utils/playerDisplayName";
-
-/** Builds the localized share message by interpolating winner, loser, and rounds. */
-function buildShareMessage(
-  t: TranslateFn,
-  winnerName: string,
-  loserName: string,
-  totalRounds: number,
-): string {
-  const template = t("game.endModal.shareMessage");
-  return template
-    .replace("{winner}", winnerName)
-    .replace("{loser}", loserName)
-    .replace("{totalRounds}", String(totalRounds));
-}
 
 /**
  * Captures a screenshot of the game-end view and opens the native share sheet.
@@ -32,7 +18,11 @@ export async function shareGameResult(
 ): Promise<void> {
   const winnerName = getPlayerDisplayName(winner, t);
   const loserName = getPlayerDisplayName(loser, t);
-  const message = buildShareMessage(t, winnerName, loserName, totalRounds);
+  const message = t("game.endModal.shareMessage", {
+    winner: winnerName,
+    loser: loserName,
+    totalRounds,
+  });
   const title = t("game.endModal.title");
 
   if (Platform.OS === "web") {

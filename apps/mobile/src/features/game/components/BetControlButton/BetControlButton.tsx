@@ -23,6 +23,9 @@ export const BetControlButton: React.FC<BetControlButtonProps> = ({
       ]}
       onPress={disabled ? undefined : onPress}
       disabled={disabled}
+      hitSlop={8}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
     >
       <Text
         style={[

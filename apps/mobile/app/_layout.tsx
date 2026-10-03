@@ -1,41 +1,37 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { setAudioModeAsync } from "expo-audio";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { Animated, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  SafeAreaProvider,
-  initialWindowMetrics,
-} from "react-native-safe-area-context";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { LanguageProvider } from "@/src/core/context/LanguageContext";
-import { SoundProvider } from "@/src/core/context/SoundContext";
-import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context";
 
 export default function RootLayout() {
-  const opacity = useRef(new Animated.Value(0.8)).current;
+  const [opacity] = useState(() => new Animated.Value(0.8));
 
   useEffect(() => {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    Animated.timing(opacity, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    // Game sounds mix with the player's music and respect the silent switch.
+    setAudioModeAsync({ playsInSilentMode: false, interruptionMode: "mixWithOthers" }).catch(
+      () => undefined,
+    );
   }, [opacity]);
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Animated.View style={{ flex: 1, opacity }}>
+      <GestureHandlerRootView style={styles.fill}>
+        <Animated.View style={[styles.fill, { opacity }]}>
           <BottomSheetModalProvider>
-            <LanguageProvider>
-              <SoundProvider>
-                <StatusBar style="light" />
-                <Stack screenOptions={{ headerShown: false }} />
-              </SoundProvider>
-            </LanguageProvider>
+            <StatusBar style="light" />
+            <Stack screenOptions={{ headerShown: false }} />
           </BottomSheetModalProvider>
         </Animated.View>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  fill: { flex: 1 },
+});

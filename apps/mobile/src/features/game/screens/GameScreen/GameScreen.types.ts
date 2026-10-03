@@ -1,45 +1,33 @@
 import type { RefObject } from "react";
 import type { View } from "react-native";
-import type { GamePhase } from "@/src/features/game/enums/GamePhase";
-import type { Player, PlayerId } from "@/src/features/game/types";
+import type { BoardView } from "@/src/features/game/model/boardView";
+import type { Flyer, GameMode } from "@/src/features/game/types";
 
-/** Props for the presentational GameScreen component, fully driven by the container. */
+/** Props for the presentational GameScreen, shared by offline and online modes. */
 export type GameScreenProps = {
-  player1: Player;
-  player2: Player;
-  phase: GamePhase;
-  point: number | null;
-  diceValues: [number, number];
+  board: BoardView;
+  mode: GameMode;
   isRolling: boolean;
-  isProcessing: boolean;
-  initialRolls: Partial<Record<PlayerId, number>>;
-  currentBet: number;
-  minBet: number;
-  bettorId: PlayerId | null;
-  keepBet: boolean;
+  /** True when the local player may roll right now. */
+  isDiceEnabled: boolean;
   isBetSheetVisible: boolean;
   toastMessage: string | null;
-  totalRounds: number;
-  lastWinnerId: PlayerId | null;
-  lastWinningNumber: number | null;
-  /** Id of the player that must act (drives where the countdown ring appears). */
-  actionCountdownPlayerId?: PlayerId | null;
-  /** In online mode, player1 is local; lock bet is only shown for the local player. */
-  isOnline?: boolean;
-  /** When true, dice can be rolled (phase is roll and local player is shooter). When false/undefined, dice stay blocked. */
-  isDiceEnabled?: boolean;
-  /** 0 = full ring, 1 = ring gone. Passed to the active player's avatar. */
-  actionCountdownProgress: number | null;
+  /** Persistent online status (reconnecting, opponent away). */
+  statusMessage?: string | null;
+  flyer: Flyer | null;
+  /** Seats allowed to toggle the bet lock (online: only the local, bottom seat). */
+  lockableSeats: { top: boolean; bottom: boolean };
   onDicePress: () => void;
-  onOpenBetSheet: () => void;
-  onKeepBetChange: (value: boolean) => void;
   onSubmitBet: (amount: number) => void;
+  onToggleBetLock: () => void;
   onDismissToast: () => void;
   onGoHome: () => void;
-  onShare?: () => void;
-  captureRef?: RefObject<View | null>;
-  isExitConfirmVisible: boolean;
-  onExitPress: () => void;
-  onExitConfirm: () => void;
-  onExitCancel: () => void;
+  onShare: () => void;
+  captureRef: RefObject<View | null>;
+  exit: {
+    visible: boolean;
+    onPress: () => void;
+    onConfirm: () => void;
+    onCancel: () => void;
+  };
 };

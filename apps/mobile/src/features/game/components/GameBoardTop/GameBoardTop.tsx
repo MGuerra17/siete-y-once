@@ -5,9 +5,8 @@ import { colors } from "@/src/theme/colors";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { BetBill } from "@/src/features/game/components/BetBill/BetBill";
 import { PlayerInfo } from "@/src/features/game/components/PlayerInfo/PlayerInfo";
-import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
-import type { GameBoardTopProps } from "./GameBoardTop.types";
-import { styles } from "./GameBoardTop.styles";
+import type { GameBoardTopProps } from "@/src/features/game/components/GameBoardTop/GameBoardTop.types";
+import { styles } from "@/src/features/game/components/GameBoardTop/GameBoardTop.styles";
 
 /** Top section of the game board: exit button, opponent info, and bet bill. */
 export const GameBoardTop: React.FC<GameBoardTopProps> = ({
@@ -21,15 +20,11 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
   lastWinningNumber,
   onExitPress,
   onKeepBetChange,
-  countdownProgress = null,
-  showLockButton: showLockButtonOverride,
+  canToggleLock,
 }) => {
   const { t } = useLanguage();
   const isBettor = bettorId === player.id;
-  const showLockButton =
-    showLockButtonOverride !== undefined
-      ? showLockButtonOverride
-      : isBettor && currentBet > 0;
+  const showLockButton = canToggleLock && isBettor && currentBet > 0;
 
   return (
     <View style={styles.top}>
@@ -48,11 +43,10 @@ export const GameBoardTop: React.FC<GameBoardTopProps> = ({
         name={player.name}
         imageUri={player.imageUri}
         currentMoney={player.currentMoney}
-        role={isInitialPhase ? PlayerRole.ROLLER : player.currentRole}
+        role={isInitialPhase ? null : player.currentRole}
         winningNumbers={player.winningNumbers}
         isActive={player.isActive}
         activeWinningNumber={lastWinnerId === player.id ? lastWinningNumber : null}
-        countdownProgress={countdownProgress}
       />
       <View style={styles.betBillContainer}>
         <BetBill

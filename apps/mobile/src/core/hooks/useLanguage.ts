@@ -1,14 +1,19 @@
-import { useContext } from "react";
-import { LanguageContext } from "@/src/core/context/LanguageContext";
+import { useCallback } from "react";
+import { formatMessage, type MessageParams } from "@/src/core/i18n/format";
+import { translate, type TranslationKey } from "@/src/core/i18n/translations";
+import { useSettingsStore } from "@/src/core/settings/settingsStore";
 
-/** Provides the current language, setter, and `t()` translation helper. Must be inside a `LanguageProvider`. */
+export type TranslateFn = (key: TranslationKey, params?: MessageParams) => string;
+
+/** Current language, its setter and a `t(key, params?)` helper with `{placeholder}` interpolation. */
 export const useLanguage = () => {
-  const ctx = useContext(LanguageContext);
+  const language = useSettingsStore((s) => s.language);
+  const setLanguage = useSettingsStore((s) => s.setLanguage);
 
-  if (!ctx) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
+  const t: TranslateFn = useCallback(
+    (key, params) => formatMessage(translate(language, key), params),
+    [language],
+  );
 
-  return ctx;
+  return { language, setLanguage, t };
 };
-

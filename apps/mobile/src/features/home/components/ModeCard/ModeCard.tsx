@@ -2,22 +2,9 @@ import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/src/theme/colors";
-import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
-import type { ComponentProps } from "react";
+import { styles } from "@/src/features/home/components/ModeCard/ModeCard.styles";
+import type { ModeCardProps } from "@/src/features/home/components/ModeCard/ModeCard.types";
 
-type IoniconsName = ComponentProps<typeof Ionicons>["name"];
-
-export type ModeCardProps = {
-  icon: IoniconsName;
-  label: string;
-  description: string;
-  selected?: boolean;
-  disabled?: boolean;
-  badge?: string;
-  isTablet?: boolean;
-  isLargeTablet?: boolean;
-  onPress: () => void;
-};
 
 /** Selectable card for choosing a game mode (offline / online). */
 export const ModeCard: React.FC<ModeCardProps> = ({
@@ -41,6 +28,9 @@ export const ModeCard: React.FC<ModeCardProps> = ({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}. ${description}`}
+      accessibilityState={{ disabled: !!disabled, selected: !!selected }}
       style={[
         styles.modeCard,
         isTablet && styles.modeCardTablet,

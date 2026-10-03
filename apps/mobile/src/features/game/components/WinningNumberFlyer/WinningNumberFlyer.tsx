@@ -2,7 +2,7 @@ import type { WinningNumberFlyerProps } from "@/src/features/game/components/Win
 import type { PlayerId } from "@/src/features/game/types";
 import { colors } from "@/src/theme/colors";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   runOnJS,
@@ -11,17 +11,14 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-const { width, height } = Dimensions.get("window");
-
 type Point = { x: number; y: number };
+type Curve = { start: Point; ctrl: Point; end: Point };
 
 // Approximate screen-space positions based on the 3-section layout (top / middle / bottom, each flex:1)
 // player2 (top section, row-reversed → winning numbers on the LEFT)
 // player1 (bottom section, normal → winning numbers on the RIGHT)
-const CURVE_CONFIG: Record<
-  PlayerId,
-  { start: Point; ctrl: Point; end: Point }
-> = {
+const curveFor = (playerId: PlayerId, width: number, height: number): Curve =>
+  ({
   player2: {
     start: { x: width * 0.18, y: height * 0.15 },
     // arc sweeps toward the right before coming down to center
@@ -34,7 +31,7 @@ const CURVE_CONFIG: Record<
     ctrl: { x: width * 0.15, y: height * 0.78 },
     end: { x: width * 0.5, y: height * 0.56 },
   },
-};
+  })[playerId];
 
 const PILL_W = 44;
 const PILL_H = 34;
@@ -51,7 +48,8 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
 }) => {
   const [visible, setVisible] = useState(true);
   const progress = useSharedValue(0);
-  const { start, ctrl, end } = CURVE_CONFIG[playerId];
+  const { width, height } = useWindowDimensions();
+  const { start, ctrl, end } = curveFor(playerId, width, height);
 
   useEffect(() => {
     progress.value = withTiming(
@@ -64,8 +62,7 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
         }
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- animation runs once on mount with initial props
-  }, []);
+  }, [progress]);
 
   const animatedStyle = useAnimatedStyle(() => {
     const t = progress.value;

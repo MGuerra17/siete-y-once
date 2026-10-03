@@ -4,7 +4,9 @@ import { styles } from "@/src/features/game/components/BetBottomSheet/BetBottomS
 import type { BetBottomSheetProps } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet.types";
 import { BetControlButton } from "@/src/features/game/components/BetControlButton/BetControlButton";
 import { BetSubmitButton } from "@/src/features/game/components/BetSubmitButton/BetSubmitButton";
-import { BET_STEPS } from "@/src/features/game/constants/game.constants";
+import { BET_STEPS } from "@seven/game-core";
+import { useCountdownProgress } from "@/src/features/game/hooks/useCountdownProgress";
+import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
 import { useBetControls } from "@/src/features/game/hooks/useBetControls";
 import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import {
@@ -33,9 +35,10 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
   isFirstBet,
   onClose,
   onSubmitBet,
-  countdownProgress = null,
 }) => {
   const { t } = useLanguage();
+  const timerProgress = useCountdownProgress();
+  const countdownProgress = visible ? timerProgress : null;
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const {
@@ -97,7 +100,7 @@ export const BetBottomSheet: React.FC<BetBottomSheetProps> = ({
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {player.name ?? t("game.player1DefaultName")}
+                {getPlayerDisplayName(player, t)}
               </Text>
             </View>
           )}

@@ -16,6 +16,9 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled: isDisabled, busy: !!loading }}
       style={({ pressed }) => [
         styles.base,
         pressed && !isDisabled && styles.pressed,

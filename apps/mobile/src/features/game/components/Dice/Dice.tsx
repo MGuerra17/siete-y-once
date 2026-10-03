@@ -1,5 +1,6 @@
 import React from "react";
-import { Animated, Pressable, View } from "react-native";
+import { Pressable } from "react-native";
+import Animated from "react-native-reanimated";
 import { styles } from "@/src/features/game/components/Dice/Dice.styles";
 import type { DiceProps } from "@/src/features/game/components/Dice/Dice.types";
 import { useDiceAnimation } from "@/src/features/game/hooks/useDiceAnimation";
@@ -12,7 +13,7 @@ export const Dice: React.FC<DiceProps> = ({
   disabled,
   accessibilityLabel,
 }) => {
-  const { displayValue, scale } = useDiceAnimation(isRolling, value);
+  const { displayValue, animatedStyle } = useDiceAnimation(isRolling, value);
 
   return (
     <Pressable
@@ -22,11 +23,7 @@ export const Dice: React.FC<DiceProps> = ({
       accessibilityState={{ disabled: !!disabled }}
     >
       <Animated.View
-        style={[
-          styles.die,
-          { transform: [{ scale }] },
-          disabled && styles.dieDisabled,
-        ]}
+        style={[styles.die, animatedStyle, disabled && styles.dieDisabled]}
       >
         <DicePips value={displayValue} />
       </Animated.View>

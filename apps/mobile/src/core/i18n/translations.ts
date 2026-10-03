@@ -1,8 +1,6 @@
 export type Language = "en" | "es";
 
 type TranslationKeys =
-  | "home.welcomeTitle"
-  | "home.startGame"
   | "home.languageEnglish"
   | "home.languageSpanish"
   | "home.configTitle"
@@ -14,18 +12,11 @@ type TranslationKeys =
   | "home.modeOffline"
   | "home.modeOfflineDescription"
   | "home.modeOnlineDescription"
-  | "home.comingSoon"
   | "game.player1DefaultName"
   | "game.player2DefaultName"
-  | "game.currentMoney"
-  | "game.currentRole"
-  | "game.winningNumbers"
   | "game.betRoleLabel"
   | "game.rollRoleLabel"
   | "game.pointLabel"
-  | "game.lastRollSumPlayer1Label"
-  | "game.lastRollSumPlayer2Label"
-  | "game.rollDiceCta"
   | "game.betSheet.title"
   | "game.betSheet.currentBetLabel"
   | "game.betSheet.newTotalBetLabel"
@@ -54,8 +45,6 @@ type TranslationKeys =
   | "game.toast.shooterWinsPoint"
   | "game.toast.bettorWinsSeven"
   | "game.toast.continueRolling"
-  | "game.toast.comparingRolls"
-  | "game.keepBetLabel"
   | "game.exitModal.title"
   | "game.exitModal.message"
   | "game.exitModal.cancelCta"
@@ -63,17 +52,11 @@ type TranslationKeys =
   | "game.a11y.exitButton"
   | "game.a11y.rollDice"
   | "game.a11y.keepBetToggle"
-  | "game.toast.opponentDisconnected"
   | "game.toast.opponentReconnected"
   | "game.toast.gameOverAbandonment"
-  | "game.toast.waitingForOpponent"
-  | "online.lobby.title"
   | "online.lobby.heroTitle"
   | "online.lobby.heroSubtitle"
   | "online.lobby.createGame"
-  | "online.lobby.joinGame"
-  | "online.lobby.joinWithCode"
-  | "online.lobby.enterCode"
   | "online.lobby.codePlaceholder"
   | "online.lobby.join"
   | "online.lobby.joinCodeModal.title"
@@ -82,14 +65,9 @@ type TranslationKeys =
   | "online.lobby.joinCta"
   | "online.lobby.pasteCode"
   | "online.lobby.playerCount"
-  | "online.waiting.title"
   | "online.waiting.gameCodeTitle"
   | "online.waiting.copyCodeCta"
-  | "online.waiting.waitingForOpponent"
-  | "online.waiting.shareCodeLabel"
-  | "online.waiting.copyCode"
   | "online.waiting.codeCopied"
-  | "online.waiting.connecting"
   | "online.waiting.cancel"
   | "online.waiting.exitCta"
   | "online.waiting.shareCta"
@@ -100,15 +78,18 @@ type TranslationKeys =
   | "online.error.connectionFailed"
   | "online.error.invalidCode"
   | "online.error.gameFull"
-  | "online.error.copyFailed"
-  | "online.claimAbandonment";
+  | "game.banner.reconnecting"
+  | "game.banner.opponentDisconnected"
+  | "game.toast.opponentLeft"
+  | "online.error.generic"
+  | "online.error.notYourTurn"
+  | "online.error.invalidBet"
+  | "online.error.rejoinFailed";
 
 type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
 export const translations: TranslationRecord = {
   en: {
-    "home.welcomeTitle": "Welcome to Siete y Once",
-    "home.startGame": "Start game",
     "home.languageEnglish": "English",
     "home.languageSpanish": "Spanish",
     "home.configTitle": "Settings",
@@ -120,18 +101,11 @@ export const translations: TranslationRecord = {
     "home.modeOffline": "Offline",
     "home.modeOfflineDescription": "Play with friends on the same device",
     "home.modeOnlineDescription": "Challenge players worldwide",
-    "home.comingSoon": "Coming soon",
     "game.player1DefaultName": "Player 1",
     "game.player2DefaultName": "Player 2",
-    "game.currentMoney": "Money",
-    "game.currentRole": "Role",
-    "game.winningNumbers": "Winning numbers",
     "game.betRoleLabel": "Bet",
     "game.rollRoleLabel": "Roll",
     "game.pointLabel": "Point",
-    "game.lastRollSumPlayer1Label": "Player 1 last roll",
-    "game.lastRollSumPlayer2Label": "Player 2 last roll",
-    "game.rollDiceCta": "Roll dices",
     "game.betSheet.title": "It's time for bet",
     "game.betSheet.currentBetLabel": "Current bet",
     "game.betSheet.newTotalBetLabel": "New bet",
@@ -161,8 +135,6 @@ export const translations: TranslationRecord = {
     "game.toast.shooterWinsPoint": "Point matched! {name} wins!",
     "game.toast.bettorWinsSeven": "Seven out! {name} wins!",
     "game.toast.continueRolling": "Rolled {sum}. Keep rolling!",
-    "game.toast.comparingRolls": "{name} rolled {sum}! Comparing...",
-    "game.keepBetLabel": "Keep bet",
     "game.exitModal.title": "Exit game?",
     "game.exitModal.message": "Your progress will be lost.",
     "game.exitModal.cancelCta": "Cancel",
@@ -170,17 +142,11 @@ export const translations: TranslationRecord = {
     "game.a11y.exitButton": "Exit game",
     "game.a11y.rollDice": "Roll dice",
     "game.a11y.keepBetToggle": "Keep bet locked",
-    "game.toast.opponentDisconnected": "Opponent disconnected",
     "game.toast.opponentReconnected": "Opponent reconnected",
     "game.toast.gameOverAbandonment": "You win! Opponent abandoned the game.",
-    "game.toast.waitingForOpponent": "Waiting for opponent...",
-    "online.lobby.title": "Online Game",
     "online.lobby.heroTitle": "Play with friends",
     "online.lobby.heroSubtitle": "Create a game or join with a code",
     "online.lobby.createGame": "Create Game",
-    "online.lobby.joinGame": "Join Game",
-    "online.lobby.joinWithCode": "Join with code",
-    "online.lobby.enterCode": "Enter room code",
     "online.lobby.codePlaceholder": "ABCDEF",
     "online.lobby.join": "Join",
     "online.lobby.joinCodeModal.title": "Enter room code",
@@ -189,14 +155,9 @@ export const translations: TranslationRecord = {
     "online.lobby.joinCta": "Join",
     "online.lobby.pasteCode": "Paste",
     "online.lobby.playerCount": "Players",
-    "online.waiting.title": "Waiting Room",
     "online.waiting.gameCodeTitle": "Game code",
     "online.waiting.copyCodeCta": "Copy code",
-    "online.waiting.waitingForOpponent": "Waiting for opponent to join...",
-    "online.waiting.shareCodeLabel": "Share this code with the other player",
-    "online.waiting.copyCode": "Tap to copy code",
     "online.waiting.codeCopied": "Code copied!",
-    "online.waiting.connecting": "Connecting...",
     "online.waiting.cancel": "Cancel",
     "online.waiting.exitCta": "Exit",
     "online.waiting.shareCta": "Share",
@@ -207,12 +168,15 @@ export const translations: TranslationRecord = {
     "online.error.connectionFailed": "Connection failed. Please try again.",
     "online.error.invalidCode": "Invalid or expired code",
     "online.error.gameFull": "Game not found or already full",
-    "online.error.copyFailed": "Could not copy to clipboard",
-    "online.claimAbandonment": "Claim Win",
+    "game.banner.reconnecting": "Reconnecting…",
+    "game.banner.opponentDisconnected": "{name} disconnected · {seconds}s to return",
+    "game.toast.opponentLeft": "{name} left the game. You win!",
+    "online.error.generic": "Something went wrong. Please try again.",
+    "online.error.notYourTurn": "It's not your turn",
+    "online.error.invalidBet": "Invalid bet amount",
+    "online.error.rejoinFailed": "Your previous game is no longer available",
   },
   es: {
-    "home.welcomeTitle": "Bienvenido a Siete y Once",
-    "home.startGame": "Comenzar juego",
     "home.languageEnglish": "Inglés",
     "home.languageSpanish": "Español",
     "home.configTitle": "Configuración",
@@ -224,18 +188,11 @@ export const translations: TranslationRecord = {
     "home.modeOffline": "Sin conexión",
     "home.modeOfflineDescription": "Juega con amigos en el mismo dispositivo",
     "home.modeOnlineDescription": "Desafía a jugadores de todo el mundo",
-    "home.comingSoon": "Próximamente",
     "game.player1DefaultName": "Jugador 1",
     "game.player2DefaultName": "Jugador 2",
-    "game.currentMoney": "Dinero",
-    "game.currentRole": "Rol",
-    "game.winningNumbers": "Números ganadores",
     "game.betRoleLabel": "Apostar",
     "game.rollRoleLabel": "Lanzar",
     "game.pointLabel": "Punto",
-    "game.lastRollSumPlayer1Label": "Último lanzamiento jugador 1",
-    "game.lastRollSumPlayer2Label": "Último lanzamiento jugador 2",
-    "game.rollDiceCta": "Lanzar dados",
     "game.betSheet.title": "Es momento de apostar",
     "game.betSheet.currentBetLabel": "Apuesta actual",
     "game.betSheet.newTotalBetLabel": "Nueva apuesta",
@@ -261,12 +218,10 @@ export const translations: TranslationRecord = {
     "game.toast.shooterRoll": "{name}, ¡lanza los dados!",
     "game.toast.shooterWinsNatural": "¡7 u 11! ¡{name} gana!",
     "game.toast.bettorWinsCraps": "¡Craps! ¡{name} gana!",
-    "game.toast.pointSet": "¡El punto es {point}! Igualalo para ganar.",
+    "game.toast.pointSet": "¡El punto es {point}! Iguálalo para ganar.",
     "game.toast.shooterWinsPoint": "¡Punto igualado! ¡{name} gana!",
-    "game.toast.bettorWinsSeven": "¡Seven out! ¡{name} gana!",
+    "game.toast.bettorWinsSeven": "¡Sacó 7! ¡{name} gana!",
     "game.toast.continueRolling": "Sacaste {sum}. ¡Sigue lanzando!",
-    "game.toast.comparingRolls": "{name} sacó {sum}. Comparando...",
-    "game.keepBetLabel": "Mantener apuesta",
     "game.exitModal.title": "¿Salir del juego?",
     "game.exitModal.message": "Se perderá tu progreso.",
     "game.exitModal.cancelCta": "Cancelar",
@@ -274,18 +229,12 @@ export const translations: TranslationRecord = {
     "game.a11y.exitButton": "Salir del juego",
     "game.a11y.rollDice": "Lanzar dados",
     "game.a11y.keepBetToggle": "Mantener apuesta bloqueada",
-    "game.toast.opponentDisconnected": "Oponente desconectado",
     "game.toast.opponentReconnected": "Oponente reconectado",
     "game.toast.gameOverAbandonment":
       "¡Ganaste! El oponente abandonó la partida.",
-    "game.toast.waitingForOpponent": "Esperando al oponente...",
-    "online.lobby.title": "Juego en línea",
     "online.lobby.heroTitle": "Juega con amigos",
     "online.lobby.heroSubtitle": "Crea una partida o únete con un código",
     "online.lobby.createGame": "Crear partida",
-    "online.lobby.joinGame": "Unirse a partida",
-    "online.lobby.joinWithCode": "Unirse con código",
-    "online.lobby.enterCode": "Ingresa el código de sala",
     "online.lobby.codePlaceholder": "ABCDEF",
     "online.lobby.join": "Unirse",
     "online.lobby.joinCodeModal.title": "Ingresa el código de la partida",
@@ -294,15 +243,9 @@ export const translations: TranslationRecord = {
     "online.lobby.joinCta": "Unirme",
     "online.lobby.pasteCode": "Pegar",
     "online.lobby.playerCount": "Jugadores",
-    "online.waiting.title": "Sala de espera",
     "online.waiting.gameCodeTitle": "Código de partida",
     "online.waiting.copyCodeCta": "Copiar código",
-    "online.waiting.waitingForOpponent":
-      "Esperando a que se una un oponente...",
-    "online.waiting.shareCodeLabel": "Comparte este código con el otro jugador",
-    "online.waiting.copyCode": "Toca para copiar el código",
     "online.waiting.codeCopied": "¡Código copiado!",
-    "online.waiting.connecting": "Conectando...",
     "online.waiting.cancel": "Cancelar",
     "online.waiting.exitCta": "Salir",
     "online.waiting.shareCta": "Compartir",
@@ -313,9 +256,18 @@ export const translations: TranslationRecord = {
     "online.error.connectionFailed": "Error de conexión. Intenta de nuevo.",
     "online.error.invalidCode": "Código inválido o expirado",
     "online.error.gameFull": "Partida no encontrada o llena",
-    "online.error.copyFailed": "No se pudo copiar al portapapeles",
-    "online.claimAbandonment": "Reclamar victoria",
+    "game.banner.reconnecting": "Reconectando…",
+    "game.banner.opponentDisconnected": "{name} se desconectó · {seconds}s para volver",
+    "game.toast.opponentLeft": "{name} abandonó la partida. ¡Ganaste!",
+    "online.error.generic": "Algo salió mal. Intenta de nuevo.",
+    "online.error.notYourTurn": "No es tu turno",
+    "online.error.invalidBet": "Monto de apuesta inválido",
+    "online.error.rejoinFailed": "Tu partida anterior ya no está disponible",
   },
 };
 
 export type TranslationKey = TranslationKeys;
+
+/** Looks up a translation, falling back to the key itself so a missing string is visible. */
+export const translate = (language: Language, key: TranslationKey): string =>
+  translations[language][key] ?? key;

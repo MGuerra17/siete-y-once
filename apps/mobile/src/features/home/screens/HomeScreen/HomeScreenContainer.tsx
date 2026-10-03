@@ -1,15 +1,15 @@
-import React, { useCallback, useState } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useSound } from "@/src/core/hooks/useSound";
-import { HomeScreen } from "@/src/features/home/screens/HomeScreen/HomeScreen";
+import { GameModes } from "@/src/features/game/types";
 import { ConfigMenu } from "@/src/features/home/components/ConfigMenu/ConfigMenu";
+import { HomeScreen } from "@/src/features/home/screens/HomeScreen/HomeScreen";
 import { UsernameBottomSheet } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet";
-import {
-  getUsername,
-  setUsername as persistUsername,
-} from "@/src/features/online/utils/storage";
-import { useGameStore } from "@/src/features/game/store/gameStore";
+import { getOnlineClient } from "@/src/features/online/engine/onlineClientInstance";
+import { getUsername, saveUsername } from "@/src/features/online/storage/onlineStorage";
+
+let resumeAttempted = false;
 
 export const HomeScreenContainer: React.FC = () => {
   const router = useRouter();
@@ -25,30 +25,38 @@ export const HomeScreenContainer: React.FC = () => {
     }, []),
   );
 
+  // Once per launch: take the player back to an online game the app was closed in.
+  useEffect(() => {
+    if (resumeAttempted) return;
+    resumeAttempted = true;
+    getOnlineClient()
+      .resume()
+      .then((resumed) => {
+        if (resumed) router.push({ pathname: "/game", params: { mode: GameModes.ONLINE } });
+      });
+  }, [router]);
+
+  const goToLobby = () => {
+    setIsNavigating(true);
+    router.push({ pathname: "/online/lobby" });
+  };
+
   const handleOfflinePress = () => {
     if (isNavigating) return;
-    // Siempre que iniciamos una partida offline, resetear el estado global del juego.
-    useGameStore.getState().resetGame();
     setIsNavigating(true);
-    router.push({ pathname: "/game", params: { mode: "offline" } });
+    router.push({ pathname: "/game", params: { mode: GameModes.OFFLINE } });
   };
 
   const handleOnlinePress = async () => {
     if (isNavigating) return;
-    const savedName = await getUsername();
-    if (savedName) {
-      setIsNavigating(true);
-      router.push({ pathname: "/online/lobby" });
-    } else {
-      setUsernameSheetVisible(true);
-    }
+    if (await getUsername()) goToLobby();
+    else setUsernameSheetVisible(true);
   };
 
   const handleUsernameSubmit = async (name: string) => {
-    await persistUsername(name);
+    await saveUsername(name);
     setUsernameSheetVisible(false);
-    setIsNavigating(true);
-    router.push({ pathname: "/online/lobby" });
+    goToLobby();
   };
 
   return (
@@ -58,6 +66,7 @@ export const HomeScreenContainer: React.FC = () => {
         modeOfflineLabel={t("home.modeOffline")}
         modeOfflineDescription={t("home.modeOfflineDescription")}
         modeOnlineDescription={t("home.modeOnlineDescription")}
+        configLabel={t("home.configTitle")}
         onOfflinePress={handleOfflinePress}
         onOnlinePress={handleOnlinePress}
         onOpenConfig={() => setConfigVisible(true)}

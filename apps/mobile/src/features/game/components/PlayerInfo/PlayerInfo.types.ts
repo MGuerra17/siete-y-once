@@ -1,4 +1,4 @@
-import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
+import type { PlayerRole } from "@seven/game-core";
 
 export type PlayerInfoVariant = "primary" | "secondary";
 
@@ -7,12 +7,11 @@ export type PlayerInfoProps = {
   name?: string;
   imageUri?: string | null;
   currentMoney: number;
-  role: PlayerRole;
-  winningNumbers: number[];
+  /** Null before the shooter is decided (shown as rolling). */
+  role: PlayerRole | null;
+  winningNumbers: readonly number[];
   isActive: boolean;
   activeWinningNumber?: number | null;
   variant?: PlayerInfoVariant;
-  /** 0 = full ring, 1 = ring gone. Donut countdown on avatar when set (active player only). */
-  countdownProgress?: number | null;
 };
 

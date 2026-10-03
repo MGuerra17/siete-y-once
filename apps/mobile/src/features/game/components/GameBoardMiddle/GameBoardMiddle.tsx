@@ -4,8 +4,9 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { DiceSumDisplay } from "@/src/features/game/components/DiceSumDisplay/DiceSumDisplay";
 import { Dices } from "@/src/features/game/components/Dices/Dices";
 import { PointDisplay } from "@/src/features/game/components/PointDisplay/PointDisplay";
-import type { GameBoardMiddleProps } from "./GameBoardMiddle.types";
-import { styles } from "./GameBoardMiddle.styles";
+import type { GameBoardMiddleProps } from "@/src/features/game/components/GameBoardMiddle/GameBoardMiddle.types";
+import { styles } from "@/src/features/game/components/GameBoardMiddle/GameBoardMiddle.styles";
+import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
 
 /** Middle section of the game board: dice sum displays / point, and the dice. */
 export const GameBoardMiddle: React.FC<GameBoardMiddleProps> = ({
@@ -26,7 +27,7 @@ export const GameBoardMiddle: React.FC<GameBoardMiddleProps> = ({
       <View style={styles.middleSlot}>
         {isInitialPhase ? (
           <DiceSumDisplay
-            label={player2.name ?? "Player 2"}
+            label={getPlayerDisplayName(player2, t)}
             value={initialRolls.player2 ?? null}
             visible
           />
@@ -44,7 +45,7 @@ export const GameBoardMiddle: React.FC<GameBoardMiddleProps> = ({
       <View style={styles.middleSlot}>
         {isInitialPhase ? (
           <DiceSumDisplay
-            label={player1.name ?? "Player 1"}
+            label={getPlayerDisplayName(player1, t)}
             value={initialRolls.player1 ?? null}
             visible
             invertOrder

@@ -23,10 +23,7 @@ export const OnlineCodeModal: React.FC<OnlineCodeModalProps> = ({
   const { t } = useLanguage();
 
   const handleShare = () => {
-    const message = t("online.waiting.shareCodeMessage").replace(
-      "{code}",
-      shortCode,
-    );
+    const message = t("online.waiting.shareCodeMessage", { code: shortCode });
     Share.share({ message }).catch(() => {
       // User dismissed or share failed
     });
@@ -39,7 +36,7 @@ export const OnlineCodeModal: React.FC<OnlineCodeModalProps> = ({
       transparent
       animationType="fade"
       visible
-      onRequestClose={() => {}}
+      onRequestClose={onExit}
     >
       <View style={styles.backdrop}>
         <View style={styles.card}>
@@ -48,7 +45,7 @@ export const OnlineCodeModal: React.FC<OnlineCodeModalProps> = ({
           </Text>
           <Text style={styles.code}>{shortCode}</Text>
 
-          <Pressable style={styles.ghostButton} onPress={onCopy}>
+          <Pressable style={styles.ghostButton} onPress={onCopy} accessibilityRole="button">
             <Ionicons
               name="copy-outline"
               size={16}
@@ -66,6 +63,7 @@ export const OnlineCodeModal: React.FC<OnlineCodeModalProps> = ({
             <Pressable
               style={[styles.actionButton, styles.exitButton]}
               onPress={onExit}
+              accessibilityRole="button"
             >
               <Text style={[styles.actionLabel, styles.exitLabel]}>
                 {t("online.waiting.exitCta")}
@@ -74,6 +72,7 @@ export const OnlineCodeModal: React.FC<OnlineCodeModalProps> = ({
             <Pressable
               style={[styles.actionButton, styles.primaryButton]}
               onPress={handleShare}
+              accessibilityRole="button"
             >
               <Text style={[styles.actionLabel, styles.primaryLabel]}>
                 {t("online.waiting.shareCta")}

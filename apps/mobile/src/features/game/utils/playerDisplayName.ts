@@ -1,23 +1,8 @@
+import type { TranslateFn } from "@/src/core/hooks/useLanguage";
 import type { Player } from "@/src/features/game/types";
 
-export type TranslateFn = (key: string) => string;
-
-/** Minimal player shape needed for display name (id + optional name). */
-export type PlayerDisplayNameInput = Pick<Player, "id"> & {
-  name?: string | null;
-};
-
-/**
- * Returns the player's display name: their custom name if set,
- * otherwise the localized default ("Player 1" / "Player 2").
- */
-export function getPlayerDisplayName(
-  player: PlayerDisplayNameInput,
-  t: TranslateFn,
-): string {
-  const defaultName =
-    player.id === "player1"
-      ? t("game.player1DefaultName")
-      : t("game.player2DefaultName");
-  return player.name ?? defaultName;
+/** The player's chosen name, or the localized "Player 1" / "Player 2" for their seat. */
+export function getPlayerDisplayName(player: Pick<Player, "id" | "name">, t: TranslateFn): string {
+  if (player.name) return player.name;
+  return t(player.id === "player1" ? "game.player1DefaultName" : "game.player2DefaultName");
 }

@@ -2,9 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import { BetBill } from "@/src/features/game/components/BetBill/BetBill";
 import { PlayerInfo } from "@/src/features/game/components/PlayerInfo/PlayerInfo";
-import { PlayerRole } from "@/src/features/game/enums/PlayerRole";
-import type { GameBoardBottomProps } from "./GameBoardBottom.types";
-import { styles } from "./GameBoardBottom.styles";
+import type { GameBoardBottomProps } from "@/src/features/game/components/GameBoardBottom/GameBoardBottom.types";
+import { styles } from "@/src/features/game/components/GameBoardBottom/GameBoardBottom.styles";
 
 /** Bottom section of the game board: bet bill and local player info. */
 export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
@@ -17,7 +16,7 @@ export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
   lastWinnerId,
   lastWinningNumber,
   onKeepBetChange,
-  countdownProgress = null,
+  canToggleLock,
 }) => {
   const isBettor = bettorId === player.id;
 
@@ -30,7 +29,7 @@ export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
           visible={isBettor}
           keepBet={keepBet}
           onKeepBetToggle={() => onKeepBetChange(!keepBet)}
-          showLockButton={isBettor && currentBet > 0}
+          showLockButton={canToggleLock && isBettor && currentBet > 0}
           lockPermanent={keepBet && !canUnlock}
         />
       </View>
@@ -39,11 +38,10 @@ export const GameBoardBottom: React.FC<GameBoardBottomProps> = ({
         name={player.name}
         imageUri={player.imageUri}
         currentMoney={player.currentMoney}
-        role={isInitialPhase ? PlayerRole.ROLLER : player.currentRole}
+        role={isInitialPhase ? null : player.currentRole}
         winningNumbers={player.winningNumbers}
         isActive={player.isActive}
         activeWinningNumber={lastWinnerId === player.id ? lastWinningNumber : null}
-        countdownProgress={countdownProgress}
       />
     </View>
   );

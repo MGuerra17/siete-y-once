@@ -10,6 +10,7 @@ export type GameBoardBottomProps = {
   lastWinnerId: PlayerId | null;
   lastWinningNumber: number | null;
   onKeepBetChange: (value: boolean) => void;
-  countdownProgress?: number | null;
+  /** Whether this seat may toggle the bet lock. */
+  canToggleLock: boolean;
 };
 

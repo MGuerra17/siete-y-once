@@ -1,102 +1,75 @@
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { GamePhase } from "@seven/game-core";
 import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
 import { BetBottomSheet } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet";
 import { ExitConfirmModal } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal";
+import { GameBoardBottom } from "@/src/features/game/components/GameBoardBottom/GameBoardBottom";
+import { GameBoardMiddle } from "@/src/features/game/components/GameBoardMiddle/GameBoardMiddle";
+import { GameBoardTop } from "@/src/features/game/components/GameBoardTop/GameBoardTop";
 import { GameEndModal } from "@/src/features/game/components/GameEndModal/GameEndModal";
 import { GameToast } from "@/src/features/game/components/GameToast/GameToast";
+import { StatusBanner } from "@/src/features/game/components/StatusBanner/StatusBanner";
 import { WinningNumberFlyer } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer";
-import { GamePhase } from "@/src/features/game/enums/GamePhase";
-import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
-import { GameBoardBottom } from "@/src/features/game/components/GameBoardBottom";
-import { GameBoardMiddle } from "@/src/features/game/components/GameBoardMiddle";
-import { GameBoardTop } from "@/src/features/game/components/GameBoardTop";
+import { styles } from "@/src/features/game/screens/GameScreen/GameScreen.styles";
 import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import { GameModes } from "@/src/features/game/types";
+
+const noop = () => {};
 
 export const GameScreen: React.FC<GameScreenProps> = ({
-  player1,
-  player2,
-  phase,
-  point,
-  diceValues,
+  board,
+  mode,
   isRolling,
-  isProcessing,
-  initialRolls,
-  currentBet,
-  minBet,
-  bettorId,
-  keepBet,
+  isDiceEnabled,
   isBetSheetVisible,
   toastMessage,
-  totalRounds,
-  lastWinnerId,
-  lastWinningNumber,
-  actionCountdownPlayerId,
-  isOnline = false,
-  isDiceEnabled,
-  actionCountdownProgress,
+  statusMessage = null,
+  flyer,
+  lockableSeats,
   onDicePress,
-  onKeepBetChange,
   onSubmitBet,
+  onToggleBetLock,
   onDismissToast,
   onGoHome,
   onShare,
   captureRef,
-  isExitConfirmVisible,
-  onExitPress,
-  onExitConfirm,
-  onExitCancel,
+  exit,
 }) => {
-  const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
-  const isGameOver = phase === GamePhase.GAME_OVER;
-
-  const { activeBetter, maxBet, isFirstBet, canUnlock, winner, loser } =
-    useGameDerivedState({
-      player1,
-      player2,
-      bettorId,
-      currentBet,
-      minBet,
-      lastWinnerId,
-    });
-
-  const isDiceInteractionBlocked =
-    isDiceEnabled !== undefined
-      ? !isDiceEnabled || isBetSheetVisible || isProcessing
-      : isProcessing || isBetSheetVisible;
-
-  const topHasCountdown =
-    actionCountdownProgress != null && actionCountdownPlayerId === player2.id;
-  const bottomHasCountdown =
-    actionCountdownProgress != null && actionCountdownPlayerId === player1.id;
+  const { player1, player2, bettorId, currentBet, betLocked, maxBet } = board;
+  const isInitialPhase = board.phase === GamePhase.INITIAL_ROLL;
+  const isGameOver = board.phase === GamePhase.GAME_OVER;
+  const canUnlock = currentBet < maxBet;
+  const activeBettor = bettorId === "player1" ? player1 : bettorId === "player2" ? player2 : null;
+  const flyerNumberFor = (seat: "player1" | "player2") =>
+    flyer?.playerId === seat ? flyer.number : null;
 
   return (
-    <ScreenContainer>
-      <View style={{ flex: 1 }}>
+    <ScreenContainer withBottomInset>
+      <View style={styles.board}>
         <GameBoardTop
           player={player2}
           isInitialPhase={isInitialPhase}
           currentBet={currentBet}
           bettorId={bettorId}
-          keepBet={keepBet}
+          keepBet={betLocked}
           canUnlock={canUnlock}
-          lastWinnerId={lastWinnerId}
-          lastWinningNumber={lastWinningNumber}
-          onExitPress={onExitPress}
-          onKeepBetChange={onKeepBetChange}
-          countdownProgress={topHasCountdown ? actionCountdownProgress : null}
-          showLockButton={isOnline ? false : undefined}
+          lastWinnerId={flyer?.playerId ?? null}
+          lastWinningNumber={flyerNumberFor("player2")}
+          onExitPress={exit.onPress}
+          onKeepBetChange={onToggleBetLock}
+          canToggleLock={lockableSeats.top}
         />
 
         <GameBoardMiddle
           player1={player1}
           player2={player2}
           isInitialPhase={isInitialPhase}
-          point={point}
-          diceValues={diceValues}
+          point={board.point}
+          diceValues={board.diceValues}
           isRolling={isRolling}
-          isInteractionBlocked={isDiceInteractionBlocked}
-          initialRolls={initialRolls}
+          isInteractionBlocked={!isDiceEnabled}
+          initialRolls={board.initialRolls}
           onDicePress={onDicePress}
         />
 
@@ -105,43 +78,37 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           isInitialPhase={isInitialPhase}
           currentBet={currentBet}
           bettorId={bettorId}
-          keepBet={keepBet}
+          keepBet={betLocked}
           canUnlock={canUnlock}
-          lastWinnerId={lastWinnerId}
-          lastWinningNumber={lastWinningNumber}
-          onKeepBetChange={onKeepBetChange}
-          countdownProgress={
-            bottomHasCountdown ? actionCountdownProgress : null
-          }
+          lastWinnerId={flyer?.playerId ?? null}
+          lastWinningNumber={flyerNumberFor("player1")}
+          onKeepBetChange={onToggleBetLock}
+          canToggleLock={lockableSeats.bottom}
         />
 
         <GameToast message={toastMessage} onDismiss={onDismissToast} />
+        <StatusBanner message={statusMessage} />
 
         <BetBottomSheet
           visible={isBetSheetVisible}
-          player={activeBetter}
+          player={activeBettor}
           currentBet={currentBet}
-          minBet={minBet}
+          minBet={board.minBet}
           maxBet={maxBet}
-          isFirstBet={isFirstBet}
-          onClose={() => {}}
+          isFirstBet={board.isFirstBet}
+          onClose={noop}
           onSubmitBet={onSubmitBet}
-          countdownProgress={isBetSheetVisible ? actionCountdownProgress : null}
         />
 
-        <ExitConfirmModal
-          visible={isExitConfirmVisible}
-          onConfirm={onExitConfirm}
-          onCancel={onExitCancel}
-        />
+        <ExitConfirmModal visible={exit.visible} onConfirm={exit.onConfirm} onCancel={exit.onCancel} />
 
-        {isGameOver && (
+        {isGameOver && board.winner && board.loser && (
           <GameEndModal
-            visible={isGameOver}
-            winner={winner}
-            loser={loser}
-            totalRounds={totalRounds}
-            isOnline={isOnline}
+            visible
+            winner={board.winner}
+            loser={board.loser}
+            totalRounds={board.totalRounds}
+            isOnline={mode === GameModes.ONLINE}
             onGoHome={onGoHome}
             onShare={onShare}
             captureRef={captureRef}
@@ -149,12 +116,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         )}
 
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          {lastWinnerId != null && lastWinningNumber != null && (
-            <WinningNumberFlyer
-              key={`${lastWinnerId}-${lastWinningNumber}-${totalRounds}`}
-              number={lastWinningNumber}
-              playerId={lastWinnerId}
-            />
+          {flyer && (
+            <WinningNumberFlyer key={flyer.key} number={flyer.number} playerId={flyer.playerId} />
           )}
         </View>
       </View>

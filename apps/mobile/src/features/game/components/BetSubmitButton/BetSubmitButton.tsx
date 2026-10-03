@@ -13,6 +13,8 @@ export const BetSubmitButton: React.FC<BetSubmitButtonProps> = ({
       style={[styles.submitButton, disabled && styles.submitButtonDisabled]}
       onPress={disabled ? undefined : onPress}
       disabled={disabled}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
     >
       <Text
         style={[
