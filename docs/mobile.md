@@ -55,6 +55,24 @@ src/
       storage/, store/, hooks/, components/, screens/
 ```
 
+## Design system ("Mesa Costeña", poster layout)
+
+- **Tokens** in `src/theme`: `colors` (mar profundo `#0D3B3E` background, paño `#135E5A`,
+  arena `#F3E3C3`, coral `#F2694B` primary, sol `#F6B93B`), `typography` (Bricolage Grotesque
+  for titles/figures, Figtree for UI; weights are separate families for Android), `spacing`
+  (incl. `MIN_TOUCH` 44), `shadows`.
+- **PosterScreen**: every screen's layout. Edge-to-edge illustration from the top (9:16),
+  top scrim, bottom fade into the background, eyebrow + title in the sky, content anchored to
+  the bottom with safe areas; content is capped and centered on tablets.
+- **Glass**: `GlassSurface` / `GlassButton` / `IconButton` (expo-blur + translucent sea tint).
+  **SandSheet** for bottom sheets (bet, rules, settings).
+- **Illustrations** (`src/core/assets/illustrations`): WebP 1170 px wide (~150–210 KB),
+  generated with OpenArt (GPT Image) from one approved scene so they stay one family. Brand
+  vector sources (icon, Android layers, splash) live in `assets/brand/*.svg`.
+- **Dice** are drawn in code (`Dice` + `dieLayout`), top-down to match the table illustration,
+  animated with Reanimated (respecting reduced motion).
+- **Haptics** via `src/core/utils/haptics.ts`, gated by the persisted `hapticsEnabled` setting.
+
 ## How a game flows
 
 - **Offline**: `offlineController` applies actions with `reduce` from game-core, then paces the
