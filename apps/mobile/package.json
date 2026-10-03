@@ -7,13 +7,18 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.2.8",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/native": "^7.1.8",
+    "@seven/game-core": "workspace:*",
+    "@seven/protocol": "workspace:*",
     "expo": "^57.0.0",
     "expo-asset": "~57.0.18",
     "expo-audio": "~57.0.5",
@@ -42,10 +47,25 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.2.18",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~57.0.2",
+    "jest": "^30.5.2",
+    "jest-expo": "^57.0.5",
     "typescript": "~6.0.3"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jest.setup.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/ios/",
+      "/android/"
+    ]
+  }
 }
