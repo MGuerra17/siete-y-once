@@ -1,0 +1,163 @@
+import { ScreenContainer } from "@/src/core/components/ScreenContainer/ScreenContainer";
+import { BetBottomSheet } from "@/src/features/game/components/BetBottomSheet/BetBottomSheet";
+import { ExitConfirmModal } from "@/src/features/game/components/ExitConfirmModal/ExitConfirmModal";
+import { GameEndModal } from "@/src/features/game/components/GameEndModal/GameEndModal";
+import { GameToast } from "@/src/features/game/components/GameToast/GameToast";
+import { WinningNumberFlyer } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer";
+import { GamePhase } from "@/src/features/game/enums/GamePhase";
+import { useGameDerivedState } from "@/src/features/game/hooks/useGameDerivedState";
+import { GameBoardBottom } from "@/src/features/game/components/GameBoardBottom";
+import { GameBoardMiddle } from "@/src/features/game/components/GameBoardMiddle";
+import { GameBoardTop } from "@/src/features/game/components/GameBoardTop";
+import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+
+export const GameScreen: React.FC<GameScreenProps> = ({
+  player1,
+  player2,
+  phase,
+  point,
+  diceValues,
+  isRolling,
+  isProcessing,
+  initialRolls,
+  currentBet,
+  minBet,
+  bettorId,
+  keepBet,
+  isBetSheetVisible,
+  toastMessage,
+  totalRounds,
+  lastWinnerId,
+  lastWinningNumber,
+  actionCountdownPlayerId,
+  isOnline = false,
+  isDiceEnabled,
+  actionCountdownProgress,
+  onDicePress,
+  onKeepBetChange,
+  onSubmitBet,
+  onDismissToast,
+  onGoHome,
+  onShare,
+  captureRef,
+  isExitConfirmVisible,
+  onExitPress,
+  onExitConfirm,
+  onExitCancel,
+}) => {
+  const isInitialPhase = phase === GamePhase.INITIAL_ROLL;
+  const isGameOver = phase === GamePhase.GAME_OVER;
+
+  const { activeBetter, maxBet, isFirstBet, canUnlock, winner, loser } =
+    useGameDerivedState({
+      player1,
+      player2,
+      bettorId,
+      currentBet,
+      minBet,
+      lastWinnerId,
+    });
+
+  const isDiceInteractionBlocked =
+    isDiceEnabled !== undefined
+      ? !isDiceEnabled || isBetSheetVisible || isProcessing
+      : isProcessing || isBetSheetVisible;
+
+  const topHasCountdown =
+    actionCountdownProgress != null && actionCountdownPlayerId === player2.id;
+  const bottomHasCountdown =
+    actionCountdownProgress != null && actionCountdownPlayerId === player1.id;
+
+  return (
+    <ScreenContainer>
+      <View style={{ flex: 1 }}>
+        <GameBoardTop
+          player={player2}
+          isInitialPhase={isInitialPhase}
+          currentBet={currentBet}
+          bettorId={bettorId}
+          keepBet={keepBet}
+          canUnlock={canUnlock}
+          lastWinnerId={lastWinnerId}
+          lastWinningNumber={lastWinningNumber}
+          onExitPress={onExitPress}
+          onKeepBetChange={onKeepBetChange}
+          countdownProgress={topHasCountdown ? actionCountdownProgress : null}
+          showLockButton={isOnline ? false : undefined}
+        />
+
+        <GameBoardMiddle
+          player1={player1}
+          player2={player2}
+          isInitialPhase={isInitialPhase}
+          point={point}
+          diceValues={diceValues}
+          isRolling={isRolling}
+          isInteractionBlocked={isDiceInteractionBlocked}
+          initialRolls={initialRolls}
+          onDicePress={onDicePress}
+        />
+
+        <GameBoardBottom
+          player={player1}
+          isInitialPhase={isInitialPhase}
+          currentBet={currentBet}
+          bettorId={bettorId}
+          keepBet={keepBet}
+          canUnlock={canUnlock}
+          lastWinnerId={lastWinnerId}
+          lastWinningNumber={lastWinningNumber}
+          onKeepBetChange={onKeepBetChange}
+          countdownProgress={
+            bottomHasCountdown ? actionCountdownProgress : null
+          }
+        />
+
+        <GameToast message={toastMessage} onDismiss={onDismissToast} />
+
+        <BetBottomSheet
+          visible={isBetSheetVisible}
+          player={activeBetter}
+          currentBet={currentBet}
+          minBet={minBet}
+          maxBet={maxBet}
+          isFirstBet={isFirstBet}
+          onClose={() => {}}
+          onSubmitBet={onSubmitBet}
+          countdownProgress={isBetSheetVisible ? actionCountdownProgress : null}
+        />
+
+        <ExitConfirmModal
+          visible={isExitConfirmVisible}
+          onConfirm={onExitConfirm}
+          onCancel={onExitCancel}
+        />
+
+        {isGameOver && (
+          <GameEndModal
+            visible={isGameOver}
+            winner={winner}
+            loser={loser}
+            totalRounds={totalRounds}
+            isOnline={isOnline}
+            onGoHome={onGoHome}
+            onShare={onShare}
+            captureRef={captureRef}
+          />
+        )}
+
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          {lastWinnerId != null && lastWinningNumber != null && (
+            <WinningNumberFlyer
+              key={`${lastWinnerId}-${lastWinningNumber}-${totalRounds}`}
+              number={lastWinningNumber}
+              playerId={lastWinnerId}
+            />
+          )}
+        </View>
+      </View>
+    </ScreenContainer>
+  );
+};
