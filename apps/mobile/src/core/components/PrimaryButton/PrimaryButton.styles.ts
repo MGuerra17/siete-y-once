@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     opacity: 0,
   },
   loaderOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: "center",
     justifyContent: "center",
   },

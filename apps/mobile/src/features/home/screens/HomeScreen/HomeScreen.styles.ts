@@ -136,10 +136,10 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   backgroundLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   blurLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   contentLayer: {
     flex: 1,

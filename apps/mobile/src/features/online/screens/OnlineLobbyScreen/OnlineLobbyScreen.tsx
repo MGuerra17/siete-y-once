@@ -206,7 +206,7 @@ export const OnlineLobbyScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {Platform.OS !== "android" && (
-        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <View style={styles.backgroundLayer}>
             <RadialCircle
               size={isTablet ? 280 : 150}
@@ -439,10 +439,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   backgroundLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   blurLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   backgroundCircle: {
     position: "absolute",

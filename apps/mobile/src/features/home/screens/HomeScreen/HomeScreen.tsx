@@ -35,7 +35,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <View style={styles.wrapper}>
       {Platform.OS !== "android" && (
-        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <View style={styles.backgroundLayer}>
             <RadialCircle
               size={isTablet ? 280 : 150}
