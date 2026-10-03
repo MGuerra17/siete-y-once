@@ -1,12 +1,17 @@
 import type { RefObject } from "react";
 import type { View } from "react-native";
 import type { BoardView } from "@/src/features/game/model/boardView";
+import type { GameStats } from "@/src/features/game/model/gameStats";
 import type { Flyer, GameMode } from "@/src/features/game/types";
 
 /** Props for the presentational GameScreen, shared by offline and online modes. */
 export type GameScreenProps = {
   board: BoardView;
   mode: GameMode;
+  /** Display names by seat (player1 = bottom). */
+  names: { player1: string; player2: string };
+  /** Stats keyed by seat, for the end screen. */
+  stats: GameStats;
   isRolling: boolean;
   /** True when the local player may roll right now. */
   isDiceEnabled: boolean;
@@ -21,6 +26,8 @@ export type GameScreenProps = {
   onSubmitBet: (amount: number) => void;
   onToggleBetLock: () => void;
   onDismissToast: () => void;
+  /** End screen primary action: rematch offline, new game online. */
+  onPlayAgain: () => void;
   onGoHome: () => void;
   onShare: () => void;
   captureRef: RefObject<View | null>;

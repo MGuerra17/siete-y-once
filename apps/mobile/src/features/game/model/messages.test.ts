@@ -20,7 +20,7 @@ describe("describeOutcomes", () => {
     ];
     expect(describeOutcomes(outcomes, createInitialState(), nameOf)).toEqual({
       key: "game.toast.bettorWinsSeven",
-      params: { name: "Beto", amount: 100_000 },
+      params: { name: "Beto", sum: 7, amount: 100_000 },
     });
   });
 

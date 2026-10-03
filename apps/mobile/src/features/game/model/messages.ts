@@ -42,7 +42,11 @@ function describeOutcome(outcome: GameOutcome, state: GameState, nameOf: NameOf)
     case "ROUND_WON":
       return {
         key: ROUND_WON_KEYS[outcome.reason],
-        params: { name: nameOf(outcome.result.winnerId), amount: outcome.result.amount },
+        params: {
+          name: nameOf(outcome.result.winnerId),
+          sum: outcome.result.winningSum,
+          amount: outcome.result.amount,
+        },
       };
     case "BET_PLACED":
     case "BET_KEPT":

@@ -3,6 +3,7 @@ import { Platform, Share, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import type { Player } from "@/src/features/game/types";
 import type { TranslateFn } from "@/src/core/hooks/useLanguage";
+import { roundsText } from "@/src/features/game/components/GameOverScreen/gameOverCopy";
 import { getPlayerDisplayName } from "@/src/features/game/utils/playerDisplayName";
 
 /**
@@ -18,12 +19,12 @@ export async function shareGameResult(
 ): Promise<void> {
   const winnerName = getPlayerDisplayName(winner, t);
   const loserName = getPlayerDisplayName(loser, t);
-  const message = t("game.endModal.shareMessage", {
+  const message = t("game.over.shareMessage", {
     winner: winnerName,
     loser: loserName,
-    totalRounds,
+    rounds: roundsText(totalRounds, t),
   });
-  const title = t("game.endModal.title");
+  const title = t("game.over.shareTitle");
 
   if (Platform.OS === "web") {
     if (typeof navigator !== "undefined" && navigator.share) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   cancelAnimation,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withRepeat,
   withSequence,
@@ -17,10 +18,12 @@ const randomFace = () => Math.floor(Math.random() * 6) + 1;
 
 /**
  * Dice roll animation: a bounce running on the UI thread plus random faces while
- * rolling. Shows `finalValue` as soon as the roll ends.
+ * rolling (no bounce when the system asks to reduce motion). Shows `finalValue` as soon
+ * as the roll ends.
  */
 export const useDiceAnimation = (isRolling: boolean, finalValue: number) => {
   const scale = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
   const [rollingFace, setRollingFace] = useState(finalValue);
 
   useEffect(() => {
@@ -28,7 +31,7 @@ export const useDiceAnimation = (isRolling: boolean, finalValue: number) => {
       scale.set(withTiming(1, { duration: BOUNCE_MS }));
       return;
     }
-    scale.set(
+    if (!reduceMotion) scale.set(
       withRepeat(
         withSequence(
           withTiming(SCALE_UP, { duration: BOUNCE_MS }),
@@ -42,7 +45,7 @@ export const useDiceAnimation = (isRolling: boolean, finalValue: number) => {
       clearInterval(interval);
       cancelAnimation(scale);
     };
-  }, [isRolling, scale]);
+  }, [isRolling, reduceMotion, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
 

@@ -7,9 +7,11 @@ import {
   getOpponentId,
   getRole,
   getWinningNumbers,
+  type GameEndReason,
   type GameState,
   type PlayerId,
 } from "@seven/game-core";
+import type { GameStats } from "@/src/features/game/model/gameStats";
 import type { Player } from "@/src/features/game/types";
 
 /** Everything the board renders, expressed in seats (player1 = bottom, player2 = top). */
@@ -30,6 +32,7 @@ export type BoardView = {
   totalRounds: number;
   winner: Player | null;
   loser: Player | null;
+  endReason: GameEndReason | null;
 };
 
 export type BoardViewOptions = {
@@ -92,5 +95,18 @@ export function buildBoardView(state: GameState, options: BoardViewOptions): Boa
     totalRounds: state.round,
     winner: winnerSeat ? (winnerSeat === "player1" ? player1 : player2) : null,
     loser: winnerSeat ? (winnerSeat === "player1" ? player2 : player1) : null,
+    endReason: state.endReason,
+  };
+}
+
+/** Re-keys stats (by rules id) to seats, so the end screen can read the local player's numbers. */
+export function statsInSeats(stats: GameStats, localPlayerId: PlayerId): GameStats {
+  const { toPlayerId } = createSeatMapper(localPlayerId);
+  return {
+    biggestBet: stats.biggestBet,
+    roundsWon: {
+      player1: stats.roundsWon[toPlayerId("player1")],
+      player2: stats.roundsWon[toPlayerId("player2")],
+    },
   };
 }

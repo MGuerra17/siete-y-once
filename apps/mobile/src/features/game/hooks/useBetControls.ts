@@ -1,61 +1,44 @@
-import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { useMemo, useState } from "react";
+import { BET_STEPS } from "@seven/game-core";
+import { useState } from "react";
+import type { TranslationKey } from "@/src/core/i18n/translations";
 
 type UseBetControlsParams = {
-  initialBet: number;
   minBet: number;
   maxBet: number;
   isFirstBet: boolean;
   currentBet: number;
 };
 
+export type BetStep = (typeof BET_STEPS)[number];
+
+/** Which label the submit button shows for a given amount. */
+export function betCtaKey(isFirstBet: boolean, amount: number, currentBet: number): TranslationKey {
+  if (isFirstBet) return "game.betSheet.firstBetCta";
+  return amount === currentBet ? "game.betSheet.keepCta" : "game.betSheet.increaseCta";
+}
+
 /**
- * Encapsulates bet adjustment logic: clamping, validation, and increase/decrease guards.
- * Players cannot decrease an existing bet below the current amount; only increase or keep.
+ * Bet amount editing: a chosen step size (50K / 100K / 200K) and −/+ around it,
+ * clamped to [min, max]. An existing bet can only be kept or raised.
  */
-export const useBetControls = ({
-  initialBet,
-  minBet,
-  maxBet,
-  isFirstBet,
-  currentBet,
-}: UseBetControlsParams) => {
-  const { t } = useLanguage();
-  const [sheetBet, setSheetBet] = useState(initialBet);
+export const useBetControls = ({ minBet, maxBet, isFirstBet, currentBet }: UseBetControlsParams) => {
+  const [sheetBet, setSheetBet] = useState(isFirstBet ? minBet : currentBet);
+  const [step, setStep] = useState<BetStep>(BET_STEPS[1]);
 
-  const clampBet = (value: number) => {
-    if (value < minBet) return minBet;
-    if (value > maxBet) return maxBet;
-    return value;
-  };
-
-  const handleAdjust = (delta: number) => {
-    setSheetBet((prev) => clampBet(prev + delta));
-  };
-
-  const canDecreaseBy = (delta: number) =>
-    isFirstBet && sheetBet - delta >= minBet;
-
-  const canIncreaseBy = (delta: number) => sheetBet + delta <= maxBet;
-
-  const isValidBet = sheetBet >= minBet && sheetBet <= maxBet;
-
-  const primaryCtaLabel = useMemo(() => {
-    if (isFirstBet) return t("game.betSheet.firstBetCta");
-    if (sheetBet === currentBet) return t("game.betSheet.keepCta");
-    return t("game.betSheet.increaseCta");
-  }, [currentBet, isFirstBet, sheetBet, t]);
-
-  /** Resets sheetBet to a given value (used when the sheet opens). */
-  const resetTo = (value: number) => setSheetBet(value);
+  const clamp = (value: number) => Math.min(maxBet, Math.max(minBet, value));
+  const floor = isFirstBet ? minBet : Math.max(minBet, currentBet);
 
   return {
     sheetBet,
-    handleAdjust,
-    canDecreaseBy,
-    canIncreaseBy,
-    isValidBet,
-    primaryCtaLabel,
-    resetTo,
+    step,
+    setStep,
+    increase: () => setSheetBet((prev) => clamp(prev + step)),
+    decrease: () => setSheetBet((prev) => Math.max(floor, clamp(prev - step))),
+    canIncrease: sheetBet < maxBet,
+    canDecrease: sheetBet > floor,
+    isValidBet: sheetBet >= minBet && sheetBet <= maxBet,
+    ctaKey: betCtaKey(isFirstBet, sheetBet, currentBet),
+    /** Resets the amount when the sheet opens for a new decision. */
+    resetTo: (value: number) => setSheetBet(clamp(value)),
   };
 };

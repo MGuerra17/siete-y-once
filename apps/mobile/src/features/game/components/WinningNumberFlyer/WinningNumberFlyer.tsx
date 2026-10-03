@@ -1,11 +1,13 @@
 import type { WinningNumberFlyerProps } from "@/src/features/game/components/WinningNumberFlyer/WinningNumberFlyer.types";
 import type { PlayerId } from "@/src/features/game/types";
 import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/typography";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   runOnJS,
+  useReducedMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -46,6 +48,7 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
   number,
   playerId,
 }) => {
+  const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(true);
   const progress = useSharedValue(0);
   const { width, height } = useWindowDimensions();
@@ -83,7 +86,7 @@ export const WinningNumberFlyer: React.FC<WinningNumberFlyerProps> = ({
     };
   });
 
-  if (!visible) return null;
+  if (!visible || reduceMotion) return null;
 
   return (
     <Animated.View style={[styles.pill, animatedStyle]}>
@@ -100,13 +103,13 @@ const styles = StyleSheet.create({
     width: PILL_W,
     height: PILL_H,
     borderRadius: PILL_H / 2,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.sun,
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
-    color: colors.textPrimary,
-    fontWeight: "700",
-    fontSize: 14,
+    color: colors.textOnSand,
+    fontFamily: fonts.display,
+    fontSize: 16,
   },
 });

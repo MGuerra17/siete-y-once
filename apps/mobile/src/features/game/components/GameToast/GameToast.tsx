@@ -1,54 +1,42 @@
-import React, { useEffect, useRef } from "react";
-import { Text, View } from "react-native";
-import { styles } from "@/src/features/game/components/GameToast/GameToast.styles";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import type { GameToastProps } from "@/src/features/game/components/GameToast/GameToast.types";
+import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/typography";
 
 const DEFAULT_DURATION = 3000;
 
-export const GameToast: React.FC<GameToastProps> = ({
-  message,
-  duration = DEFAULT_DURATION,
-  onDismiss,
-}) => {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+/** The latest game message, shown under the dice and cleared after `duration`. */
+export const GameToast: React.FC<GameToastProps> = ({ message, duration = DEFAULT_DURATION, onDismiss }) => {
+  const hasMessage = !!message && message.trim() !== "";
 
   useEffect(() => {
-    if (!message || message.trim() === "") {
-      return;
-    }
+    if (!hasMessage) return;
+    const timeout = setTimeout(() => onDismiss?.(), duration);
+    return () => clearTimeout(timeout);
+  }, [hasMessage, message, duration, onDismiss]);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-
-    timeoutRef.current = setTimeout(() => {
-      timeoutRef.current = null;
-      onDismiss?.();
-    }, duration);
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
-  }, [message, duration, onDismiss]);
-
-  if (!message || message.trim() === "") {
-    return null;
-  }
+  if (!hasMessage) return null;
 
   return (
-    <View
-      style={styles.container}
-      pointerEvents="box-none"
-      accessibilityLabel={message}
-      accessibilityRole="alert"
-    >
-      <View style={styles.pill}>
-        <Text style={styles.text}>{message}</Text>
-      </View>
+    <View style={styles.container} accessibilityLabel={message} accessibilityRole="alert" accessibilityLiveRegion="polite">
+      <Text style={styles.text} numberOfLines={2}>
+        {message}
+      </Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { paddingHorizontal: 16, alignItems: "center" },
+  text: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 15,
+    lineHeight: 20,
+    textAlign: "center",
+    color: colors.ivoryWarm,
+    textShadowColor: "rgba(0, 0, 0, 0.45)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 8,
+  },
+});
