@@ -2,7 +2,7 @@
   "name": "@seven/game-core",
   "version": "1.0.0",
   "private": true,
-  "description": "Pure, framework-agnostic rules engine for the Seven Eleven dice game",
+  "description": "Pure, framework-agnostic rules engine for Siete y Once",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

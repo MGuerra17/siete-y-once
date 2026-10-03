@@ -107,7 +107,7 @@ type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
 
 export const translations: TranslationRecord = {
   en: {
-    "home.welcomeTitle": "Welcome to Dice Duel",
+    "home.welcomeTitle": "Welcome to Siete y Once",
     "home.startGame": "Start game",
     "home.languageEnglish": "English",
     "home.languageSpanish": "Spanish",
@@ -146,7 +146,7 @@ export const translations: TranslationRecord = {
     "game.endModal.goHomeCta": "Finish",
     "game.endModal.shareCta": "Share",
     "game.endModal.shareMessage":
-      "{winner} won against {loser} in {totalRounds} rounds! Play Dice Duel with me!",
+      "{winner} won against {loser} in {totalRounds} rounds! Play Siete y Once with me!",
     "game.endModal.winnerLabel": "Winner",
     "game.endModal.loserLabel": "Loser",
     "game.toast.rollToDetermineShooter": "Roll to determine the Shooter!",
@@ -211,7 +211,7 @@ export const translations: TranslationRecord = {
     "online.claimAbandonment": "Claim Win",
   },
   es: {
-    "home.welcomeTitle": "Bienvenido a Duelo de Dados",
+    "home.welcomeTitle": "Bienvenido a Siete y Once",
     "home.startGame": "Comenzar juego",
     "home.languageEnglish": "Inglés",
     "home.languageSpanish": "Español",
@@ -250,7 +250,7 @@ export const translations: TranslationRecord = {
     "game.endModal.goHomeCta": "Finalizar",
     "game.endModal.shareCta": "Compartir",
     "game.endModal.shareMessage":
-      "{winner} ganó contra {loser} en {totalRounds} rondas! ¡Juega Duelo de Dados conmigo!",
+      "{winner} ganó contra {loser} en {totalRounds} rondas! ¡Juega Siete y Once conmigo!",
     "game.endModal.winnerLabel": "Ganador",
     "game.endModal.loserLabel": "Perdedor",
     "game.toast.rollToDetermineShooter": "¡Lanza para determinar al Lanzador!",

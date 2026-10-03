@@ -1,4 +1,4 @@
-/** Phases of a Seven-Eleven game from start to finish. */
+/** Phases of a game from start to finish. */
 export enum GamePhase {
   /** Both players roll to determine who becomes the shooter (highest wins). */
   INITIAL_ROLL = "INITIAL_ROLL",

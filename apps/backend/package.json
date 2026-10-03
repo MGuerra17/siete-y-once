@@ -1,7 +1,7 @@
 {
   "name": "@seven/backend",
   "version": "1.0.0",
-  "description": "Serverless WebSocket backend for the Seven Eleven dice game (API Gateway, Lambda, DynamoDB)",
+  "description": "Serverless WebSocket backend for Siete y Once (API Gateway, Lambda, DynamoDB)",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",

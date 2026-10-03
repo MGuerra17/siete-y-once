@@ -1,6 +1,7 @@
-# Seven
+# Siete y Once
 
-Two-player dice game from Colombia's Caribbean coast (a craps variant locally called "Seven Eleven").
+Two-player dice duel from Colombia's Caribbean coast (a craps variant locally called "Seven Eleven").
+Store name: "Siete y Once: Duelo de Dados". Never use "Seven Eleven"/"7-11" in branding (7-Eleven trademark).
 pnpm monorepo: Expo app + AWS serverless backend + shared TypeScript packages.
 
 ## Layout

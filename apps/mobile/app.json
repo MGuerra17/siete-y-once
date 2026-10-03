@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Seven Eleven",
+    "name": "Siete y Once",
     "slug": "seven-eleven-rn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "sevenelevenrn",
+    "scheme": "sieteyonce",
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/images/icon.png",
