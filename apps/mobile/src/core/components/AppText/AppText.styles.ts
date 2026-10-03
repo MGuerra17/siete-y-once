@@ -1,29 +1,17 @@
 import { StyleSheet } from "react-native";
+import type { AppTextTone } from "@/src/core/components/AppText/AppText.types";
 import { colors } from "@/src/theme/colors";
-import { fontSize } from "@/src/theme/fontSize";
+import { typography } from "@/src/theme/typography";
 
-export const styles = StyleSheet.create({
-  base: {
-    color: colors.textPrimary,
-  },
-});
+export const variantStyles = StyleSheet.create(typography);
 
-export const variantStyles = StyleSheet.create({
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: "700",
-  },
-  subtitle: {
-    fontSize: fontSize.md,
-    color: colors.textSecondary,
-  },
-  body: {
-    fontSize: fontSize.md,
-  },
-  label: {
-    fontSize: fontSize.sm,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-});
-
+export const toneColors: Record<AppTextTone, string> = {
+  light: colors.textPrimary,
+  strong: colors.textStrong,
+  soft: colors.textSecondary,
+  muted: colors.textMuted,
+  dark: colors.textOnSand,
+  darkMuted: colors.textOnSandMuted,
+  sun: colors.sun,
+  coral: colors.coral,
+};

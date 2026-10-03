@@ -1,87 +1,66 @@
 import React from "react";
-import { Image, View } from "react-native";
-import Svg, { Circle, G } from "react-native-svg";
-import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
+import type { AvatarProps } from "@/src/core/components/Avatar/Avatar.types";
 import { colors } from "@/src/theme/colors";
-import { styles } from "@/src/core/components/Avatar/Avatar.styles";
-import { AvatarProps } from "@/src/core/components/Avatar/Avatar.types";
+import { fonts } from "@/src/theme/typography";
 
-const BORDER_WIDTH = 2;
+const RING_WIDTH = 3;
+const RING_GAP = 3;
 
-/** Circular avatar with image or person-icon fallback. Highlights when `isActive` is true. */
+/** Initial in a colored circle, with an optional active / countdown ring around it. */
 export const Avatar: React.FC<AvatarProps> = ({
-  imageUri,
+  name,
+  background,
+  foreground,
+  size = 44,
   isActive = false,
-  size = 56,
-  fallbackLabel = "?",
+  ringColor = colors.sun,
   countdownProgress = null,
 }) => {
-  const showCountdownRing =
-    countdownProgress != null &&
-    countdownProgress >= 0 &&
-    countdownProgress <= 1;
-
-  const radius = size / 2 - BORDER_WIDTH / 2;
+  const outer = size + (RING_WIDTH + RING_GAP) * 2;
+  const radius = outer / 2 - RING_WIDTH / 2;
   const circumference = 2 * Math.PI * radius;
-  const visibleLength = showCountdownRing
-    ? Math.max(0, (1 - countdownProgress) * circumference)
-    : 0;
-
-  const containerStyle = [
-    styles.container,
-    {
-      width: size,
-      height: size,
-      borderRadius: size / 2,
-    },
-    showCountdownRing ? styles.countdownBorder : isActive ? styles.activeBorder : styles.inactiveBorder,
-  ];
+  const showCountdown = countdownProgress !== null;
+  const visible = showCountdown ? Math.max(0, 1 - countdownProgress) * circumference : circumference;
+  const initial = name.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <View style={[styles.wrapper, { width: size, height: size }]}>
-      <View style={containerStyle}>
-        {imageUri ? (
-          <Image
-            source={{ uri: imageUri }}
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: size / 2,
-            }}
-            resizeMode="cover"
+    <View style={{ width: outer, height: outer }} importantForAccessibility="no-hide-descendants">
+      {(isActive || showCountdown) && (
+        <Svg width={outer} height={outer} style={StyleSheet.absoluteFill}>
+          <Circle
+            cx={outer / 2}
+            cy={outer / 2}
+            r={radius}
+            stroke={ringColor}
+            strokeWidth={RING_WIDTH}
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={`${visible} ${circumference}`}
+            transform={`rotate(-90 ${outer / 2} ${outer / 2})`}
           />
-        ) : (
-          <View style={[styles.placeholder, { borderRadius: size / 2 }]}>
-            <Ionicons
-              name="person"
-              size={size * 0.5}
-              color={colors.textSecondary}
-            />
-          </View>
-        )}
-      </View>
-      {showCountdownRing && (
-        <Svg
-          width={size}
-          height={size}
-          style={styles.countdownRing}
-          pointerEvents="none"
-        >
-          <G transform={`rotate(-90 ${size / 2} ${size / 2})`}>
-            <Circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke={colors.primary}
-              strokeWidth={BORDER_WIDTH}
-              fill="none"
-              strokeDasharray={`${visibleLength} ${circumference}`}
-              strokeLinecap="round"
-            />
-          </G>
         </Svg>
       )}
+      <View
+        style={[
+          styles.circle,
+          {
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            backgroundColor: background,
+            margin: RING_WIDTH + RING_GAP,
+          },
+        ]}
+      >
+        <Text style={[styles.initial, { color: foreground, fontSize: size * 0.43 }]}>{initial}</Text>
+      </View>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  circle: { alignItems: "center", justifyContent: "center" },
+  initial: { fontFamily: fonts.display },
+});

@@ -1,272 +1,311 @@
 export type Language = "en" | "es";
 
-type TranslationKeys =
-  | "home.languageEnglish"
-  | "home.languageSpanish"
-  | "home.configTitle"
-  | "home.languageLabel"
-  | "home.soundLabel"
-  | "home.soundOn"
-  | "home.soundOff"
-  | "home.modeOnline"
-  | "home.modeOffline"
-  | "home.modeOfflineDescription"
-  | "home.modeOnlineDescription"
-  | "game.player1DefaultName"
-  | "game.player2DefaultName"
-  | "game.betRoleLabel"
-  | "game.rollRoleLabel"
-  | "game.pointLabel"
-  | "game.betSheet.title"
-  | "game.betSheet.currentBetLabel"
-  | "game.betSheet.newTotalBetLabel"
-  | "game.betSheet.firstBetCta"
-  | "game.betSheet.keepCta"
-  | "game.betSheet.increaseCta"
-  | "game.endModal.title"
-  | "game.endModal.titleLoserOnline"
-  | "game.endModal.subtitle"
-  | "game.endModal.subtitleLoserOnline"
-  | "game.endModal.roundsLabel"
-  | "game.endModal.goHomeCta"
-  | "game.endModal.shareCta"
-  | "game.endModal.shareMessage"
-  | "game.endModal.winnerLabel"
-  | "game.endModal.loserLabel"
-  | "game.toast.rollToDetermineShooter"
-  | "game.toast.playerRolled"
-  | "game.toast.tie"
-  | "game.toast.shooterDetermined"
-  | "game.toast.placeBet"
-  | "game.toast.shooterRoll"
-  | "game.toast.shooterWinsNatural"
-  | "game.toast.bettorWinsCraps"
-  | "game.toast.pointSet"
-  | "game.toast.shooterWinsPoint"
-  | "game.toast.bettorWinsSeven"
-  | "game.toast.continueRolling"
-  | "game.exitModal.title"
-  | "game.exitModal.message"
-  | "game.exitModal.cancelCta"
-  | "game.exitModal.exitCta"
-  | "game.a11y.exitButton"
-  | "game.a11y.rollDice"
-  | "game.a11y.keepBetToggle"
-  | "game.toast.opponentReconnected"
-  | "game.toast.gameOverAbandonment"
-  | "online.lobby.heroTitle"
-  | "online.lobby.heroSubtitle"
-  | "online.lobby.createGame"
-  | "online.lobby.codePlaceholder"
-  | "online.lobby.join"
-  | "online.lobby.joinCodeModal.title"
-  | "online.lobby.betPerGame"
-  | "online.lobby.haveCodeQuestion"
-  | "online.lobby.joinCta"
-  | "online.lobby.pasteCode"
-  | "online.lobby.playerCount"
-  | "online.waiting.gameCodeTitle"
-  | "online.waiting.copyCodeCta"
-  | "online.waiting.codeCopied"
-  | "online.waiting.cancel"
-  | "online.waiting.exitCta"
-  | "online.waiting.shareCta"
-  | "online.waiting.shareCodeMessage"
-  | "online.username.title"
-  | "online.username.placeholder"
-  | "online.username.continue"
-  | "online.error.connectionFailed"
-  | "online.error.invalidCode"
-  | "online.error.gameFull"
-  | "game.banner.reconnecting"
-  | "game.banner.opponentDisconnected"
-  | "game.toast.opponentLeft"
-  | "online.error.generic"
-  | "online.error.notYourTurn"
-  | "online.error.invalidBet"
-  | "online.error.rejoinFailed";
+/** Spanish is the source of truth: every key must exist here first. */
+const es = {
+  // Home
+  "home.eyebrow": "Duelo de dados · Costa Caribe",
+  "home.title": "Siete y Once",
+  "home.tagline": "Saca 7 u 11 y la mesa es tuya.",
+  "home.playOnline": "Jugar en línea",
+  "home.playLocal": "Dos jugadores en este celular",
+  "home.howToPlay": "¿Cómo se juega?",
+  "home.a11y.language": "Idioma: {language}. Toca para cambiarlo",
+  "home.languageShort": "ES",
+  "home.languageEnglish": "Inglés",
+  "home.languageSpanish": "Español",
+  "home.configTitle": "Ajustes",
+  "home.languageLabel": "Idioma",
+  "home.soundLabel": "Sonido",
+  "home.hapticsLabel": "Vibración",
 
-type TranslationRecord = Record<Language, Record<TranslationKeys, string>>;
+  // Rules sheet
+  "rules.title": "¿Cómo se juega?",
+  "rules.intro": "Dos jugadores, $1.000.000 cada uno. Gana quien deje al otro sin plata.",
+  "rules.roles":
+    "Al empezar, cada uno lanza los dados: el que saque más es el Tirador y el otro es el Apostador.",
+  "rules.bet":
+    "El Apostador pone la apuesta: mínimo $50.000 y como máximo el saldo menor de los dos.",
+  "rules.comeOut":
+    "Primer tiro del Tirador: con 7 u 11 gana él; con 2, 3 o 12 gana el Apostador.",
+  "rules.point":
+    "Cualquier otro número es el punto. El Apostador mantiene o sube la apuesta y el Tirador sigue lanzando: si repite el punto gana él, si saca 7 gana el Apostador.",
+  "rules.next": "Quien gana la ronda cobra la apuesta y lanza en la siguiente.",
+  "rules.timer":
+    "Cada turno dura 8 segundos. Si se acaba, el juego lanza por ti o apuesta el mínimo.",
+  "rules.end": "Pierde quien ya no pueda cubrir la apuesta mínima.",
+  "rules.cta": "¡A jugar!",
 
-export const translations: TranslationRecord = {
-  en: {
-    "home.languageEnglish": "English",
-    "home.languageSpanish": "Spanish",
-    "home.configTitle": "Settings",
-    "home.languageLabel": "Language",
-    "home.soundLabel": "Sound",
-    "home.soundOn": "On",
-    "home.soundOff": "Off",
-    "home.modeOnline": "Online",
-    "home.modeOffline": "Offline",
-    "home.modeOfflineDescription": "Play with friends on the same device",
-    "home.modeOnlineDescription": "Challenge players worldwide",
-    "game.player1DefaultName": "Player 1",
-    "game.player2DefaultName": "Player 2",
-    "game.betRoleLabel": "Bet",
-    "game.rollRoleLabel": "Roll",
-    "game.pointLabel": "Point",
-    "game.betSheet.title": "It's time for bet",
-    "game.betSheet.currentBetLabel": "Current bet",
-    "game.betSheet.newTotalBetLabel": "New bet",
-    "game.betSheet.firstBetCta": "Bet",
-    "game.betSheet.keepCta": "Keep",
-    "game.betSheet.increaseCta": "Increase",
-    "game.endModal.title": "Game over",
-    "game.endModal.titleLoserOnline": "You lost",
-    "game.endModal.subtitle": "Congrats!",
-    "game.endModal.subtitleLoserOnline": "Better luck next time!",
-    "game.endModal.roundsLabel": "Rounds played",
-    "game.endModal.goHomeCta": "Finish",
-    "game.endModal.shareCta": "Share",
-    "game.endModal.shareMessage":
-      "{winner} won against {loser} in {totalRounds} rounds! Play Siete y Once with me!",
-    "game.endModal.winnerLabel": "Winner",
-    "game.endModal.loserLabel": "Loser",
-    "game.toast.rollToDetermineShooter": "Roll to determine the Shooter!",
-    "game.toast.playerRolled": "{name} rolled {sum}! {next}'s turn.",
-    "game.toast.tie": "It's a tie! Roll again.",
-    "game.toast.shooterDetermined": "{name} is the Shooter!",
-    "game.toast.placeBet": "{name}, place your bet!",
-    "game.toast.shooterRoll": "{name}, roll the dice!",
-    "game.toast.shooterWinsNatural": "7 or 11! {name} wins!",
-    "game.toast.bettorWinsCraps": "Craps! {name} wins!",
-    "game.toast.pointSet": "Point is {point}! Roll to match it.",
-    "game.toast.shooterWinsPoint": "Point matched! {name} wins!",
-    "game.toast.bettorWinsSeven": "Seven out! {name} wins!",
-    "game.toast.continueRolling": "Rolled {sum}. Keep rolling!",
-    "game.exitModal.title": "Exit game?",
-    "game.exitModal.message": "Your progress will be lost.",
-    "game.exitModal.cancelCta": "Cancel",
-    "game.exitModal.exitCta": "Exit",
-    "game.a11y.exitButton": "Exit game",
-    "game.a11y.rollDice": "Roll dice",
-    "game.a11y.keepBetToggle": "Keep bet locked",
-    "game.toast.opponentReconnected": "Opponent reconnected",
-    "game.toast.gameOverAbandonment": "You win! Opponent abandoned the game.",
-    "online.lobby.heroTitle": "Play with friends",
-    "online.lobby.heroSubtitle": "Create a game or join with a code",
-    "online.lobby.createGame": "Create Game",
-    "online.lobby.codePlaceholder": "ABCDEF",
-    "online.lobby.join": "Join",
-    "online.lobby.joinCodeModal.title": "Enter room code",
-    "online.lobby.betPerGame": "Total money",
-    "online.lobby.haveCodeQuestion": "Do you have a game code?",
-    "online.lobby.joinCta": "Join",
-    "online.lobby.pasteCode": "Paste",
-    "online.lobby.playerCount": "Players",
-    "online.waiting.gameCodeTitle": "Game code",
-    "online.waiting.copyCodeCta": "Copy code",
-    "online.waiting.codeCopied": "Code copied!",
-    "online.waiting.cancel": "Cancel",
-    "online.waiting.exitCta": "Exit",
-    "online.waiting.shareCta": "Share",
-    "online.waiting.shareCodeMessage": "Join my game with this code: {code}",
-    "online.username.title": "Choose your name",
-    "online.username.placeholder": "Enter your name",
-    "online.username.continue": "Continue",
-    "online.error.connectionFailed": "Connection failed. Please try again.",
-    "online.error.invalidCode": "Invalid or expired code",
-    "online.error.gameFull": "Game not found or already full",
-    "game.banner.reconnecting": "Reconnecting…",
-    "game.banner.opponentDisconnected": "{name} disconnected · {seconds}s to return",
-    "game.toast.opponentLeft": "{name} left the game. You win!",
-    "online.error.generic": "Something went wrong. Please try again.",
-    "online.error.notYourTurn": "It's not your turn",
-    "online.error.invalidBet": "Invalid bet amount",
-    "online.error.rejoinFailed": "Your previous game is no longer available",
-  },
-  es: {
-    "home.languageEnglish": "Inglés",
-    "home.languageSpanish": "Español",
-    "home.configTitle": "Configuración",
-    "home.languageLabel": "Idioma",
-    "home.soundLabel": "Sonido",
-    "home.soundOn": "Activado",
-    "home.soundOff": "Desactivado",
-    "home.modeOnline": "En línea",
-    "home.modeOffline": "Sin conexión",
-    "home.modeOfflineDescription": "Juega con amigos en el mismo dispositivo",
-    "home.modeOnlineDescription": "Desafía a jugadores de todo el mundo",
-    "game.player1DefaultName": "Jugador 1",
-    "game.player2DefaultName": "Jugador 2",
-    "game.betRoleLabel": "Apostar",
-    "game.rollRoleLabel": "Lanzar",
-    "game.pointLabel": "Punto",
-    "game.betSheet.title": "Es momento de apostar",
-    "game.betSheet.currentBetLabel": "Apuesta actual",
-    "game.betSheet.newTotalBetLabel": "Nueva apuesta",
-    "game.betSheet.firstBetCta": "Apostar",
-    "game.betSheet.keepCta": "Mantener",
-    "game.betSheet.increaseCta": "Aumentar",
-    "game.endModal.title": "Fin de la partida",
-    "game.endModal.titleLoserOnline": "Has perdido",
-    "game.endModal.subtitle": "¡Felicidades!",
-    "game.endModal.subtitleLoserOnline": "¡Más suerte la próxima!",
-    "game.endModal.roundsLabel": "Rondas jugadas",
-    "game.endModal.goHomeCta": "Finalizar",
-    "game.endModal.shareCta": "Compartir",
-    "game.endModal.shareMessage":
-      "{winner} ganó contra {loser} en {totalRounds} rondas! ¡Juega Siete y Once conmigo!",
-    "game.endModal.winnerLabel": "Ganador",
-    "game.endModal.loserLabel": "Perdedor",
-    "game.toast.rollToDetermineShooter": "¡Lanza para determinar al Lanzador!",
-    "game.toast.playerRolled": "{name} sacó {sum}. Turno de {next}.",
-    "game.toast.tie": "¡Empate! Lanza de nuevo.",
-    "game.toast.shooterDetermined": "¡{name} es el Lanzador!",
-    "game.toast.placeBet": "{name}, ¡haz tu apuesta!",
-    "game.toast.shooterRoll": "{name}, ¡lanza los dados!",
-    "game.toast.shooterWinsNatural": "¡7 u 11! ¡{name} gana!",
-    "game.toast.bettorWinsCraps": "¡Craps! ¡{name} gana!",
-    "game.toast.pointSet": "¡El punto es {point}! Iguálalo para ganar.",
-    "game.toast.shooterWinsPoint": "¡Punto igualado! ¡{name} gana!",
-    "game.toast.bettorWinsSeven": "¡Sacó 7! ¡{name} gana!",
-    "game.toast.continueRolling": "Sacaste {sum}. ¡Sigue lanzando!",
-    "game.exitModal.title": "¿Salir del juego?",
-    "game.exitModal.message": "Se perderá tu progreso.",
-    "game.exitModal.cancelCta": "Cancelar",
-    "game.exitModal.exitCta": "Salir",
-    "game.a11y.exitButton": "Salir del juego",
-    "game.a11y.rollDice": "Lanzar dados",
-    "game.a11y.keepBetToggle": "Mantener apuesta bloqueada",
-    "game.toast.opponentReconnected": "Oponente reconectado",
-    "game.toast.gameOverAbandonment":
-      "¡Ganaste! El oponente abandonó la partida.",
-    "online.lobby.heroTitle": "Juega con amigos",
-    "online.lobby.heroSubtitle": "Crea una partida o únete con un código",
-    "online.lobby.createGame": "Crear partida",
-    "online.lobby.codePlaceholder": "ABCDEF",
-    "online.lobby.join": "Unirse",
-    "online.lobby.joinCodeModal.title": "Ingresa el código de la partida",
-    "online.lobby.betPerGame": "Dinero total",
-    "online.lobby.haveCodeQuestion": "¿Tienes un código de partida?",
-    "online.lobby.joinCta": "Unirme",
-    "online.lobby.pasteCode": "Pegar",
-    "online.lobby.playerCount": "Jugadores",
-    "online.waiting.gameCodeTitle": "Código de partida",
-    "online.waiting.copyCodeCta": "Copiar código",
-    "online.waiting.codeCopied": "¡Código copiado!",
-    "online.waiting.cancel": "Cancelar",
-    "online.waiting.exitCta": "Salir",
-    "online.waiting.shareCta": "Compartir",
-    "online.waiting.shareCodeMessage": "Únete a mi partida con este código: {code}",
-    "online.username.title": "Elige tu nombre",
-    "online.username.placeholder": "Ingresa tu nombre",
-    "online.username.continue": "Continuar",
-    "online.error.connectionFailed": "Error de conexión. Intenta de nuevo.",
-    "online.error.invalidCode": "Código inválido o expirado",
-    "online.error.gameFull": "Partida no encontrada o llena",
-    "game.banner.reconnecting": "Reconectando…",
-    "game.banner.opponentDisconnected": "{name} se desconectó · {seconds}s para volver",
-    "game.toast.opponentLeft": "{name} abandonó la partida. ¡Ganaste!",
-    "online.error.generic": "Algo salió mal. Intenta de nuevo.",
-    "online.error.notYourTurn": "No es tu turno",
-    "online.error.invalidBet": "Monto de apuesta inválido",
-    "online.error.rejoinFailed": "Tu partida anterior ya no está disponible",
-  },
+  // Game board
+  "game.player1DefaultName": "Jugador 1",
+  "game.player2DefaultName": "Jugador 2",
+  "game.round": "Ronda {round}",
+  "game.role.shooter": "Tirador",
+  "game.role.bettor": "Apostador",
+  "game.role.opening": "Tirada inicial",
+  "game.winsWith": "{role} · gana con {numbers}",
+  "game.or": "o",
+  "game.you": "{name} (tú)",
+  "game.pointLabel": "Punto",
+  "game.betChip": "Apuesta",
+  "game.openingRoll": "Sacó {sum}",
+  "game.rollCta": "Lanzar dados",
+  "game.turnOf": "Turno de {name}",
+  "game.a11y.exitButton": "Salir de la partida",
+  "game.a11y.rollDice": "Lanzar dados",
+  "game.a11y.keepBetToggle": "Mantener apuesta bloqueada",
+  "game.a11y.mute": "Silenciar sonido",
+  "game.a11y.unmute": "Activar sonido",
+  "game.a11y.secondsLeft": "{seconds} segundos",
+
+  // Bet sheet
+  "game.betSheet.title": "Tu apuesta, {name}",
+  "game.betSheet.winsFirstRoll": "Ganas con 2, 3 o 12 en el primer tiro",
+  "game.betSheet.winsOnPoint": "Ganas si sale 7 antes que el {point}",
+  "game.betSheet.maxLabel": "Máximo {amount} · el saldo menor",
+  "game.betSheet.keepRound": "Mantener apuesta toda la ronda",
+  "game.betSheet.keepRoundHint": "No te volveremos a preguntar hasta que alguien gane",
+  "game.betSheet.firstBetCta": "Apostar {amount}",
+  "game.betSheet.keepCta": "Mantener {amount}",
+  "game.betSheet.increaseCta": "Subir a {amount}",
+  "game.betSheet.decrease": "Bajar apuesta",
+  "game.betSheet.increase": "Subir apuesta",
+  "game.betSheet.step": "Saltos de {amount}",
+
+  // Game over
+  "game.over.youWon": "¡Ganaste, {name}!",
+  "game.over.playerWon": "¡Ganó {name}!",
+  "game.over.gameOver": "Fin de la partida",
+  "game.over.tookTheTable": "{name} se llevó la mesa",
+  "game.over.subtitleYouWon": "Dejaste a {loser} sin plata en {rounds}",
+  "game.over.subtitleWon": "{winner} dejó a {loser} sin plata en {rounds}",
+  "game.over.subtitleYouLost": "Te quedaste sin plata en {rounds}. La revancha te espera.",
+  "game.over.subtitleOpponentLeft": "{loser} se levantó de la mesa",
+  "game.over.roundsOne": "{count} ronda",
+  "game.over.roundsOther": "{count} rondas",
+  "game.over.statRounds": "Rondas",
+  "game.over.statWon": "Ganadas",
+  "game.over.statBiggestBet": "Mayor apuesta",
+  "game.over.rematch": "Revancha",
+  "game.over.newGame": "Nueva partida",
+  "game.over.share": "Compartir resultado",
+  "game.over.home": "Volver al inicio",
+  "game.over.shareTitle": "Siete y Once",
+  "game.over.shareMessage":
+    "¡{winner} le ganó a {loser} en {rounds} de Siete y Once! ¿Te le mides?",
+
+  // Toasts
+  "game.toast.rollToDetermineShooter": "¡Lancen para ver quién es el Tirador!",
+  "game.toast.playerRolled": "{name} sacó {sum}. Turno de {next}.",
+  "game.toast.tie": "¡Empate! A lanzar otra vez.",
+  "game.toast.shooterDetermined": "¡{name} es el Tirador!",
+  "game.toast.placeBet": "{name}, ¡haz tu apuesta!",
+  "game.toast.shooterRoll": "{name}, ¡lanza los dados!",
+  "game.toast.shooterWinsNatural": "¡{sum} de una! Gana {name}",
+  "game.toast.bettorWinsCraps": "¡Sacó {sum}! Gana {name}",
+  "game.toast.pointSet": "El punto es {point}. ¡A repetirlo!",
+  "game.toast.shooterWinsPoint": "¡Repitió el punto! Gana {name}",
+  "game.toast.bettorWinsSeven": "¡Salió 7! Gana {name}",
+  "game.toast.continueRolling": "Salió {sum} · sigue lanzando",
+  "game.toast.opponentReconnected": "Tu rival volvió a la mesa",
+  "game.toast.gameOverAbandonment": "¡Ganaste! Tu rival abandonó la partida.",
+  "game.toast.opponentLeft": "{name} se fue de la mesa. ¡Ganaste!",
+
+  // Exit dialog
+  "game.exitModal.title": "¿Salir de la partida?",
+  "game.exitModal.message": "Se perderá el progreso de esta partida.",
+  "game.exitModal.messageOnline": "Si sales, tu rival gana la partida.",
+  "game.exitModal.cancelCta": "Seguir jugando",
+  "game.exitModal.exitCta": "Salir",
+
+  // Status banner
+  "game.banner.reconnecting": "Reconectando…",
+  "game.banner.opponentDisconnected": "{name} se desconectó · {seconds}s para volver",
+
+  // Online lobby
+  "online.lobby.eyebrow": "Jugar en línea",
+  "online.lobby.title": "La mesa está servida",
+  "online.lobby.playingAs": "Jugando como",
+  "online.lobby.createTitle": "Arma tu mesa",
+  "online.lobby.createSubtitle": "Crea una partida y comparte el código con tu rival.",
+  "online.lobby.createGame": "Crear partida",
+  "online.lobby.invited": "¿Te invitaron?",
+  "online.lobby.codePlaceholder": "CÓDIGO",
+  "online.lobby.codeLabel": "Código de tu amigo",
+  "online.lobby.joinCta": "Unirme",
+  "online.lobby.back": "Volver al inicio",
+
+  // Waiting room
+  "online.waiting.title": "Tu código",
+  "online.waiting.status": "Esperando rival…",
+  "online.waiting.invite": "Invitar",
+  "online.waiting.copy": "Copiar",
+  "online.waiting.codeCopied": "¡Copiado!",
+  "online.waiting.leave": "Salir de la mesa",
+  "online.waiting.codeA11y": "Código {code}",
+  "online.waiting.shareCodeMessage":
+    "¡Te reto a Siete y Once! Únete a mi mesa con el código {code}",
+
+  // Name form
+  "online.username.title": "¿Cómo te llamas?",
+  "online.username.placeholder": "Tu nombre",
+  "online.username.continue": "Listo",
+
+  // Errors
+  "online.error.connectionFailed": "No pudimos conectarnos. Intenta de nuevo.",
+  "online.error.invalidCode": "Ese código no existe o ya venció",
+  "online.error.gameFull": "No encontramos esa mesa o ya está llena",
+  "online.error.generic": "Algo salió mal. Intenta de nuevo.",
+  "online.error.notYourTurn": "No es tu turno",
+  "online.error.invalidBet": "Esa apuesta no es válida",
+  "online.error.rejoinFailed": "Tu partida anterior ya no está disponible",
+} as const;
+
+export type TranslationKey = keyof typeof es;
+
+const en: Record<TranslationKey, string> = {
+  "home.eyebrow": "Dice duel · Caribbean coast",
+  "home.title": "Siete y Once",
+  "home.tagline": "Roll a 7 or 11 and the table is yours.",
+  "home.playOnline": "Play online",
+  "home.playLocal": "Two players on this phone",
+  "home.howToPlay": "How to play",
+  "home.a11y.language": "Language: {language}. Tap to change it",
+  "home.languageShort": "EN",
+  "home.languageEnglish": "English",
+  "home.languageSpanish": "Spanish",
+  "home.configTitle": "Settings",
+  "home.languageLabel": "Language",
+  "home.soundLabel": "Sound",
+  "home.hapticsLabel": "Haptics",
+
+  "rules.title": "How to play",
+  "rules.intro": "Two players, $1,000,000 each. Leave your rival broke to win.",
+  "rules.roles":
+    "First, both players roll: the higher roll becomes the Shooter and the other one the Bettor.",
+  "rules.bet": "The Bettor places the bet: at least $50,000 and at most the lower of both balances.",
+  "rules.comeOut":
+    "Shooter's first roll: 7 or 11 wins for the Shooter; 2, 3 or 12 wins for the Bettor.",
+  "rules.point":
+    "Any other number becomes the point. The Bettor keeps or raises the bet and the Shooter keeps rolling: the point again wins for the Shooter, a 7 wins for the Bettor.",
+  "rules.next": "The round winner collects the bet and shoots next.",
+  "rules.timer": "Each turn lasts 8 seconds. When time runs out, the game rolls or bets the minimum for you.",
+  "rules.end": "You lose when you can no longer cover the minimum bet.",
+  "rules.cta": "Let's play!",
+
+  "game.player1DefaultName": "Player 1",
+  "game.player2DefaultName": "Player 2",
+  "game.round": "Round {round}",
+  "game.role.shooter": "Shooter",
+  "game.role.bettor": "Bettor",
+  "game.role.opening": "Opening roll",
+  "game.winsWith": "{role} · wins with {numbers}",
+  "game.or": "or",
+  "game.you": "{name} (you)",
+  "game.pointLabel": "Point",
+  "game.betChip": "Bet",
+  "game.openingRoll": "Rolled {sum}",
+  "game.rollCta": "Roll the dice",
+  "game.turnOf": "{name}'s turn",
+  "game.a11y.exitButton": "Leave game",
+  "game.a11y.rollDice": "Roll the dice",
+  "game.a11y.keepBetToggle": "Keep bet locked",
+  "game.a11y.mute": "Mute sound",
+  "game.a11y.unmute": "Turn sound on",
+  "game.a11y.secondsLeft": "{seconds} seconds",
+
+  "game.betSheet.title": "Your bet, {name}",
+  "game.betSheet.winsFirstRoll": "You win with 2, 3 or 12 on the first roll",
+  "game.betSheet.winsOnPoint": "You win if a 7 comes before the {point}",
+  "game.betSheet.maxLabel": "Max {amount} · the lower balance",
+  "game.betSheet.keepRound": "Keep this bet all round",
+  "game.betSheet.keepRoundHint": "We won't ask again until someone wins",
+  "game.betSheet.firstBetCta": "Bet {amount}",
+  "game.betSheet.keepCta": "Keep {amount}",
+  "game.betSheet.increaseCta": "Raise to {amount}",
+  "game.betSheet.decrease": "Lower bet",
+  "game.betSheet.increase": "Raise bet",
+  "game.betSheet.step": "Steps of {amount}",
+
+  "game.over.youWon": "You won, {name}!",
+  "game.over.playerWon": "{name} wins!",
+  "game.over.gameOver": "Game over",
+  "game.over.tookTheTable": "{name} took the table",
+  "game.over.subtitleYouWon": "You left {loser} broke in {rounds}",
+  "game.over.subtitleWon": "{winner} left {loser} broke in {rounds}",
+  "game.over.subtitleYouLost": "You went broke in {rounds}. A rematch awaits.",
+  "game.over.subtitleOpponentLeft": "{loser} left the table",
+  "game.over.roundsOne": "{count} round",
+  "game.over.roundsOther": "{count} rounds",
+  "game.over.statRounds": "Rounds",
+  "game.over.statWon": "Won",
+  "game.over.statBiggestBet": "Biggest bet",
+  "game.over.rematch": "Rematch",
+  "game.over.newGame": "New game",
+  "game.over.share": "Share result",
+  "game.over.home": "Back to home",
+  "game.over.shareTitle": "Siete y Once",
+  "game.over.shareMessage": "{winner} beat {loser} in {rounds} of Siete y Once! Up for it?",
+
+  "game.toast.rollToDetermineShooter": "Roll to see who's the Shooter!",
+  "game.toast.playerRolled": "{name} rolled {sum}. {next}'s turn.",
+  "game.toast.tie": "It's a tie! Roll again.",
+  "game.toast.shooterDetermined": "{name} is the Shooter!",
+  "game.toast.placeBet": "{name}, place your bet!",
+  "game.toast.shooterRoll": "{name}, roll the dice!",
+  "game.toast.shooterWinsNatural": "{sum} right away! {name} wins",
+  "game.toast.bettorWinsCraps": "Rolled {sum}! {name} wins",
+  "game.toast.pointSet": "The point is {point}. Roll it again!",
+  "game.toast.shooterWinsPoint": "Point repeated! {name} wins",
+  "game.toast.bettorWinsSeven": "Seven out! {name} wins",
+  "game.toast.continueRolling": "Rolled {sum} · keep rolling",
+  "game.toast.opponentReconnected": "Your rival is back at the table",
+  "game.toast.gameOverAbandonment": "You win! Your rival abandoned the game.",
+  "game.toast.opponentLeft": "{name} left the table. You win!",
+
+  "game.exitModal.title": "Leave the game?",
+  "game.exitModal.message": "This game's progress will be lost.",
+  "game.exitModal.messageOnline": "If you leave, your rival wins the game.",
+  "game.exitModal.cancelCta": "Keep playing",
+  "game.exitModal.exitCta": "Leave",
+
+  "game.banner.reconnecting": "Reconnecting…",
+  "game.banner.opponentDisconnected": "{name} disconnected · {seconds}s to return",
+
+  "online.lobby.eyebrow": "Play online",
+  "online.lobby.title": "The table is set",
+  "online.lobby.playingAs": "Playing as",
+  "online.lobby.createTitle": "Set up your table",
+  "online.lobby.createSubtitle": "Create a game and share the code with your rival.",
+  "online.lobby.createGame": "Create game",
+  "online.lobby.invited": "Were you invited?",
+  "online.lobby.codePlaceholder": "CODE",
+  "online.lobby.codeLabel": "Your friend's code",
+  "online.lobby.joinCta": "Join",
+  "online.lobby.back": "Back to home",
+
+  "online.waiting.title": "Your code",
+  "online.waiting.status": "Waiting for your rival…",
+  "online.waiting.invite": "Invite",
+  "online.waiting.copy": "Copy",
+  "online.waiting.codeCopied": "Copied!",
+  "online.waiting.leave": "Leave the table",
+  "online.waiting.codeA11y": "Code {code}",
+  "online.waiting.shareCodeMessage": "I challenge you to Siete y Once! Join my table with code {code}",
+
+  "online.username.title": "What's your name?",
+  "online.username.placeholder": "Your name",
+  "online.username.continue": "Done",
+
+  "online.error.connectionFailed": "We couldn't connect. Please try again.",
+  "online.error.invalidCode": "That code doesn't exist or has expired",
+  "online.error.gameFull": "We couldn't find that table or it's already full",
+  "online.error.generic": "Something went wrong. Please try again.",
+  "online.error.notYourTurn": "It's not your turn",
+  "online.error.invalidBet": "That bet isn't valid",
+  "online.error.rejoinFailed": "Your previous game is no longer available",
 };
 
-export type TranslationKey = TranslationKeys;
+export const translations: Record<Language, Record<TranslationKey, string>> = { es, en };
 
 /** Looks up a translation, falling back to the key itself so a missing string is visible. */
 export const translate = (language: Language, key: TranslationKey): string =>

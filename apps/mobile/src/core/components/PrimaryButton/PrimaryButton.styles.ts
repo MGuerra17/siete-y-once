@@ -1,41 +1,31 @@
 import { StyleSheet } from "react-native";
 import { colors } from "@/src/theme/colors";
-import { spacing } from "@/src/theme/spacing";
-import { fontSize } from "@/src/theme/fontSize";
+import { shadows } from "@/src/theme/shadows";
+import { radii } from "@/src/theme/spacing";
+import { typography } from "@/src/theme/typography";
 
 export const styles = StyleSheet.create({
   base: {
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
-    borderRadius: 999,
+    height: 60,
+    borderRadius: radii.lg,
+    backgroundColor: colors.coral,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 10,
+    paddingHorizontal: 20,
+    overflow: "hidden",
+    ...shadows.coral,
   },
   pressed: {
-    opacity: 0.9,
+    transform: [{ scale: 0.985 }],
+    opacity: 0.94,
   },
   disabled: {
-    backgroundColor: colors.primaryMuted,
-    opacity: 0.7,
-  },
-  content: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
+    opacity: 0.55,
   },
   label: {
-    color: colors.textPrimary,
-    fontSize: fontSize.md,
-    fontWeight: "600",
-  },
-  labelInvisible: {
-    opacity: 0,
-  },
-  loaderOverlay: {
-    ...StyleSheet.absoluteFill,
-    alignItems: "center",
-    justifyContent: "center",
+    ...typography.button,
+    color: colors.textOnCoral,
   },
 });
-

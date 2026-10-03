@@ -7,8 +7,10 @@ import type { Language } from "@/src/core/i18n/translations";
 type SettingsState = {
   language: Language;
   soundEnabled: boolean;
+  hapticsEnabled: boolean;
   setLanguage: (language: Language) => void;
   setSoundEnabled: (enabled: boolean) => void;
+  setHapticsEnabled: (enabled: boolean) => void;
 };
 
 /** User preferences, persisted across launches. */
@@ -17,13 +19,19 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       language: detectDeviceLanguage(),
       soundEnabled: true,
+      hapticsEnabled: true,
       setLanguage: (language) => set({ language }),
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
+      setHapticsEnabled: (hapticsEnabled) => set({ hapticsEnabled }),
     }),
     {
       name: "@siete-y-once/settings",
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: ({ language, soundEnabled }) => ({ language, soundEnabled }),
+      partialize: ({ language, soundEnabled, hapticsEnabled }) => ({
+        language,
+        soundEnabled,
+        hapticsEnabled,
+      }),
     },
   ),
 );
