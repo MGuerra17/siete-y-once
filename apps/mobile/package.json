@@ -1,5 +1,5 @@
 {
-  "name": "seven-eleven-rn",
+  "name": "@seven/mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

@@ -1,0 +1,19 @@
+{
+  "name": "seven",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "mobile": "pnpm --filter @seven/mobile",
+    "backend": "pnpm --filter @seven/backend",
+    "core": "pnpm --filter @seven/game-core",
+    "lint": "pnpm -r --parallel lint",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm -r test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {}
+}

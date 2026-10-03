@@ -1,5 +1,5 @@
 {
-  "name": "seven-eleven-back-aws",
+  "name": "@seven/backend",
   "version": "1.0.0",
   "description": "Backend for Seven-Eleven game: API Gateway WebSocket, Lambda, DynamoDB",
   "main": "lib/index.js",
