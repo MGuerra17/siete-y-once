@@ -6,6 +6,7 @@ import { CancelledError, sleep } from "@/src/core/utils/sleep";
 import { RESULT_DELAY_MS, ROLL_DURATION_MS } from "@/src/features/game/constants/ui.constants";
 import { createSeatMapper } from "@/src/features/game/model/boardView";
 import { describePrompt, type Message } from "@/src/features/game/model/messages";
+import { recordRound } from "@/src/features/game/model/gameStats";
 import type { GameEvent } from "@/src/features/game/types";
 import {
   displayNameOf,
@@ -154,6 +155,7 @@ export function createOnlineClient(deps: OnlineClientDeps) {
     if (plan.roundWon) {
       events.emit({ type: "roundWon", mine: plan.roundWon.mine });
       setState({
+        stats: recordRound(getState().stats, plan.roundWon),
         flyer: {
           playerId: toSeat(plan.roundWon.winnerId),
           number: plan.roundWon.winningSum,

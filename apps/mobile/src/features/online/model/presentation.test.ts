@@ -29,10 +29,15 @@ describe("planGameMessage", () => {
   it("animates rolls and tells each player whether the round is theirs", () => {
     const forShooter = planGameMessage(roundWon, "player1");
     expect(forShooter.animateRoll).toBe(true);
-    expect(forShooter.roundWon).toEqual({ winnerId: "player1", winningSum: 7, mine: true });
+    expect(forShooter.roundWon).toEqual({
+      winnerId: "player1",
+      winningSum: 7,
+      amount: 50_000,
+      mine: true,
+    });
     expect(forShooter.toast).toEqual({
       key: "game.toast.shooterWinsNatural",
-      params: { name: "Ana", amount: 50_000 },
+      params: { name: "Ana", sum: 7, amount: 50_000 },
     });
     expect(planGameMessage(roundWon, "player2").roundWon?.mine).toBe(false);
   });

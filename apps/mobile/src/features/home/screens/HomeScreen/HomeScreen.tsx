@@ -1,123 +1,81 @@
-import { colors } from "@/src/theme/colors";
-import { Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import React from "react";
-import {
-  Pressable,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { AmbientBackground } from "@/src/core/components/AmbientBackground/AmbientBackground";
-import { ModeCard } from "@/src/features/home/components/ModeCard/ModeCard";
-import { styles } from "@/src/features/home/screens/HomeScreen/HomeScreen.styles";
-import type { HomeScreenProps } from "@/src/features/home/screens/HomeScreen/HomeScreen.types";
+import { Pressable, StyleSheet } from "react-native";
+import { illustrations } from "@/src/core/assets/illustrations";
+import { AppText } from "@/src/core/components/AppText/AppText";
+import { GlassButton } from "@/src/core/components/GlassButton/GlassButton";
+import { IconButton } from "@/src/core/components/IconButton/IconButton";
+import { PosterScreen } from "@/src/core/components/PosterScreen/PosterScreen";
+import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { MIN_TOUCH } from "@/src/theme/spacing";
 
+export type HomeScreenProps = {
+  onPlayOnline: () => void;
+  onPlayLocal: () => void;
+  onOpenRules: () => void;
+  onOpenSettings: () => void;
+  onToggleLanguage: () => void;
+  isNavigating: boolean;
+};
+
+/** Poster home: illustration, title in the sky, two ways to play. */
 export const HomeScreen: React.FC<HomeScreenProps> = ({
-  modeOnlineLabel,
-  modeOfflineLabel,
-  modeOfflineDescription,
-  modeOnlineDescription,
-  configLabel,
-  onOfflinePress,
-  onOnlinePress,
-  onOpenConfig,
+  onPlayOnline,
+  onPlayLocal,
+  onOpenRules,
+  onOpenSettings,
+  onToggleLanguage,
   isNavigating,
 }) => {
-  const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-
-  const isTablet = width >= 600;
-  const isLargeTablet = width >= 840;
+  const { t } = useLanguage();
 
   return (
-    <View style={styles.wrapper}>
-      <AmbientBackground />
-      <View
-        style={[
-          styles.container,
-          styles.contentWrapper,
-          isTablet && styles.contentWrapperTablet,
-          { paddingTop: insets.top },
-        ]}
-      >
-        <View
-          style={[
-            styles.contentLayer,
-            isTablet && styles.contentLayerTablet,
-            isLargeTablet && styles.contentLayerLargeTablet,
-          ]}
-        >
-          <View style={styles.header}>
-            <Pressable
-              onPress={onOpenConfig}
-              accessibilityRole="button"
-              accessibilityLabel={configLabel}
-              style={({ pressed }) => [
-                styles.configButton,
-                isTablet && styles.configButtonTablet,
-                pressed && styles.configButtonPressed,
-              ]}
-            >
-              <Ionicons
-                name="settings-outline"
-                size={24}
-                color={colors.textPrimary}
-              />
-            </Pressable>
-          </View>
-
-          <View style={styles.content}>
-            <View
-              style={[
-                styles.logoContainer,
-                isTablet && styles.logoContainerTablet,
-                isLargeTablet && styles.logoContainerLargeTablet,
-              ]}
-            >
-              <Image
-                source={require("@/assets/images/seven-eleven-logo.png")}
-                style={styles.logo}
-                contentFit="contain"
-              />
-            </View>
-
-            <View
-              style={[
-                styles.modeSelector,
-                isTablet && styles.modeSelectorTablet,
-                isLargeTablet && styles.modeSelectorLargeTablet,
-              ]}
-            >
-              <View
-                style={[
-                  styles.modeRow,
-                  isTablet && styles.modeRowTablet,
-                ]}
-              >
-                <ModeCard
-                  icon="globe-outline"
-                  label={modeOnlineLabel}
-                  description={modeOnlineDescription}
-                  onPress={onOnlinePress}
-                  disabled={isNavigating}
-                  isTablet={isTablet}
-                  isLargeTablet={isLargeTablet}
-                />
-                <ModeCard
-                  icon="phone-portrait-outline"
-                  label={modeOfflineLabel}
-                  description={modeOfflineDescription}
-                  onPress={onOfflinePress}
-                  disabled={isNavigating}
-                  isTablet={isTablet}
-                  isLargeTablet={isLargeTablet}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
+    <PosterScreen
+      testID="home-screen"
+      source={illustrations.home}
+      fadeStart={0.6}
+      eyebrow={t("home.eyebrow")}
+      title={t("home.title")}
+      topRight={
+        <>
+          <IconButton
+            text={t("home.languageShort")}
+            accessibilityLabel={t("home.a11y.language", { language: t("home.languageShort") })}
+            onPress={onToggleLanguage}
+          />
+          <IconButton
+            icon="options-outline"
+            accessibilityLabel={t("home.configTitle")}
+            onPress={onOpenSettings}
+          />
+        </>
+      }
+    >
+      <AppText variant="body" tone="soft" align="center" style={styles.tagline}>
+        {t("home.tagline")}
+      </AppText>
+      <PrimaryButton
+        label={t("home.playOnline")}
+        icon="globe-outline"
+        onPress={onPlayOnline}
+        disabled={isNavigating}
+      />
+      <GlassButton
+        label={t("home.playLocal")}
+        icon="phone-portrait-outline"
+        onPress={onPlayLocal}
+        disabled={isNavigating}
+      />
+      <Pressable onPress={onOpenRules} accessibilityRole="button" style={styles.link} hitSlop={6}>
+        <AppText variant="bodyStrong" tone="sun">
+          {t("home.howToPlay")}
+        </AppText>
+      </Pressable>
+    </PosterScreen>
   );
 };
+
+const styles = StyleSheet.create({
+  tagline: { marginBottom: 6 },
+  link: { minHeight: MIN_TOUCH, alignItems: "center", justifyContent: "center" },
+});

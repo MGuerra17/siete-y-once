@@ -1,18 +1,20 @@
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import React, { useEffect, useRef } from "react";
-import { Pressable, Switch, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/core/components/AppText/AppText";
+import { SandSheet } from "@/src/core/components/SandSheet/SandSheet";
+import { SettingRow } from "@/src/core/components/SettingRow/SettingRow";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
-import { colors } from "@/src/theme/colors";
-import { styles } from "@/src/features/home/components/ConfigMenu/ConfigMenu.styles";
+import type { Language } from "@/src/core/i18n/translations";
 import type { ConfigMenuProps } from "@/src/features/home/components/ConfigMenu/ConfigMenu.types";
+import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/typography";
 
-const isActiveLanguage = (current: string, target: string) => current === target;
+const LANGUAGES: { value: Language; key: "home.languageSpanish" | "home.languageEnglish" }[] = [
+  { value: "es", key: "home.languageSpanish" },
+  { value: "en", key: "home.languageEnglish" },
+];
 
+/** Settings sheet: language, sound and haptics. */
 export const ConfigMenu: React.FC<ConfigMenuProps> = ({
   visible,
   onClose,
@@ -20,110 +22,76 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = ({
   onSelectLanguage,
   soundEnabled,
   onSoundToggle,
+  hapticsEnabled,
+  onHapticsToggle,
 }) => {
   const { t } = useLanguage();
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
-
-  useEffect(() => {
-    if (!bottomSheetRef.current) return;
-
-    if (visible) {
-      bottomSheetRef.current.present();
-    } else {
-      bottomSheetRef.current.dismiss();
-    }
-  }, [visible]);
-
-  const renderBackdrop = (backdropProps: Parameters<typeof BottomSheetBackdrop>[0]) => (
-    <BottomSheetBackdrop
-      {...backdropProps}
-      appearsOnIndex={0}
-      disappearsOnIndex={-1}
-      pressBehavior="close"
-    />
-  );
 
   return (
-    <BottomSheetModal
-      ref={bottomSheetRef}
-      index={0}
-      backdropComponent={renderBackdrop}
-      enablePanDownToClose
-      onDismiss={onClose}
-      handleIndicatorStyle={styles.handleIndicator}
-      style={styles.modal}
-      backgroundStyle={styles.background}
-    >
-      <BottomSheetView style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title}>{t("home.configTitle")}</Text>
-        </View>
+    <SandSheet visible={visible} onDismiss={onClose}>
+      <AppText variant="heading" tone="dark" accessibilityRole="header">
+        {t("home.configTitle")}
+      </AppText>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="language-outline" size={18} color={colors.textSecondary} />
-            <Text style={styles.sectionTitle}>{t("home.languageLabel")}</Text>
-          </View>
-          <View style={styles.languageRow}>
-            <Pressable
-              onPress={() => onSelectLanguage("en")}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: isActiveLanguage(language, "en") }}
-              style={[
-                styles.languageButton,
-                isActiveLanguage(language, "en") && styles.languageButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.languageButtonText,
-                  isActiveLanguage(language, "en") && styles.languageButtonTextActive,
-                ]}
+      <View style={styles.section}>
+        <AppText variant="label" tone="darkMuted">
+          {t("home.languageLabel")}
+        </AppText>
+        <View style={styles.segmented} accessibilityRole="radiogroup">
+          {LANGUAGES.map(({ value, key }) => {
+            const selected = value === language;
+            return (
+              <Pressable
+                key={value}
+                onPress={() => onSelectLanguage(value)}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                style={[styles.segment, selected && styles.segmentSelected]}
               >
-                {t("home.languageEnglish")}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => onSelectLanguage("es")}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: isActiveLanguage(language, "es") }}
-              style={[
-                styles.languageButton,
-                isActiveLanguage(language, "es") && styles.languageButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.languageButtonText,
-                  isActiveLanguage(language, "es") && styles.languageButtonTextActive,
-                ]}
-              >
-                {t("home.languageSpanish")}
-              </Text>
-            </Pressable>
-          </View>
+                <AppText style={[styles.segmentText, selected && styles.segmentTextSelected]}>
+                  {t(key)}
+                </AppText>
+              </Pressable>
+            );
+          })}
         </View>
+      </View>
 
-        <View style={styles.divider} />
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="volume-high-outline" size={18} color={colors.textSecondary} />
-            <Text style={styles.sectionTitle}>{t("home.soundLabel")}</Text>
-          </View>
-          <View style={styles.soundRow}>
-            <Text style={styles.soundLabel}>
-              {soundEnabled ? t("home.soundOn") : t("home.soundOff")}
-            </Text>
-            <Switch
-              value={soundEnabled}
-              onValueChange={onSoundToggle}
-              trackColor={{ false: colors.border, true: colors.primary }}
-              thumbColor={colors.textPrimary}
-            />
-          </View>
-        </View>
-      </BottomSheetView>
-    </BottomSheetModal>
+      <View style={styles.section}>
+        <SettingRow
+          icon="volume-high-outline"
+          label={t("home.soundLabel")}
+          value={soundEnabled}
+          onChange={onSoundToggle}
+        />
+        <SettingRow
+          icon="phone-portrait-outline"
+          label={t("home.hapticsLabel")}
+          value={hapticsEnabled}
+          onChange={onHapticsToggle}
+        />
+      </View>
+    </SandSheet>
   );
 };
+
+const styles = StyleSheet.create({
+  section: { gap: 10 },
+  segmented: {
+    flexDirection: "row",
+    padding: 4,
+    gap: 4,
+    borderRadius: 16,
+    backgroundColor: "rgba(13,59,62,0.08)",
+  },
+  segment: {
+    flex: 1,
+    height: 44,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  segmentSelected: { backgroundColor: colors.background },
+  segmentText: { fontFamily: fonts.bodyBold, fontSize: 15, color: colors.textOnSand },
+  segmentTextSelected: { color: colors.sand },
+});

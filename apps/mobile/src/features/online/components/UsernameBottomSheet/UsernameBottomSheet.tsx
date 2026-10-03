@@ -1,20 +1,16 @@
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
-import { styles } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.styles";
-import type { UsernameBottomSheetProps } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.types";
-import React, { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
-import { useLanguage } from "@/src/core/hooks/useLanguage";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { DISPLAY_NAME_MAX_LENGTH } from "@seven/protocol";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/core/components/AppText/AppText";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
+import { SandSheet } from "@/src/core/components/SandSheet/SandSheet";
+import { useLanguage } from "@/src/core/hooks/useLanguage";
+import type { UsernameBottomSheetProps } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.types";
 import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/typography";
 
-
-const USERNAME_MAX_LENGTH = 15;
-
+/** Asks for the name shown to the rival. */
 export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
   visible,
   onClose,
@@ -22,15 +18,10 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
   initialValue = "",
 }) => {
   const { t } = useLanguage();
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
   // null until the player types, so the sheet always opens with the current name.
   const [draft, setDraft] = useState<string | null>(null);
   const name = draft ?? initialValue;
-
-  useEffect(() => {
-    if (visible) bottomSheetRef.current?.present();
-    else bottomSheetRef.current?.dismiss();
-  }, [visible]);
+  const isValid = name.trim().length > 0;
 
   const handleDismiss = () => {
     setDraft(null);
@@ -38,62 +29,50 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
   };
 
   const handleSubmit = () => {
-    const trimmed = name.trim();
-    if (trimmed.length > 0) {
-      onSubmit(trimmed);
-    }
+    if (isValid) onSubmit(name.trim());
   };
 
-  const renderBackdrop = (
-    backdropProps: Parameters<typeof BottomSheetBackdrop>[0],
-  ) => (
-    <BottomSheetBackdrop
-      {...backdropProps}
-      appearsOnIndex={0}
-      disappearsOnIndex={-1}
-      pressBehavior="close"
-    />
-  );
-
   return (
-    <BottomSheetModal
-      ref={bottomSheetRef}
-      index={0}
-      backdropComponent={renderBackdrop}
-      enablePanDownToClose
-      onDismiss={handleDismiss}
-      handleIndicatorStyle={styles.handleIndicator}
-      style={styles.modal}
-      backgroundStyle={styles.background}
-      keyboardBehavior="interactive"
-      keyboardBlurBehavior="restore"
-    >
-      <BottomSheetView style={styles.content}>
-        <Text style={styles.title}>{t("online.username.title")}</Text>
-        <View style={styles.inputWrapper}>
-          <BottomSheetTextInput
-            style={styles.input}
-            placeholder={t("online.username.placeholder")}
-            placeholderTextColor={colors.textSecondary}
-            value={name}
-            onChangeText={setDraft}
-            maxLength={USERNAME_MAX_LENGTH}
-            autoFocus
-            returnKeyType="done"
-            onSubmitEditing={handleSubmit}
-          />
-          <Text style={styles.charCounter}>
-            {name.length}/{USERNAME_MAX_LENGTH}
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton
-            label={t("online.username.continue")}
-            onPress={handleSubmit}
-            disabled={name.trim().length === 0}
-          />
-        </View>
-      </BottomSheetView>
-    </BottomSheetModal>
+    <SandSheet visible={visible} onDismiss={handleDismiss} withKeyboard>
+      <AppText variant="heading" tone="dark" accessibilityRole="header">
+        {t("online.username.title")}
+      </AppText>
+      <View style={styles.inputWrapper}>
+        <BottomSheetTextInput
+          style={styles.input}
+          placeholder={t("online.username.placeholder")}
+          placeholderTextColor={colors.textOnSandMuted}
+          accessibilityLabel={t("online.username.placeholder")}
+          value={name}
+          onChangeText={setDraft}
+          maxLength={DISPLAY_NAME_MAX_LENGTH}
+          autoFocus
+          autoCapitalize="words"
+          returnKeyType="done"
+          onSubmitEditing={handleSubmit}
+        />
+        <AppText variant="caption" tone="darkMuted" style={styles.counter}>
+          {name.length}/{DISPLAY_NAME_MAX_LENGTH}
+        </AppText>
+      </View>
+      <PrimaryButton label={t("online.username.continue")} onPress={handleSubmit} disabled={!isValid} />
+    </SandSheet>
   );
 };
+
+const styles = StyleSheet.create({
+  inputWrapper: { justifyContent: "center" },
+  input: {
+    height: 56,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: colors.sandBorder,
+    backgroundColor: "rgba(255,255,255,0.45)",
+    paddingHorizontal: 16,
+    paddingRight: 64,
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 17,
+    color: colors.textOnSand,
+  },
+  counter: { position: "absolute", right: 16 },
+});

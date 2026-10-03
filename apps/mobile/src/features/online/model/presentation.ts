@@ -23,7 +23,7 @@ export const displayNameOf = (game: PublicGame, playerId: PlayerId): string =>
 export type MessagePlan = {
   /** Play the dice animation before revealing this snapshot. */
   animateRoll: boolean;
-  roundWon: { winnerId: PlayerId; winningSum: number; mine: boolean } | null;
+  roundWon: { winnerId: PlayerId; winningSum: number; amount: number; mine: boolean } | null;
   gameOver: { mine: boolean } | null;
   toast: Message | null;
 };
@@ -55,6 +55,7 @@ export function planGameMessage(message: GameStateMessage, localPlayerId: Player
       ? {
           winnerId: roundWon.result.winnerId,
           winningSum: roundWon.result.winningSum,
+          amount: roundWon.result.amount,
           mine: roundWon.result.winnerId === localPlayerId,
         }
       : null,

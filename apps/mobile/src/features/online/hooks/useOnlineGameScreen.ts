@@ -1,13 +1,14 @@
 import { GamePhase, TURN_TIMEOUT_MS, getActivePlayerId, getBettorId } from "@seven/game-core";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLanguage } from "@/src/core/hooks/useLanguage";
 import { useGoHome } from "@/src/features/game/hooks/useGameExit";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
+import { useGameHaptics } from "@/src/features/game/hooks/useGameHaptics";
 import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
 import { useShareResult } from "@/src/features/game/hooks/useShareResult";
 import { useTurnTimer } from "@/src/features/game/hooks/useTurnTimer";
-import { buildBoardView, createSeatMapper } from "@/src/features/game/model/boardView";
+import { buildBoardView, createSeatMapper, statsInSeats } from "@/src/features/game/model/boardView";
 import type { GameScreenProps } from "@/src/features/game/screens/GameScreen/GameScreen.types";
 import { GameModes } from "@/src/features/game/types";
 import { getOnlineClient, onlineGameEvents } from "@/src/features/online/engine/onlineClientInstance";
@@ -30,6 +31,7 @@ export type OnlineGameScreenModel = {
 /** Projects the online session into GameScreen props and wires the player's actions. */
 export const useOnlineGameScreen = (): OnlineGameScreenModel => {
   const navigation = useNavigation();
+  const router = useRouter();
   const goHome = useGoHome();
   const { t } = useLanguage();
   const client = getOnlineClient();
@@ -42,11 +44,17 @@ export const useOnlineGameScreen = (): OnlineGameScreenModel => {
   }, [navigation]);
 
   useGameSounds(onlineGameEvents.subscribe);
+  useGameHaptics(onlineGameEvents.subscribe);
 
   const leave = useCallback(() => {
     client.leave();
     goHome();
   }, [client, goHome]);
+
+  const playAgain = useCallback(() => {
+    client.leave();
+    router.replace("/online/lobby");
+  }, [client, router]);
 
   const exit = useExitConfirm(leave);
   const board = useMemo(
@@ -100,6 +108,8 @@ export const useOnlineGameScreen = (): OnlineGameScreenModel => {
     screenProps: {
       board,
       mode: GameModes.ONLINE,
+      names: { player1: displayNameOf(game, me), player2: opponentName },
+      stats: statsInSeats(state.stats, me),
       isRolling: state.isRolling,
       isDiceEnabled: isIdle && isRollPhase && isMyTurn(game, me),
       isBetSheetVisible:
@@ -112,6 +122,7 @@ export const useOnlineGameScreen = (): OnlineGameScreenModel => {
       onSubmitBet: client.submitBet,
       onToggleBetLock: client.toggleBetLock,
       onDismissToast: client.dismissToast,
+      onPlayAgain: playAgain,
       onGoHome: leave,
       onShare: share,
       captureRef,

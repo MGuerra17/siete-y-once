@@ -5,6 +5,7 @@ import { translateNow } from "@/src/core/i18n/translator";
 import { createEmitter } from "@/src/core/utils/emitter";
 import { useGoHome } from "@/src/features/game/hooks/useGameExit";
 import { useExitConfirm } from "@/src/features/game/hooks/useExitConfirm";
+import { useGameHaptics } from "@/src/features/game/hooks/useGameHaptics";
 import { useGameSounds } from "@/src/features/game/hooks/useGameSounds";
 import { useShareResult } from "@/src/features/game/hooks/useShareResult";
 import { useTurnTimer } from "@/src/features/game/hooks/useTurnTimer";
@@ -39,6 +40,7 @@ export const useOfflineGameScreen = (): GameScreenProps => {
   }, [controller, navigation]);
 
   useGameSounds(events.subscribe);
+  useGameHaptics(events.subscribe);
 
   const board = useMemo(
     () => buildBoardView(state.core, { localPlayerId: "player1", names: {} }),
@@ -63,6 +65,8 @@ export const useOfflineGameScreen = (): GameScreenProps => {
   return {
     board,
     mode: GameModes.OFFLINE,
+    names: { player1: defaultName("player1"), player2: defaultName("player2") },
+    stats: state.stats,
     isRolling: state.isRolling,
     isDiceEnabled: isRollPhase && !state.isRolling && !state.isProcessing,
     isBetSheetVisible: state.isBetSheetVisible,
@@ -73,6 +77,7 @@ export const useOfflineGameScreen = (): GameScreenProps => {
     onSubmitBet: controller.submitBet,
     onToggleBetLock: controller.toggleBetLock,
     onDismissToast: controller.dismissToast,
+    onPlayAgain: controller.start,
     onGoHome: goHome,
     onShare: share,
     captureRef,

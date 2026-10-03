@@ -23,6 +23,7 @@ import {
   mustAutoKeepBet,
   type Message,
 } from "@/src/features/game/model/messages";
+import { recordRound } from "@/src/features/game/model/gameStats";
 import type { GameEvent } from "@/src/features/game/types";
 import {
   createOfflineInitialState,
@@ -101,6 +102,7 @@ export function createOfflineController(deps: OfflineControllerDeps) {
       if (outcome.kind === "ROUND_WON") {
         events.emit({ type: "roundWon", mine: true });
         setState({
+          stats: recordRound(getState().stats, outcome.result),
           flyer: {
             playerId: outcome.result.winnerId,
             number: outcome.result.winningSum,

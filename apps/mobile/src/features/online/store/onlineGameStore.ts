@@ -1,5 +1,6 @@
 import type { PublicGame } from "@seven/protocol";
 import { create } from "zustand";
+import { emptyGameStats, type GameStats } from "@/src/features/game/model/gameStats";
 import type { Flyer } from "@/src/features/game/types";
 import type { SocketStatus } from "@/src/features/online/services/socketClient";
 import type { OnlineSession } from "@/src/features/online/storage/onlineStorage";
@@ -18,6 +19,7 @@ export type OnlineGameState = {
   isAwaitingServer: boolean;
   toastMessage: string | null;
   flyer: Flyer | null;
+  stats: GameStats;
 };
 
 export const createOnlineInitialState = (): OnlineGameState => ({
@@ -30,6 +32,7 @@ export const createOnlineInitialState = (): OnlineGameState => ({
   isAwaitingServer: false,
   toastMessage: null,
   flyer: null,
+  stats: emptyGameStats(),
 });
 
 export const useOnlineGameStore = create<OnlineGameState>(createOnlineInitialState);

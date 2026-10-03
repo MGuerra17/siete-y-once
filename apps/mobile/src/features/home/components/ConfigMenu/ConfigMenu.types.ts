@@ -7,4 +7,6 @@ export type ConfigMenuProps = {
   onSelectLanguage: (language: Language) => void;
   soundEnabled: boolean;
   onSoundToggle: (enabled: boolean) => void;
+  hapticsEnabled: boolean;
+  onHapticsToggle: (enabled: boolean) => void;
 };
