@@ -25,5 +25,6 @@ pnpm mobile start
 - [Architecture](docs/architecture.md)
 - [WebSocket protocol](docs/protocol.md)
 - [Backend & deployment](docs/backend.md)
+- [CI/CD](docs/ci-cd.md)
 - [Mobile app](docs/mobile.md)
 - [Roadmap](docs/roadmap.md)

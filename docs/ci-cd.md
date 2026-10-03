@@ -1,0 +1,30 @@
+# CI/CD
+
+All workflows live in `.github/workflows`. Node version comes from `.nvmrc`, pnpm from
+`packageManager` in the root `package.json`.
+
+| Workflow | Trigger | What it does |
+|---|---|---|
+| `ci.yml` | Every PR and push to `main` | `pnpm typecheck`, `pnpm lint`, `pnpm test` across all workspaces and a `cdk synth` of prod |
+| `deploy-backend.yml` | Push to `main` touching backend/shared packages (→ dev), or manual (dev/prod) | Tests, `cdk diff`, `cdk deploy` with OIDC credentials |
+| `mobile-build.yml` | Manual | `eas build` for a profile/platform, optionally `--auto-submit` to the stores |
+| `dependabot.yml` | Weekly | Grouped dependency PRs; Expo-managed packages are excluded (upgrade them per SDK) |
+
+## One-time setup
+
+1. **AWS deploy role (OIDC, no stored keys)**
+
+   ```bash
+   pnpm backend deploy Seven-github -c githubRepo=<owner>/<repo>
+   ```
+
+   Copy the `DeployRoleArn` output into the repository variable `AWS_DEPLOY_ROLE_ARN`
+   (Settings → Secrets and variables → Actions → Variables). The role can only assume the CDK
+   bootstrap roles and only from `main` or a GitHub environment of this repository.
+
+2. **Environments**: create `dev` and `prod` in Settings → Environments and add yourself as a
+   required reviewer on `prod`.
+
+3. **Expo**: create an access token at expo.dev → Account settings → Access tokens and save it as
+   the `EXPO_TOKEN` repository secret. Store credentials (App Store Connect API key, Google Play
+   service account) are configured once with `eas credentials` / `eas submit`.

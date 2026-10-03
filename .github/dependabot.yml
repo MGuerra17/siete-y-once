@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      aws:
+        patterns: ["@aws-sdk/*", "aws-cdk*", "constructs"]
+      tooling:
+        patterns: ["typescript", "vitest", "eslint*", "jest*", "@types/*"]
+    ignore:
+      # Expo pins these per SDK; upgrade them with `npx expo install --fix` during SDK upgrades.
+      - dependency-name: "expo*"
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "react-native*"
+      - dependency-name: "@react-native*"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

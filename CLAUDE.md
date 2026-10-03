@@ -32,5 +32,6 @@ pnpm monorepo: Expo app + AWS serverless backend + shared TypeScript packages.
 - `docs/architecture.md` — how the pieces fit, state flow, design decisions
 - `docs/protocol.md` — WebSocket actions, events and errors
 - `docs/backend.md` — infrastructure, deploy, operations, costs
+- `docs/ci-cd.md` — GitHub Actions, OIDC deploys, EAS builds
 - `docs/mobile.md` — app structure and conventions
 - `docs/roadmap.md` — improvement plan and status
