@@ -1,16 +1,1 @@
-node_modules
-cdk.out
-dist
-lib
-coverage
-*.tsbuildinfo
-*.log
-*.tmp
-*.swp
-.DS_Store
-.env
-.env.*
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
+cdk.out/

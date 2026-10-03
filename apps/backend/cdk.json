@@ -1,0 +1,10 @@
+{
+  "app": "npx tsx src/infra/app.ts",
+  "watch": {
+    "include": ["src/**"],
+    "exclude": ["**/*.test.ts"]
+  },
+  "context": {
+    "@aws-cdk/aws-lambda-nodejs:useLatestRuntimeVersion": true
+  }
+}
