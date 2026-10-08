@@ -9,7 +9,6 @@ import {
   Figtree_600SemiBold,
   Figtree_700Bold,
 } from "@expo-google-fonts/figtree";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { setAudioModeAsync } from "expo-audio";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -52,7 +51,6 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.fill}>
-        <BottomSheetModalProvider>
           <StatusBar style="light" />
           <Stack
             screenOptions={{
@@ -61,7 +59,6 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: colors.background },
             }}
           />
-        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

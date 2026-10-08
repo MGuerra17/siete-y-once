@@ -83,12 +83,12 @@ export const HomeScreenContainer: React.FC = () => {
         hapticsEnabled={settings.hapticsEnabled}
         onHapticsToggle={settings.setHapticsEnabled}
       />
-      <RulesSheet visible={sheet === "rules"} onClose={closeSheet} />
       <UsernameBottomSheet
         visible={sheet === "username"}
         onClose={closeSheet}
         onSubmit={handleUsernameSubmit}
       />
+      <RulesSheet visible={sheet === "rules"} onClose={closeSheet} />
     </>
   );
 };

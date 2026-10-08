@@ -26,7 +26,7 @@ type RulesSheetProps = {
 export const RulesSheet: React.FC<RulesSheetProps> = ({ visible, onClose }) => {
   const { t } = useLanguage();
   return (
-    <SandSheet visible={visible} onDismiss={onClose}>
+    <SandSheet visible={visible} onDismiss={onClose} scrollable>
       <View style={styles.header}>
         <AppText variant="heading" tone="dark" accessibilityRole="header">
           {t("rules.title")}

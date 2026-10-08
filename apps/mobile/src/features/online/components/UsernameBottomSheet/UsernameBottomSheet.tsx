@@ -1,7 +1,6 @@
-import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { DISPLAY_NAME_MAX_LENGTH } from "@seven/protocol";
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, View, TextInput } from "react-native";
 import { AppText } from "@/src/core/components/AppText/AppText";
 import { PrimaryButton } from "@/src/core/components/PrimaryButton/PrimaryButton";
 import { SandSheet } from "@/src/core/components/SandSheet/SandSheet";
@@ -9,6 +8,8 @@ import { useLanguage } from "@/src/core/hooks/useLanguage";
 import type { UsernameBottomSheetProps } from "@/src/features/online/components/UsernameBottomSheet/UsernameBottomSheet.types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/typography";
+
+const FOCUS_DELAY_MS = 260;
 
 /** Asks for the name shown to the rival. */
 export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
@@ -22,6 +23,15 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
   const [draft, setDraft] = useState<string | null>(null);
   const name = draft ?? initialValue;
   const isValid = name.trim().length > 0;
+  const inputRef = useRef<TextInput>(null);
+
+  // Focus once the sheet has slid in: focusing mid-animation can leave Android's keyboard
+  // detached from the field.
+  useEffect(() => {
+    if (!visible) return;
+    const timer = setTimeout(() => inputRef.current?.focus(), FOCUS_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [visible]);
 
   const handleDismiss = () => {
     setDraft(null);
@@ -38,7 +48,8 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
         {t("online.username.title")}
       </AppText>
       <View style={styles.inputWrapper}>
-        <BottomSheetTextInput
+        <TextInput
+          ref={inputRef}
           style={styles.input}
           placeholder={t("online.username.placeholder")}
           placeholderTextColor={colors.textOnSandMuted}
@@ -46,7 +57,6 @@ export const UsernameBottomSheet: React.FC<UsernameBottomSheetProps> = ({
           value={name}
           onChangeText={setDraft}
           maxLength={DISPLAY_NAME_MAX_LENGTH}
-          autoFocus
           autoCapitalize="words"
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
