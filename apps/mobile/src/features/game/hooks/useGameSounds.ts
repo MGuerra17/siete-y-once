@@ -12,9 +12,17 @@ const sources = {
   loseGame: require("@/assets/audio/lose-game.mp3"),
 };
 
+/**
+ * Restarts a sound effect. Native players can disappear under us (e.g. after the app was
+ * backgrounded or the audio session was interrupted); a missed sound is fine, a crash is not.
+ */
 const replay = (player: AudioPlayer) => {
-  player.seekTo(0);
-  player.play();
+  try {
+    void Promise.resolve(player.seekTo(0)).catch(() => undefined);
+    player.play();
+  } catch {
+    // Ignore: the next event will use a fresh player.
+  }
 };
 
 type Subscribe = (listener: (event: GameEvent) => void) => () => void;

@@ -10,6 +10,7 @@ import {
   Figtree_700Bold,
 } from "@expo-google-fonts/figtree";
 import { setAudioModeAsync } from "expo-audio";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -21,7 +22,10 @@ import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-c
 import { colors } from "@/src/theme/colors";
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
-SplashScreen.setOptions({ fade: true, duration: 250 });
+// Expo Go cannot customize the native splash; the fade only applies in real builds.
+if (Constants.executionEnvironment !== ExecutionEnvironment.StoreClient) {
+  SplashScreen.setOptions({ fade: true, duration: 250 });
+}
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
