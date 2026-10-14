@@ -2,6 +2,8 @@
 
 `apps/site` is a static [Astro](https://astro.build) site with the pages the stores require:
 
+Live at **https://siete-y-once.vercel.app** (Vercel project `siete-y-once`, root directory `apps/site`).
+
 | Page | Spanish | English |
 |---|---|---|
 | Landing | `/` | `/en` |
