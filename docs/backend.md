@@ -16,7 +16,8 @@ pnpm backend run deploy -c stage=dev     # stack Seven-dev
 pnpm backend run deploy -c stage=prod    # stack Seven-prod
 ```
 
-Copy the `WebSocketUrl` output into `apps/mobile/.env.local` as `EXPO_PUBLIC_WS_URL`.
+Copy the `WebSocketUrl` output into `apps/mobile/.env.local` as `EXPO_PUBLIC_WS_URL` for local
+development, and into `env` of the matching profile in `apps/mobile/eas.json` for builds.
 
 ## Operations
 

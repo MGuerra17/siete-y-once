@@ -18,6 +18,14 @@ Reanimated 4 · expo-audio. Rules come from `@seven/game-core`, the online contr
 EXPO_PUBLIC_WS_URL=wss://<api-id>.execute-api.us-east-1.amazonaws.com/<stage>
 ```
 
+That file is only for the local dev server. EAS builds take the URL from `env` in `eas.json`:
+
+| Profile | Backend |
+|---|---|
+| `development` | dev |
+| `preview` | prod (internal test builds of what ships) |
+| `production` | prod |
+
 ## Commands
 
 ```bash

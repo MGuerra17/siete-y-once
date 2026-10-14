@@ -6,13 +6,22 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_WS_URL": "wss://gs75xpt1sl.execute-api.us-east-1.amazonaws.com/dev"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_WS_URL": "wss://sbymcvfptf.execute-api.us-east-1.amazonaws.com/prod"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_WS_URL": "wss://sbymcvfptf.execute-api.us-east-1.amazonaws.com/prod"
+      }
     }
   },
   "submit": {
