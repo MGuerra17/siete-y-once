@@ -36,7 +36,7 @@ jobs:
       # Only prod alarms send e-mail; AWS asks the address to confirm the subscription once.
       ALARM_EMAIL: ${{ inputs.stage == 'prod' && vars.ALARM_EMAIL || '' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
