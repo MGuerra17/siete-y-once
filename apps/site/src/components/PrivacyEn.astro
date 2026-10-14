@@ -1,0 +1,101 @@
+---
+import { retention, site } from "../config";
+---
+
+<div class="panel summary">
+  <h2>In short</h2>
+  <ul>
+    <li>We don't ask for an account, email or phone number.</li>
+    <li>There are no ads, analytics or tracking.</li>
+    <li>
+      Online play only uses the name you type, and games delete themselves after {retention.gameHours} hours.
+    </li>
+    <li>We don't sell or share data with anyone.</li>
+  </ul>
+</div>
+
+<section>
+  <h2>Who is responsible</h2>
+  <p>
+    {site.developer}, an independent developer in Colombia, is the data controller for {site.storeName}.
+    For any question, write to <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+  </p>
+</section>
+
+<section>
+  <h2>What data is used and why</h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Purpose</th><th>Kept for</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Player name (up to 20 characters, whatever you type)</td>
+          <td>Showing it to your opponent in an online game</td>
+          <td>Deleted after {retention.gameHours} hours</td>
+        </tr>
+        <tr>
+          <td>Game code and in-game balances</td>
+          <td>Running the online game</td>
+          <td>Deleted after {retention.gameHours} hours</td>
+        </tr>
+        <tr>
+          <td>Technical connection identifier</td>
+          <td>Sending moves to each phone and letting you reconnect</td>
+          <td>Up to {retention.connectionHours} hours</td>
+        </tr>
+        <tr>
+          <td>Server error logs</td>
+          <td>Finding and fixing problems</td>
+          <td>{retention.logDays} days</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Playing on one phone sends nothing over the internet.</p>
+</section>
+
+<section>
+  <h2>What is stored on your phone</h2>
+  <p>
+    Your settings (sound, vibration, language), your last player name and a private key to get back into an
+    online game if the connection drops. All of it is removed when you uninstall the app.
+  </p>
+</section>
+
+<section>
+  <h2>Where data is stored</h2>
+  <p>
+    The game servers run on Amazon Web Services in the United States. It is the only provider that
+    processes game data. The connection is encrypted.
+  </p>
+</section>
+
+<section>
+  <h2>Play money</h2>
+  <p>
+    Bets in the game use play money. The app has no purchases, handles no real money and winnings cannot be
+    exchanged for anything.
+  </p>
+</section>
+
+<section>
+  <h2>Children</h2>
+  <p>The app is not directed at children under 13 and does not knowingly collect their data.</p>
+</section>
+
+<section>
+  <h2>Your rights</h2>
+  <p>
+    Under Colombia's Law 1581 of 2012 and any other law that applies to you, you can ask us to tell you
+    about, correct or delete your data. Since games delete themselves after {retention.gameHours} hours,
+    there is usually nothing left. Write to <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+    and we will answer within 15 business days.
+  </p>
+</section>
+
+<section>
+  <h2>Changes</h2>
+  <p>If this policy changes, we will publish the new version on this page with its date.</p>
+</section>

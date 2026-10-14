@@ -1,0 +1,119 @@
+---
+import { site } from "../config";
+import { t, type Lang } from "../i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tr = t(lang);
+
+// Button labels match the app's translations (apps/mobile/src/core/i18n/translations.ts).
+const faq: Record<Lang, { q: string; a: string }[]> = {
+  es: [
+    {
+      q: "¿Cómo invito a alguien a jugar en línea?",
+      a: "Toca «Jugar en línea», luego «Crear partida», y comparte el código de 6 caracteres. Tu rival lo escribe en «Código de tu amigo», toca «Unirme» y la partida empieza.",
+    },
+    {
+      q: "Se me cayó la conexión en plena partida",
+      a: "Tienes 60 segundos para volver: abre la app y vuelves a entrar a la partida. Si pasan los 60 segundos, tu rival puede reclamar la victoria.",
+    },
+    {
+      q: "¿Qué pasa si no juego a tiempo?",
+      a: "Cada turno dura 8 segundos. Si se acaba el tiempo, el juego tira por ti, apuesta el mínimo o deja la apuesta como estaba.",
+    },
+    {
+      q: "¿Se juega con dinero real?",
+      a: "No. Todo el dinero del juego es ficticio y la app no tiene compras.",
+    },
+    {
+      q: "¿Necesito una cuenta?",
+      a: "No. Solo escribes un nombre para que tu rival sepa contra quién juega.",
+    },
+  ],
+  en: [
+    {
+      q: "How do I invite someone to play online?",
+      a: "Tap “Play online”, then “Create game”, and share the 6-character code. Your opponent types it under “Your friend's code”, taps “Join” and the game starts.",
+    },
+    {
+      q: "My connection dropped in the middle of a game",
+      a: "You have 60 seconds to come back: open the app and you rejoin the game. After 60 seconds your opponent can claim the win.",
+    },
+    {
+      q: "What happens if I don't play in time?",
+      a: "Each turn lasts 8 seconds. When time runs out, the game rolls for you, bets the minimum or keeps the current bet.",
+    },
+    {
+      q: "Is real money involved?",
+      a: "No. All money in the game is play money and the app has no purchases.",
+    },
+    {
+      q: "Do I need an account?",
+      a: "No. You only type a name so your opponent knows who they are playing.",
+    },
+  ],
+};
+---
+
+<article class="page">
+  <div class="wrap">
+    <h1>{tr("support.title")}</h1>
+    <p class="meta">{tr("support.subtitle")} {site.storeName}</p>
+    <div class="panel contact">
+      <h2>{tr("support.contact.title")}</h2>
+      <p>
+        {tr("support.contact.body")} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    </div>
+    {
+      faq[lang].map((item, i) => (
+        <details open={i === 0}>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .contact h2 {
+    font-size: 22px;
+  }
+  .contact p {
+    margin: 4px 0 0;
+    color: var(--arena-suave);
+    overflow-wrap: anywhere;
+  }
+  details {
+    border-top: 1px solid var(--linea);
+    padding-block: 16px;
+  }
+  summary {
+    cursor: pointer;
+    font: 700 19px var(--display);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: "+";
+    color: var(--sol);
+    font-size: 24px;
+    line-height: 1;
+  }
+  details[open] summary::after {
+    content: "–";
+  }
+  details p {
+    color: var(--arena-texto);
+    margin: 10px 0 0;
+  }
+</style>

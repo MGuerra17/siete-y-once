@@ -1,0 +1,38 @@
+---
+import { site } from "../config";
+import { formatDate, t, type Lang } from "../i18n";
+import PrivacyEn from "./PrivacyEn.astro";
+import PrivacyEs from "./PrivacyEs.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tr = t(lang);
+---
+
+<article class="page">
+  <div class="wrap">
+    <h1>{tr("privacy.title")}</h1>
+    <p class="meta">
+      {site.storeName} · {tr("privacy.effective")}
+      <time datetime={site.policyEffectiveDate}>{formatDate(lang, site.policyEffectiveDate)}</time>
+    </p>
+    {lang === "es" ? <PrivacyEs /> : <PrivacyEn />}
+  </div>
+</article>
+
+<style>
+  .summary {
+    display: grid;
+    gap: 10px;
+  }
+  .summary h2 {
+    font-size: 20px;
+  }
+  .summary ul {
+    margin: 0;
+    gap: 4px;
+  }
+</style>

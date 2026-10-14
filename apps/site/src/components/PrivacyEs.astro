@@ -1,0 +1,104 @@
+---
+import { retention, site } from "../config";
+---
+
+<div class="panel summary">
+  <h2>En resumen</h2>
+  <ul>
+    <li>No pedimos cuentas, correo ni teléfono.</li>
+    <li>No hay anuncios, analítica ni rastreo.</li>
+    <li>
+      Para jugar en línea solo se usa el nombre que escribes, y las partidas se borran solas en {
+        retention.gameHours
+      } horas.
+    </li>
+    <li>No vendemos ni compartimos datos con nadie.</li>
+  </ul>
+</div>
+
+<section>
+  <h2>Quién es el responsable</h2>
+  <p>
+    {site.developer}, desarrollador independiente en Colombia, es el responsable del tratamiento de los
+    datos de {site.storeName}. Para cualquier consulta escribe a
+    <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+  </p>
+</section>
+
+<section>
+  <h2>Qué datos se usan y para qué</h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>Dato</th><th>Para qué</th><th>Cuánto tiempo</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nombre de jugador (hasta 20 caracteres, el que tú escribas)</td>
+          <td>Mostrárselo a tu rival en una partida en línea</td>
+          <td>Se borra a las {retention.gameHours} horas</td>
+        </tr>
+        <tr>
+          <td>Código de la partida y saldos del juego</td>
+          <td>Llevar la partida en línea</td>
+          <td>Se borra a las {retention.gameHours} horas</td>
+        </tr>
+        <tr>
+          <td>Identificador técnico de la conexión</td>
+          <td>Enviar las jugadas a cada teléfono y permitir reconectarte</td>
+          <td>Máximo {retention.connectionHours} horas</td>
+        </tr>
+        <tr>
+          <td>Registros de errores del servidor</td>
+          <td>Detectar y corregir fallas</td>
+          <td>{retention.logDays} días</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>El modo en el mismo teléfono no envía nada a internet.</p>
+</section>
+
+<section>
+  <h2>Qué se guarda en tu teléfono</h2>
+  <p>
+    Tus ajustes (sonido, vibración, idioma), tu último nombre de jugador y una clave privada para volver a
+    una partida en línea si se cae la conexión. Todo se borra al desinstalar la app.
+  </p>
+</section>
+
+<section>
+  <h2>Dónde se guardan</h2>
+  <p>
+    Los servidores del juego están en Amazon Web Services, en Estados Unidos. Es el único proveedor que
+    procesa datos de las partidas. La conexión va cifrada.
+  </p>
+</section>
+
+<section>
+  <h2>Dinero ficticio</h2>
+  <p>
+    Las apuestas del juego usan dinero ficticio. La app no tiene compras, no maneja dinero real ni permite
+    cambiar las ganancias por nada.
+  </p>
+</section>
+
+<section>
+  <h2>Menores de edad</h2>
+  <p>La app no está dirigida a menores de 13 años y no recoge a sabiendas datos de ellos.</p>
+</section>
+
+<section>
+  <h2>Tus derechos</h2>
+  <p>
+    Según la Ley 1581 de 2012 de Colombia y otras leyes que te apliquen, puedes pedir que te informemos,
+    corrijamos o borremos tus datos. Como las partidas se borran solas en {retention.gameHours} horas, casi
+    siempre ya no habrá nada guardado. Escríbenos a
+    <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> y respondemos en un máximo de 15 días hábiles.
+  </p>
+</section>
+
+<section>
+  <h2>Cambios</h2>
+  <p>Si esta política cambia, publicaremos la nueva versión en esta página con su fecha.</p>
+</section>

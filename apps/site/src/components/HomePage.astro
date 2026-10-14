@@ -1,0 +1,225 @@
+---
+import { site } from "../config";
+import { t, type Lang } from "../i18n";
+import DiceScene from "./DiceScene.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tr = t(lang);
+const money = new Intl.NumberFormat(lang === "es" ? "es-CO" : "en-US").format(1_000_000);
+
+const stores = [
+  { name: "App Store", small: tr("home.store.appStore.small"), url: site.stores.appStore, primary: true },
+  { name: "Google Play", small: tr("home.store.googlePlay.small"), url: site.stores.googlePlay, primary: false },
+];
+
+// Come-out roll outcomes, from docs/game-rules.md.
+const sums = [
+  { n: "7 · 11", title: tr("home.throw.natural.title"), body: tr("home.throw.natural.body"), lose: false },
+  { n: "2 · 3 · 12", title: tr("home.throw.craps.title"), body: tr("home.throw.craps.body"), lose: true },
+  { n: "4 – 10", title: tr("home.throw.point.title"), body: tr("home.throw.point.body"), lose: false },
+];
+---
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">{tr("home.eyebrow")}</div>
+      <h1>Siete <em>y</em> Once</h1>
+      <p class="lead">{tr("home.lead")}</p>
+      <div class="stores">
+        {
+          stores.map((s) =>
+            s.url ? (
+              <a class:list={["store", { primary: s.primary }]} href={s.url}>
+                <small>{s.small}</small>
+                <span>{s.name}</span>
+              </a>
+            ) : (
+              <div class="store soon">
+                <small>{tr("home.store.soon")}</small>
+                <span>{s.name}</span>
+              </div>
+            ),
+          )
+        }
+      </div>
+    </div>
+    <DiceScene />
+  </div>
+</section>
+
+<section class="throw">
+  <div class="wrap">
+    <h2>{tr("home.throw.title")}</h2>
+    <p class="intro">{tr("home.throw.body")}</p>
+    <div class="sums">
+      {
+        sums.map((s) => (
+          <div class:list={["sum", { lose: s.lose }]}>
+            <div class="n">{s.n}</div>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="facts">
+      <span><b>${money}</b> {tr("home.fact.balance")}</span>
+      <span><b>8 s</b> {tr("home.fact.turn")}</span>
+      <span><b>{tr("home.fact.noAccounts")}</b> {tr("home.fact.noAds")}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: 24px 56px;
+  }
+  .hero .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+  }
+  .hero :global(.scene) {
+    justify-self: end;
+  }
+  .eyebrow {
+    font: 600 13px var(--body);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sol);
+  }
+  h1 {
+    font-size: clamp(54px, 9vw, 104px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-top: 8px;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--sol);
+  }
+  .lead {
+    font-size: 20px;
+    max-width: 30ch;
+    margin: 14px 0 26px;
+  }
+  .stores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .store {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 168px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--arena);
+    background: rgb(243 227 195 / 0.08);
+    border: 1px solid rgb(243 227 195 / 0.28);
+  }
+  .store small {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .store span {
+    font: 700 18px var(--display);
+  }
+  .store.primary {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: #fff;
+  }
+  .store.soon {
+    border-style: dashed;
+    color: var(--arena-suave);
+  }
+  .throw {
+    padding-block: 64px;
+  }
+  .throw h2 {
+    font-size: clamp(30px, 5vw, 44px);
+    max-width: 18ch;
+  }
+  .intro {
+    color: var(--arena-suave);
+    max-width: 58ch;
+    margin: 12px 0 32px;
+  }
+  .sums {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .sum {
+    background: var(--pano);
+    border-radius: 18px;
+    padding: 22px;
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+  .sum .n {
+    font: 800 44px/1 var(--display);
+    color: var(--sol);
+    font-variant-numeric: tabular-nums;
+  }
+  .sum.lose .n {
+    color: var(--coral);
+  }
+  .sum h3 {
+    font-size: 20px;
+  }
+  .sum p {
+    margin: 0;
+    color: var(--arena-suave);
+    font-size: 15px;
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 28px;
+    font-size: 15px;
+    color: var(--arena-suave);
+  }
+  .facts b {
+    color: var(--arena);
+    font-family: var(--display);
+    font-weight: 700;
+  }
+  @media (max-width: 640px) {
+    .hero .wrap {
+      grid-template-columns: 1fr;
+    }
+    .hero :global(.scene) {
+      order: -1;
+      max-width: 340px;
+      justify-self: center;
+    }
+    .sums {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    h1 {
+      animation: rise 0.7s ease-out both;
+    }
+    @keyframes rise {
+      from {
+        transform: translateY(14px);
+        opacity: 0.4;
+      }
+    }
+  }
+</style>

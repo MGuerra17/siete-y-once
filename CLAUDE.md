@@ -2,12 +2,13 @@
 
 Two-player dice duel from Colombia's Caribbean coast (a craps variant locally called "Seven Eleven").
 Store name: "Siete y Once: Duelo de Dados". Never use "Seven Eleven"/"7-11" in branding (7-Eleven trademark).
-pnpm monorepo: Expo app + AWS serverless backend + shared TypeScript packages.
+pnpm monorepo: Expo app + AWS serverless backend + public website + shared TypeScript packages.
 
 ## Layout
 
 - `apps/mobile` — Expo (SDK 57) app, expo-router, zustand. Offline (same device) and online modes.
 - `apps/backend` — API Gateway WebSocket + Lambda + DynamoDB, defined with CDK.
+- `apps/site` — Astro static site (landing, privacy policy, support) deployed on Vercel; URLs used by the store listings.
 - `packages/game-core` — pure rules engine (`reduce`, selectors, constants). **Single source of truth for rules.**
 - `packages/protocol` — WebSocket message types shared by app and backend.
 
@@ -15,6 +16,7 @@ pnpm monorepo: Expo app + AWS serverless backend + shared TypeScript packages.
 
 - `pnpm test` / `pnpm typecheck` / `pnpm lint` — all workspaces
 - `pnpm mobile start` — Expo dev server
+- `pnpm site dev` — website dev server
 - `pnpm backend synth -c stage=dev` / `pnpm backend deploy -c stage=dev`
 
 ## Rules of thumb
@@ -34,4 +36,5 @@ pnpm monorepo: Expo app + AWS serverless backend + shared TypeScript packages.
 - `docs/backend.md` — infrastructure, deploy, operations, costs
 - `docs/ci-cd.md` — GitHub Actions, OIDC deploys, EAS builds
 - `docs/mobile.md` — app structure and conventions
+- `docs/site.md` — public website, privacy policy upkeep, Vercel setup
 - `docs/roadmap.md` — improvement plan and status

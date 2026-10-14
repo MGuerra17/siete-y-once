@@ -1,0 +1,134 @@
+/* Mesa Costeña palette, same tokens as the app. The site is dark only, like the app. */
+:root {
+  --mar: #0d3b3e;
+  --mar-hondo: #092c2e;
+  --pano: #135e5a;
+  --arena: #f3e3c3;
+  --arena-texto: #e6dcc4;
+  --arena-suave: #c9c0a8;
+  --coral: #f2694b;
+  --sol: #f6b93b;
+  --linea: rgb(243 227 195 / 0.14);
+  --display: "Bricolage Grotesque Variable", "Avenir Next", system-ui, sans-serif;
+  --body: "Figtree Variable", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mar);
+  color: var(--arena);
+  font: 400 17px/1.6 var(--body);
+}
+
+a {
+  color: var(--sol);
+}
+
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--sol);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  text-wrap: balance;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Long-form pages (privacy, support) */
+.page {
+  padding-block: 40px 72px;
+}
+
+.page .wrap {
+  max-width: 760px;
+}
+
+.page h1 {
+  font-size: clamp(38px, 7vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  color: var(--arena-suave);
+  font-size: 14px;
+  margin: 10px 0 28px;
+}
+
+.panel {
+  background: var(--pano);
+  border-radius: 18px;
+  padding: 22px 24px;
+  margin-bottom: 36px;
+}
+
+.page section {
+  padding-block: 22px;
+  border-top: 1px solid var(--linea);
+}
+
+.page section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.page section p,
+.page section li {
+  color: var(--arena-texto);
+}
+
+.page ul {
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 520px;
+  font-size: 15px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--linea);
+  vertical-align: top;
+}
+
+th {
+  font: 600 12px var(--body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sol);
+}

@@ -1,0 +1,11 @@
+---
+import HomePage from "../../components/HomePage.astro";
+import Base from "../../layouts/Base.astro";
+import { t } from "../../i18n";
+
+const lang = "en";
+---
+
+<Base lang={lang} page="home" title={t(lang)("home.title")}>
+  <HomePage lang={lang} />
+</Base>

@@ -1,0 +1,11 @@
+---
+import SupportPage from "../components/SupportPage.astro";
+import Base from "../layouts/Base.astro";
+import { t } from "../i18n";
+
+const lang = "es";
+---
+
+<Base lang={lang} page="support" title={`${t(lang)("support.title")} · Siete y Once`}>
+  <SupportPage lang={lang} />
+</Base>
