@@ -15,11 +15,15 @@ All workflows live in `.github/workflows`. Node version comes from `.nvmrc`, pnp
 1. **AWS deploy role (OIDC, no stored keys)**
 
    ```bash
-   pnpm backend run deploy Seven-github -c githubRepo=<owner>/<repo>
+   pnpm backend run deploy Seven-github -c githubRepo=<owner>/<repo> \
+     -c githubSubjectPrefix=$(gh api repos/<owner>/<repo>/actions/oidc/customization/sub --jq .sub_claim_prefix)
    ```
 
    Copy the `DeployRoleArn` output into the repository variable `AWS_DEPLOY_ROLE_ARN`
-   (Settings → Secrets and variables → Actions → Variables). The role can only assume the CDK
+   (Settings → Secrets and variables → Actions → Variables).
+   New repositories use GitHub's immutable OIDC subjects (`repo:owner@id/repo@id`), which is why
+   the role also trusts `githubSubjectPrefix`; without it, deploys fail with "Not authorized to
+   perform sts:AssumeRoleWithWebIdentity". The role can only assume the CDK
    bootstrap roles and only from `main` or a GitHub environment of this repository.
 
    Optionally set the repository variable `ALARM_EMAIL`: prod deploys subscribe it to the Lambda

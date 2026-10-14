@@ -20,10 +20,15 @@ new SevenStack(app, `Seven-${stage}`, {
   env,
 });
 
-// One-time setup for CI deploys: `cdk deploy Seven-github -c githubRepo=owner/repo`.
+// One-time setup for CI deploys (see docs/ci-cd.md):
+// `cdk deploy Seven-github -c githubRepo=owner/repo -c githubSubjectPrefix=repo:owner@id/repo@id`.
 const githubRepo: string | undefined = app.node.tryGetContext("githubRepo");
 if (githubRepo) {
-  new GithubDeployStack(app, "Seven-github", { repository: githubRepo, env });
+  new GithubDeployStack(app, "Seven-github", {
+    repository: githubRepo,
+    subjectPrefix: app.node.tryGetContext("githubSubjectPrefix"),
+    env,
+  });
 }
 
 cdk.Tags.of(app).add("project", "seven");
