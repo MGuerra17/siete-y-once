@@ -15,12 +15,15 @@ All workflows live in `.github/workflows`. Node version comes from `.nvmrc`, pnp
 1. **AWS deploy role (OIDC, no stored keys)**
 
    ```bash
-   pnpm backend deploy Seven-github -c githubRepo=<owner>/<repo>
+   pnpm backend run deploy Seven-github -c githubRepo=<owner>/<repo>
    ```
 
    Copy the `DeployRoleArn` output into the repository variable `AWS_DEPLOY_ROLE_ARN`
    (Settings → Secrets and variables → Actions → Variables). The role can only assume the CDK
    bootstrap roles and only from `main` or a GitHub environment of this repository.
+
+   Optionally set the repository variable `ALARM_EMAIL`: prod deploys subscribe it to the Lambda
+   error alarms (AWS sends a confirmation e-mail first). Dev deploys never send e-mail.
 
 2. **Environments**: create `dev` and `prod` in Settings → Environments and add yourself as a
    required reviewer on `prod`.

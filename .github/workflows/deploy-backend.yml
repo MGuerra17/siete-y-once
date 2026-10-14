@@ -33,6 +33,8 @@ jobs:
     environment: ${{ inputs.stage || 'dev' }}
     env:
       STAGE: ${{ inputs.stage || 'dev' }}
+      # Only prod alarms send e-mail; AWS asks the address to confirm the subscription once.
+      ALARM_EMAIL: ${{ inputs.stage == 'prod' && vars.ALARM_EMAIL || '' }}
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -47,6 +49,7 @@ jobs:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
       - name: CDK diff
-        run: pnpm backend diff -c stage=$STAGE
+        run: pnpm backend run diff -c stage=$STAGE -c alarmEmail=$ALARM_EMAIL
       - name: CDK deploy
-        run: pnpm backend deploy -c stage=$STAGE --require-approval never
+        # `run` is required: `pnpm deploy` is a built-in pnpm command.
+        run: pnpm backend run deploy -c stage=$STAGE -c alarmEmail=$ALARM_EMAIL --require-approval never

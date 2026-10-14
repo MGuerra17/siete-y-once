@@ -12,8 +12,8 @@
 
 ```bash
 pnpm backend diff   -c stage=dev
-pnpm backend deploy -c stage=dev     # stack Seven-dev
-pnpm backend deploy -c stage=prod    # stack Seven-prod
+pnpm backend run deploy -c stage=dev     # stack Seven-dev
+pnpm backend run deploy -c stage=prod    # stack Seven-prod
 ```
 
 Copy the `WebSocketUrl` output into `apps/mobile/.env.local` as `EXPO_PUBLIC_WS_URL`.

@@ -17,7 +17,7 @@ pnpm monorepo: Expo app + AWS serverless backend + public website + shared TypeS
 - `pnpm test` / `pnpm typecheck` / `pnpm lint` — all workspaces
 - `pnpm mobile start` — Expo dev server
 - `pnpm site dev` — website dev server
-- `pnpm backend synth -c stage=dev` / `pnpm backend deploy -c stage=dev`
+- `pnpm backend synth -c stage=dev` / `pnpm backend run deploy -c stage=dev`
 
 ## Rules of thumb
 
